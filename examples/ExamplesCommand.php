@@ -76,8 +76,9 @@ class ExamplesCommand extends Command
                 $builder->logInvalidRecords( 'INVALID OUTPUT' );
             }
 
-            $this->readFrom( $builder, $input->getArgument( 'reader' ) );
             $builder->usingParser( new ExampleRecordParser );
+            $this->readFrom( $builder, $input->getArgument( 'reader' ) );
+
             $builder->onlyValidRecords();
 
             $this->writeTo( $builder, $input->getArgument( 'writer' ) );
