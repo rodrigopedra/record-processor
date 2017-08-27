@@ -29,7 +29,7 @@
   },
   "autoload": {
     "files": [
-      "src/RecordProcessor/Helpers/Excel/helpers.php",
+      "src/RecordProcessor/Helpers/LaravelExcel/helpers.php",
       "src/RecordProcessor/helpers.php"
     ],
     "psr-4": {

@@ -73,7 +73,7 @@ if (!function_exists( 'app' )) {
     function app( $abstract = null, array $parameters = [] )
     {
         if ($abstract === 'excel') {
-            return \LaravelExcel\Factory::getExcel();
+            return \RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory::getExcel();
         }
 
         return null;
