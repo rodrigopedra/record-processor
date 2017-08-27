@@ -1,0 +1,40 @@
+{
+  "name": "rodrigopedra/record-processor",
+  "description": "Record Processor",
+  "keywords": [
+    "record processor",
+    "php"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Rodrigo Pedra Brum",
+      "email": "rodrigo.pedra@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "psr/log": "^1.0",
+    "illuminate/support": "^5.4",
+    "illuminate/contracts": "^5.4",
+    "illuminate/filesystem": "^5.4",
+    "league/csv": "^9.0",
+    "league/pipeline": "^0.3.0",
+    "maatwebsite/excel": "^2.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.0",
+    "symfony/var-dumper": "^3.3",
+    "symfony/console": "^3.3"
+  },
+  "autoload": {
+    "files": [
+      "src/RecordProcessor/Helpers/Excel/helpers.php",
+      "src/RecordProcessor/helpers.php"
+    ],
+    "psr-4": {
+      "RodrigoPedra\\RecordProcessor\\": "src/RecordProcessor/",
+      "RodrigoPedra\\RecordProcessor\\Examples\\": "examples/"
+    }
+  }
+}

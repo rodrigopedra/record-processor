@@ -1,0 +1,6 @@
+name|email
+Rodrigo|rodrigo@example.com
+Rodrigo|rodrigo@example.org
+Noemi|noemi@example.org
+Bruno|bruno@example.org
+Bruno|bruno@example.com
