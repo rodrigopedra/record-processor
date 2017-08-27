@@ -36,7 +36,10 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
         }
 
         $children = $this->formatChildren( $writer, $master->getRecords() );
-        $content  = [ $master->getKey(), $children ];
+        $content  = [
+            'name'  => $master->getKey(),
+            'email' => $children,
+        ];
 
         return $this->recordFormatter->formatRecord( $writer, new ArrayRecord( $content ) );
     }
