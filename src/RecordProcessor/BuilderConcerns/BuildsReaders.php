@@ -5,6 +5,7 @@ namespace RodrigoPedra\RecordProcessor\BuilderConcerns;
 use Illuminate\Support\Collection;
 use Iterator;
 use PDO;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Readers\ArrayReader;
 use RodrigoPedra\RecordProcessor\Readers\CollectionReader;
@@ -37,11 +38,7 @@ trait BuildsReaders
     {
         $this->reader = new CSVReader( $filepath );
 
-        if (is_callable( $configurator )) {
-            $configuratorObject = $this->reader->createConfigurator();
-
-            call_user_func_array( $configurator, [ $configuratorObject ] );
-        }
+        $this->configureReader( $this->reader, $configurator );
 
         return $this;
     }
@@ -73,5 +70,18 @@ trait BuildsReaders
         $this->reader = new TextReader( $filepath );
 
         return $this;
+    }
+
+    protected function configureReader( ConfigurableReader $reader, callable $configurator = null )
+    {
+        if (is_null( $configurator )) {
+            return null;
+        }
+
+        $readerConfigurator = $reader->createConfigurator();
+
+        call_user_func_array( $configurator, [ $readerConfigurator ] );
+
+        return $readerConfigurator;
     }
 }
