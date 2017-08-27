@@ -2,10 +2,12 @@
 
 /*
  * maatwebsite/excel does not work without these functions
- *
- * In a Laravel install theses should not conflict with the original functions if
- * this package appears after laravel in your composer.json
  */
+
+if (class_exists( 'Illuminate\Foundation\Application', true )) {
+    // if we are in a Laravel application, exits
+    return;
+}
 
 if (!function_exists( 'config' )) {
     /**
@@ -71,7 +73,7 @@ if (!function_exists( 'app' )) {
     function app( $abstract = null, array $parameters = [] )
     {
         if ($abstract === 'excel') {
-            return \RodrigoPedra\RecordProcessor\Helpers\Excel\Factory::getExcel();
+            return \LaravelExcel\Factory::getExcel();
         }
 
         return null;

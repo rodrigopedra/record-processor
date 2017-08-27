@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Helpers\Excel;
+namespace LaravelExcel;
 
 use DateTime;
 use PHPExcel_Shared_Date;

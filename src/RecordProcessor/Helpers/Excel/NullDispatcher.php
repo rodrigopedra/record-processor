@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Helpers\Excel;
+namespace LaravelExcel;
 
 use Illuminate\Contracts\Bus\Dispatcher;
 

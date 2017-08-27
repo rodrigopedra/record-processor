@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Helpers\Excel;
+namespace LaravelExcel;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Response;
