@@ -5,23 +5,19 @@ namespace RodrigoPedra\RecordProcessor\Readers;
 use League\Csv\Reader as RawCsvReader;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 use RodrigoPedra\RecordProcessor\Helpers\Configurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 
-class CSVReader implements ConfigurableReader
+class CSVFileReader extends FileReader implements ConfigurableReader
 {
-    use CsvControls, CountsLines, ReaderInnerIterator;
-
-    /** @var string */
-    protected $filepath = '';
+    use CsvControls, ReaderInnerIterator;
 
     /** @var bool */
     protected $useFirstRowAsHeader = true;
 
-    public function __construct( $filepath )
+    public function __construct( $fileName )
     {
-        $this->filepath = $filepath;
+        parent::__construct( $fileName );
 
         // default values
         $this->setDelimiter( ';' );
@@ -43,7 +39,7 @@ class CSVReader implements ConfigurableReader
         $this->lineCount = 0;
 
         /** @var RawCsvReader $csvReader */
-        $csvReader = RawCsvReader::createFromPath( $this->filepath );
+        $csvReader = RawCsvReader::createFromPath( $this->getRealPath() );
 
         $csvReader->setDelimiter( $this->getDelimiter() );
         $csvReader->setEnclosure( $this->getEnclosure() );

@@ -7,25 +7,20 @@ use League\Csv\Writer as RawCsvWriter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 
-class CSVWriter implements ConfigurableWriter, ByteSequence, NewLines
+class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequence, NewLines
 {
-    use CsvControls, CountsLines, NoOutput;
+    use CsvControls;
 
-    const CUSTOM_DATA_TRAILLER = '<< <<';
+    const DATA_TRAILLER = '<< <<';
 
     /** @var RawCsvWriter|null */
     protected $writer = null;
 
-    /** @var string */
-    protected $filepath = '';
-
-    public function __construct( $filepath )
+    public function __construct( $fileName )
     {
-        $this->filepath = $filepath;
+        parent::__construct( $fileName );
 
         // defaults
         $this->setDelimiter( ';' );
@@ -37,7 +32,7 @@ class CSVWriter implements ConfigurableWriter, ByteSequence, NewLines
     {
         $this->lineCount = 0;
 
-        $this->writer = RawCsvWriter::createFromPath( $this->filepath, 'wb' );
+        $this->writer = RawCsvWriter::createFromPath( $this->getRealPath(), 'wb' );
 
         $this->writer->setOutputBOM( $this->getOutputBOM() );
         $this->writer->setDelimiter( $this->getDelimiter() );

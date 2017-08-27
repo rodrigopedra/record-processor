@@ -9,14 +9,13 @@ use PDOStatement;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 use RuntimeException;
 use function RodrigoPedra\RecordProcessor\is_associative_array;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class PDOWriter implements ConfigurableWriter
 {
-    use CountsLines, NoOutput;
+    use CountsLines;
 
     /** @var PDO */
     protected $pdo = null;
@@ -190,5 +189,13 @@ class PDOWriter implements ConfigurableWriter
     public function createConfigurator()
     {
         return new WriterConfigurator( $this, false, false );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function output()
+    {
+        return $this->formatQueryStatement( 1 );
     }
 }

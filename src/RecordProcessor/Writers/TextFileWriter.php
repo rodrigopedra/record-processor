@@ -5,27 +5,20 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 use RuntimeException;
 use SplFileObject;
 
-class TextWriter implements ConfigurableWriter, NewLines
+class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
 {
-    use CountsLines, NoOutput;
-
     /** @var SplFileObject */
     protected $writer = null;
 
     /** @var string */
-    protected $filepath = '';
-
-    /** @var string */
     protected $newLine;
 
-    public function __construct( $filepath )
+    public function __construct( $fileName )
     {
-        $this->filepath = $filepath;
+        parent::__construct( $fileName );
 
         // default values
         $this->setNewLine( static::WINDOWS_NEWLINE );
@@ -47,7 +40,8 @@ class TextWriter implements ConfigurableWriter, NewLines
     public function open()
     {
         $this->lineCount = 0;
-        $this->writer    = new SplFileObject( $this->filepath, 'wb' );
+
+        $this->writer = new SplFileObject( $this->getRealPath(), 'wb' );
     }
 
     public function close()

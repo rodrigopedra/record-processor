@@ -6,13 +6,12 @@ use League\Csv\HTMLConverter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\HasOutput;
 use RuntimeException;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class HTMLTableWriter implements ConfigurableWriter
 {
-    use CountsLines, HasOutput;
+    use CountsLines;
 
     /** @var HTMLConverter|null */
     protected $writer = null;

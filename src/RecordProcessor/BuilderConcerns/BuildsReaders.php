@@ -9,8 +9,8 @@ use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Readers\ArrayReader;
 use RodrigoPedra\RecordProcessor\Readers\CollectionReader;
-use RodrigoPedra\RecordProcessor\Readers\CSVReader;
-use RodrigoPedra\RecordProcessor\Readers\ExcelReader;
+use RodrigoPedra\RecordProcessor\Readers\CSVFileReader;
+use RodrigoPedra\RecordProcessor\Readers\ExcelFileReader;
 use RodrigoPedra\RecordProcessor\Readers\IteratorReader;
 use RodrigoPedra\RecordProcessor\Readers\PDOReader;
 use RodrigoPedra\RecordProcessor\Readers\TextReader;
@@ -34,18 +34,20 @@ trait BuildsReaders
         return $this;
     }
 
-    public function readFromCSV( $filepath, callable $configurator = null )
+    public function readFromCSVFile( $fileName, callable $configurator = null )
     {
-        $this->reader = new CSVReader( $filepath );
+        $this->reader = new CSVFileReader( $fileName );
 
         $this->configureReader( $this->reader, $configurator );
 
         return $this;
     }
 
-    public function readFromExcel( $filepath )
+    public function readFromExcelFile( $fileName, callable $configurator = null )
     {
-        $this->reader = new ExcelReader( $filepath );
+        $this->reader = new ExcelFileReader( $fileName );
+
+        $this->configureReader( $this->reader, $configurator );
 
         return $this;
     }
@@ -65,9 +67,9 @@ trait BuildsReaders
         return $this;
     }
 
-    public function readFromText( $filepath )
+    public function readFromTextFile( $fileName )
     {
-        $this->reader = new TextReader( $filepath );
+        $this->reader = new TextReader( $fileName );
 
         return $this;
     }

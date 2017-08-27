@@ -126,9 +126,9 @@ class ExamplesCommand extends Command
             case 'collection':
                 return $builder->readFromCollection( new Collection( $this->sampleData() ) );
             case 'csv':
-                return $builder->readFromCSV( $inputPath . '.csv' );
+                return $builder->readFromCSVFile( $inputPath . '.csv' );
             case 'excel':
-                return $builder->readFromExcel( $inputPath . '.xlsx' );
+                return $builder->readFromExcelFile( $inputPath . '.xlsx' );
             case 'iterator':
                 return $builder->readFromIterator( new ArrayIterator( $this->sampleData() ) );
             case 'pdo':
@@ -137,7 +137,7 @@ class ExamplesCommand extends Command
 
                 return $builder->readFromPDO( $pdo, $query );
             case 'text':
-                return $builder->readFromText( $inputPath . '.txt' );
+                return $builder->readFromTextFile( $inputPath . '.txt' );
             default:
                 throw new InvalidArgumentException( 'Invalid reader' );
         }
@@ -159,7 +159,7 @@ class ExamplesCommand extends Command
             case 'collection':
                 return $builder->writeToCollection();
             case 'csv':
-                return $builder->writeToCSV( $outputPath . '.csv', function ( WriterConfigurator $configurator ) {
+                return $builder->writeToCSVFile( $outputPath . '.csv', function ( WriterConfigurator $configurator ) {
                     $configurator->setHeader( [ 'name', 'email' ] );
                 } );
             case 'echo':
@@ -167,7 +167,7 @@ class ExamplesCommand extends Command
                     $configurator->setPrefix( 'PERSIST' );
                 } );
             case 'excel':
-                return $builder->writeToExcel( $outputPath . '.xlsx', function ( WriterConfigurator $configurator ) {
+                return $builder->writeToExcelFile( $outputPath . '.xlsx', function ( WriterConfigurator $configurator ) {
                     $configurator->setHeader( [ 'name', 'email' ] );
 
                     $configurator->setTrailler( function ( WriterCallbackProxy $proxy ) {
@@ -197,7 +197,7 @@ class ExamplesCommand extends Command
                     $configurator->setTableIdAttribute( 'my-table' );
                 } );
             case 'json':
-                return $builder->writeToJSON( $outputPath . '.json' );
+                return $builder->writeToJSONFile( $outputPath . '.json' );
             case 'log':
                 return $builder->writeToLog( function ( WriterConfigurator $configurator ) {
                     $configurator->setPrefix( 'PERSIST' );
@@ -208,7 +208,7 @@ class ExamplesCommand extends Command
 
                 return $builder->writeToPDO( $pdo, 'users', [ 'name', 'email' ], $writer === 'pdo-buffered' );
             case 'text':
-                return $builder->writeToText( $outputPath . '.txt' );
+                return $builder->writeToTextFile( $outputPath . '.txt' );
             default:
                 throw new InvalidArgumentException( 'Invalid writer' );
         }

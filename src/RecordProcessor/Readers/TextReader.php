@@ -3,8 +3,6 @@
 namespace RodrigoPedra\RecordProcessor\Readers;
 
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Contracts\Reader;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 use SplFileObject;
 
@@ -15,26 +13,18 @@ use SplFileObject;
  *
  * @package RodrigoPedra\Converters\Readers
  */
-class TextReader implements Reader
+class TextReader extends FileReader
 {
-    use CountsLines, ReaderInnerIterator {
+    use ReaderInnerIterator {
         current as iteratorCurrent;
         valid as iteratorValid;
-    }
-
-    /** @var string */
-    protected $filepath = '';
-
-    public function __construct( $filepath )
-    {
-        $this->filepath = $filepath;
     }
 
     public function open()
     {
         $this->lineCount = 0;
 
-        $reader = new SplFileObject( $this->filepath, 'r' );
+        $reader = new SplFileObject( $this->getRealPath(), 'r' );
 
         $this->setInnerIterator( $reader );
     }

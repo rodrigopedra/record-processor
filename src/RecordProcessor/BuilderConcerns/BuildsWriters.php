@@ -6,15 +6,15 @@ use PDO;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Writers\ArrayWriter;
 use RodrigoPedra\RecordProcessor\Writers\CollectionWriter;
-use RodrigoPedra\RecordProcessor\Writers\CSVWriter;
+use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
 use RodrigoPedra\RecordProcessor\Writers\EchoWriter;
-use RodrigoPedra\RecordProcessor\Writers\ExcelWriter;
+use RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter;
 use RodrigoPedra\RecordProcessor\Writers\HTMLTableWriter;
-use RodrigoPedra\RecordProcessor\Writers\JSONWriter;
+use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
 use RodrigoPedra\RecordProcessor\Writers\LogWriter;
 use RodrigoPedra\RecordProcessor\Writers\PDOBufferedWriter;
 use RodrigoPedra\RecordProcessor\Writers\PDOWriter;
-use RodrigoPedra\RecordProcessor\Writers\TextWriter;
+use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
 
 trait BuildsWriters
 {
@@ -36,9 +36,9 @@ trait BuildsWriters
         return $this;
     }
 
-    public function writeToCSV( $filepath, callable $configurator = null )
+    public function writeToCSVFile( $fileName, callable $configurator = null )
     {
-        $writer = new CSVWriter( $filepath );
+        $writer = new CSVFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -54,9 +54,9 @@ trait BuildsWriters
         return $this;
     }
 
-    public function writeToExcel( $filepath, callable $configurator = null )
+    public function writeToExcelFile( $fileName, callable $configurator = null )
     {
-        $writer = new ExcelWriter( $filepath );
+        $writer = new ExcelFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -72,9 +72,9 @@ trait BuildsWriters
         return $this;
     }
 
-    public function writeToJSON( $filepath, callable $configurator = null )
+    public function writeToJSONFile( $fileName, callable $configurator = null )
     {
-        $writer = new JSONWriter( $filepath );
+        $writer = new JSONFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -104,9 +104,9 @@ trait BuildsWriters
         return $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
     }
 
-    public function writeToText( $filepath, callable $configurator = null )
+    public function writeToTextFile( $fileName, callable $configurator = null )
     {
-        $writer = new TextWriter( $filepath );
+        $writer = new TextFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 

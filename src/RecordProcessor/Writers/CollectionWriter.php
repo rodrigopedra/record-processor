@@ -4,12 +4,9 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 
 use Illuminate\Support\Collection;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Traits\HasOutput;
 
 class CollectionWriter implements Writer
 {
-    use HasOutput;
-
     /** @var Collection */
     protected $collection;
 

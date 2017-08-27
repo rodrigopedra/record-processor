@@ -5,27 +5,20 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 use RuntimeException;
 use SplFileObject;
 
-class JSONWriter implements ConfigurableWriter, NewLines
+class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
 {
-    use CountsLines, NoOutput;
-
     /** @var SplFileObject */
     protected $writer = null;
-
-    /** @var string */
-    protected $filepath = '';
 
     /** @var int */
     protected $jsonEncodeOptions;
 
-    public function __construct( $filepath )
+    public function __construct( $fileName )
     {
-        $this->filepath = $filepath;
+        parent::__construct( $fileName );
 
         // default values
         $this->setJsonEncodeOptions( JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
@@ -43,7 +36,7 @@ class JSONWriter implements ConfigurableWriter, NewLines
     {
         $this->lineCount = 0;
 
-        $this->writer = new SplFileObject( $this->filepath, 'wb' );
+        $this->writer = new SplFileObject( $this->getRealPath(), 'wb' );
     }
 
     public function close()

@@ -6,22 +6,22 @@ use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 
 trait ConfiguresExcelWriter
 {
-    /** @var  callable */
-    protected $workbookConfigurator;
+    /** @var  callable|null */
+    protected $workbookConfigurator = null;
 
-    /** @var  callable */
-    protected $worksheetConfigurator;
+    /** @var  callable|null */
+    protected $worksheetConfigurator = null;
 
     /**
-     * @return callable
+     * @return callable|null
      */
     public function getWorkbookConfigurator()
     {
-        return function ( $excel ) {
-            if (is_null( $this->workbookConfigurator )) {
-                return;
-            }
+        if (is_null( $this->workbookConfigurator )) {
+            return null;
+        }
 
+        return function ( $excel ) {
             call_user_func_array( $this->workbookConfigurator, [ $excel ] );
         };
     }
@@ -39,11 +39,11 @@ trait ConfiguresExcelWriter
      */
     public function getWorksheetConfigurator()
     {
-        return function ( $sheet ) {
-            if (is_null( $this->worksheetConfigurator )) {
-                return;
-            }
+        if (is_null( $this->worksheetConfigurator )) {
+            return null;
+        }
 
+        return function ( $sheet ) {
             call_user_func_array( $this->worksheetConfigurator, [ $sheet ] );
         };
     }
@@ -66,7 +66,7 @@ trait ConfiguresExcelWriter
 
     public function createConfigurator()
     {
-        /** @var \RodrigoPedra\RecordProcessor\Writers\ExcelWriter $this */
+        /** @var \RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter $this */
         return new WriterConfigurator( $this, true, true );
     }
 }

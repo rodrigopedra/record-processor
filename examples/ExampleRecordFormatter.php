@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Examples;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Writers\TextWriter;
+use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
 
 class ExampleRecordFormatter implements RecordFormatter
 {
@@ -17,7 +17,7 @@ class ExampleRecordFormatter implements RecordFormatter
 
         $content = $record->toArray();
 
-        if ($writer instanceof TextWriter) {
+        if ($writer instanceof TextFileWriter) {
             $content = implode( '|', $content );
         }
 

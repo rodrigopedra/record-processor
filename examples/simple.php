@@ -8,14 +8,14 @@ use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
 $processor = ( new ProcessorBuilder )
-    ->readFromExcel( __DIR__ . '/../storage/input.xlsx' )
+    ->readFromExcelFile( __DIR__ . '/../storage/input.xlsx' )
     ->writeToHTMLTable( function ( WriterConfigurator $configurator ) {
         $configurator->setTableClassAttribute( 'table table-condensed' );
         $configurator->setTableIdAttribute( 'my-table' );
     } )
-    ->writeToExcel( __DIR__ . '/../storage/output.xlsx' )
+    ->writeToExcelFile( __DIR__ . '/../storage/output.xlsx' )
     ->aggregateRecordsByKey( new ExampleRecordAggregateFormatter( 1 ) )
-    ->writeToCSV( __DIR__ . '/../storage/output.csv' )
+    ->writeToCSVFile( __DIR__ . '/../storage/output.csv' )
     ->build();
 
 $output = $processor->process();

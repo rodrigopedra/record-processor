@@ -3,12 +3,9 @@
 namespace RodrigoPedra\RecordProcessor\Writers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Traits\HasOutput;
 
 class ArrayWriter implements Writer
 {
-    use HasOutput;
-
     /** @var array */
     protected $items = [];
 

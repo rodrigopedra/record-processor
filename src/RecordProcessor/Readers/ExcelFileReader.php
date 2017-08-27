@@ -2,22 +2,14 @@
 
 namespace RodrigoPedra\RecordProcessor\Readers;
 
-use RodrigoPedra\RecordProcessor\Contracts\Reader;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
+use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelReader;
 use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 
-class ExcelReader implements Reader
+class ExcelFileReader extends FileReader implements ConfigurableReader
 {
-    use CountsLines, ReaderInnerIterator {
+    use ConfiguresExcelReader, ReaderInnerIterator {
         current as iteratorCurrent;
-    }
-
-    /** @var string */
-    protected $filepath = '';
-
-    public function __construct( $filepath )
-    {
-        $this->filepath = $filepath;
     }
 
     public function open()
@@ -27,9 +19,13 @@ class ExcelReader implements Reader
         $excel = app( 'excel' );
 
         /** @var  \Maatwebsite\Excel\Readers\LaravelExcelReader $reader */
-        $reader = $excel->load( $this->filepath );
-        $reader->setSelectedSheetIndices( 0 );
-        $reader->noHeading();
+        $configuratorCallback = $this->getReaderConfigurator();
+
+        $reader = $excel->load( $this->getRealPath(), $this->getReaderConfigurator() );
+
+        if (is_null( $configuratorCallback )) {
+            $reader->setSelectedSheetIndices( 0 );
+        }
 
         /** @var  \Maatwebsite\Excel\Collections\ExcelCollection $collection */
         $collection = $reader->get();

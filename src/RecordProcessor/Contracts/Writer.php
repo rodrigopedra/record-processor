@@ -17,11 +17,6 @@ interface Writer extends Resource
     public function getLineCount();
 
     /**
-     * @return bool
-     */
-    public function hasOutput();
-
-    /**
      * @return mixed
      */
     public function output();

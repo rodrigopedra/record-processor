@@ -63,10 +63,7 @@ class Compiler implements ProcessorStageFlusher
 
         $this->close();
 
-        if ($this->writer->hasOutput()) {
-            $payload->setOutput( $this->writer->output() );
-        }
-
+        $payload->setOutput( $this->writer->output() );
         $payload->setLineCount( $this->writer->getLineCount() );
         $payload->setRecordCount( $this->getRecordCount() );
 
