@@ -56,7 +56,7 @@ trait ConfiguresExcelWriter
         $this->worksheetConfigurator = $worksheetConfigurator;
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [
             'setWorkbookConfigurator',

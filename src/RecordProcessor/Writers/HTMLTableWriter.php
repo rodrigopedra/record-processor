@@ -80,7 +80,7 @@ class HTMLTableWriter implements ConfigurableWriter
         return $this->html;
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [
             'setTableClassAttribute',

@@ -45,7 +45,7 @@ class EchoWriter implements ConfigurableWriter
         $this->incrementLineCount();
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [ 'setPrefix' ];
     }

@@ -67,7 +67,7 @@ class CSVReader implements ConfigurableReader
     /**
      * @return array
      */
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [ 'setUseFirstRowAsHeader' ];
     }

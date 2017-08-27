@@ -63,7 +63,7 @@ class LogWriter implements ConfigurableWriter, LoggerAwareInterface
         $this->incrementLineCount();
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [
             'setLevel',

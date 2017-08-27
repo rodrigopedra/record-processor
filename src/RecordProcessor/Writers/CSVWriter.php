@@ -63,7 +63,7 @@ class CSVWriter implements ConfigurableWriter, ByteSequence, NewLines
         $this->incrementLineCount();
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [
             'setOutputBOM',

@@ -17,7 +17,7 @@ class Configurator
 
     public function __call( $method, $parameters )
     {
-        if (in_array( $method, $this->configurable->getConfigurableSetters() )) {
+        if (in_array( $method, $this->configurable->getConfigurableMethods() )) {
             $this->configurable->{$method}( ...$parameters );
 
             return $this;

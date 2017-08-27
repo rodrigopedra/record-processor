@@ -89,7 +89,7 @@ class JSONWriter implements ConfigurableWriter, NewLines
         $this->incrementLineCount();
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [ 'setJsonEncodeOptions' ];
     }

@@ -182,7 +182,7 @@ class PDOWriter implements ConfigurableWriter
         return $values;
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [ 'setUsesTransaction' ];
     }

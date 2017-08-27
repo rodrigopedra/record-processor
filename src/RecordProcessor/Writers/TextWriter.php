@@ -68,7 +68,7 @@ class TextWriter implements ConfigurableWriter, NewLines
         $this->incrementLineCount( substr_count( $content, $this->getNewLine() ) );
     }
 
-    public function getConfigurableSetters()
+    public function getConfigurableMethods()
     {
         return [ 'setNewLine' ];
     }

@@ -7,5 +7,5 @@ interface Configurable
     /**
      * @return array
      */
-    public function getConfigurableSetters();
+    public function getConfigurableMethods();
 }
