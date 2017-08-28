@@ -57,10 +57,12 @@ class ConsoleOutputLogger implements LoggerInterface
 
     public function log( $level, $message, array $context = [] )
     {
-        $this->output->writeln( strtoupper( $level ) . ': ' . $message );
+        $this->output->writeln( strtoupper( $level ) );
 
         if (count( $context )) {
-            $this->output->writeln( var_export( $context, true ) );
+            $this->output->writeln( $message . ': ' . var_export( $context, true ) );
+        } else {
+            $this->output->writeln( $message );
         }
 
         $this->output->writeln( '' );

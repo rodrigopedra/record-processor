@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
@@ -9,7 +9,7 @@ use RodrigoPedra\RecordProcessor\Helpers\WriterCallbackProxy;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
-$storagePath = __DIR__ . '/../storage/';
+$storagePath = __DIR__ . '/../../storage/';
 
 $processor = ( new ProcessorBuilder )
     ->readFromExcelFile( $storagePath . 'input.xlsx' )

@@ -8,6 +8,7 @@ use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use SplFileObject;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class HTMLTableWriter implements ConfigurableWriter
@@ -20,7 +21,7 @@ class HTMLTableWriter implements ConfigurableWriter
     /** @var array */
     protected $records = [];
 
-    /** @var string */
+    /** @var string|\SplFileObject */
     protected $output = '';
 
     /** @var string */
@@ -29,15 +30,15 @@ class HTMLTableWriter implements ConfigurableWriter
     /** @var string */
     protected $tableIdAttribute = '';
 
-    /** @var  FileInfo */
-    protected $fileInfo;
+    /** @var SplFileObject|null */
+    protected $file = null;
 
     /**
      * @param  string $fileName
      */
     public function writeOutputToFile( $fileName )
     {
-        $this->fileInfo = new FileInfo( $fileName );
+        $this->file = FileInfo::createWritableFileObject( $fileName, 'wb' );
     }
 
     /**
@@ -71,17 +72,15 @@ class HTMLTableWriter implements ConfigurableWriter
     {
         $this->output = $this->writer->convert( $this->records );
 
-        if (!is_null( $this->fileInfo )) {
-            $outputFile = $this->fileInfo->openFile( 'wb' );
-            $outputFile->fwrite( $this->output );
-            $outputFile->fwrite( NewLines::UNIX_NEWLINE );
+        if (!is_null( $this->file )) {
+            $this->file->fwrite( $this->output );
+            $this->file->fwrite( NewLines::UNIX_NEWLINE );
 
-            $this->output = $this->fileInfo;
+            $this->output = FileInfo::createReadableFileObject( $this->file );
         }
 
-        $this->fileInfo = null;
-        $this->writer   = null;
-        $this->records  = [];
+        $this->writer  = null;
+        $this->records = [];
     }
 
     public function append( $content )

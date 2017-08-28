@@ -1,12 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
 $processor = ( new ProcessorBuilder )
-    ->readFromCSVFile( __DIR__ . '/../storage/input.csv' )
+    ->readFromCSVFile( __DIR__ . '/../../storage/input.csv' )
     ->writeToHTMLTable()
     ->build();
 

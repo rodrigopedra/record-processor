@@ -36,8 +36,13 @@ trait BuildsWriters
         return $this;
     }
 
-    public function writeToCSVFile( $fileName, callable $configurator = null )
+    public function writeToCSVFile( $fileName = null, callable $configurator = null )
     {
+        if (is_callable( $fileName )) {
+            $configurator = $fileName;
+            $fileName     = null;
+        }
+
         $writer = new CSVFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
@@ -72,8 +77,13 @@ trait BuildsWriters
         return $this;
     }
 
-    public function writeToJSONFile( $fileName, callable $configurator = null )
+    public function writeToJSONFile( $fileName = null, callable $configurator = null )
     {
+        if (is_callable( $fileName )) {
+            $configurator = $fileName;
+            $fileName     = null;
+        }
+
         $writer = new JSONFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
@@ -104,8 +114,13 @@ trait BuildsWriters
         return $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
     }
 
-    public function writeToTextFile( $fileName, callable $configurator = null )
+    public function writeToTextFile( $fileName = null, callable $configurator = null )
     {
+        if (is_callable( $fileName )) {
+            $configurator = $fileName;
+            $fileName     = null;
+        }
+
         $writer = new TextFileWriter( $fileName );
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );

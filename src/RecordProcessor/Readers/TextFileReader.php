@@ -3,7 +3,6 @@
 namespace RodrigoPedra\RecordProcessor\Readers;
 
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 
 /**
  * Class TextReader
@@ -14,23 +13,11 @@ use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
  */
 class TextFileReader extends FileReader
 {
-    use ReaderInnerIterator {
-        current as iteratorCurrent;
-        valid as iteratorValid;
-    }
-
     public function open()
     {
-        $this->lineCount = 0;
+        parent::open();
 
-        $reader = $this->openFile( 'rb' );
-
-        $this->setInnerIterator( $reader );
-    }
-
-    public function close()
-    {
-        $this->setInnerIterator( null );
+        $this->setInnerIterator( $this->file );
     }
 
     public function current()

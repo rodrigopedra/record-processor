@@ -18,9 +18,9 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
     /** @var RawCsvWriter|null */
     protected $writer = null;
 
-    public function __construct( $fileName )
+    public function __construct( $file = null )
     {
-        parent::__construct( $fileName );
+        parent::__construct( $file );
 
         // defaults
         $this->setDelimiter( ';' );
@@ -30,9 +30,9 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
 
     public function open()
     {
-        $this->lineCount = 0;
+        parent::open();
 
-        $this->writer = RawCsvWriter::createFromFileObject( $this->openFile( 'wb' ) );
+        $this->writer = RawCsvWriter::createFromFileObject( $this->file );
 
         $this->writer->setOutputBOM( $this->getOutputBOM() );
         $this->writer->setDelimiter( $this->getDelimiter() );

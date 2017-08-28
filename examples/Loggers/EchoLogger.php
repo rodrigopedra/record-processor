@@ -48,7 +48,8 @@ class EchoLogger implements LoggerInterface
 
     public function log( $level, $message, array $context = [] )
     {
-        echo strtoupper( $level ) . ': ' . $message, PHP_EOL;
+        echo strtoupper( $level ), PHP_EOL;
+        echo $message, ': ', PHP_EOL;
 
         if (count( $context )) {
             echo var_export( $context, true ), PHP_EOL;

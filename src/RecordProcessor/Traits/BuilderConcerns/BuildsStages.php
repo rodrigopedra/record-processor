@@ -14,9 +14,9 @@ trait BuildsStages
         return $this;
     }
 
-    public function downloadFileOutput( $outputFilename = '' )
+    public function downloadFileOutput( $outputFilename = '', $deleteFileAfterDownload = false )
     {
-        $this->addStage( new DownloadFileOutput( $outputFilename ) );
+        $this->addStage( new DownloadFileOutput( $outputFilename, $deleteFileAfterDownload ) );
 
         return $this;
     }

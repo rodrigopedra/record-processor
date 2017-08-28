@@ -5,24 +5,12 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
-use RuntimeException;
-use SplFileObject;
+use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
 {
-    /** @var SplFileObject */
-    protected $writer = null;
-
     /** @var int */
-    protected $jsonEncodeOptions;
-
-    public function __construct( $fileName )
-    {
-        parent::__construct( $fileName );
-
-        // default values
-        $this->setJsonEncodeOptions( JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
-    }
+    protected $jsonEncodeOptions = JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 
     /**
      * @param int $jsonEncodeOptions
@@ -32,17 +20,9 @@ class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
         $this->jsonEncodeOptions = $jsonEncodeOptions;
     }
 
-    public function open()
-    {
-        $this->lineCount = 0;
-
-        $this->writer = $this->openFile( 'wb' );
-    }
-
     public function close()
     {
-        $this->writer->fwrite( ']' );
-        $this->writer = null;
+        $this->file->fwrite( ']' );
     }
 
     public function append( $content )
@@ -59,25 +39,23 @@ class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
             $content = $content->jsonSerialize();
         }
 
-        if (!is_array( $content )) {
-            throw new RuntimeException( 'content for JSONWriter should be an array' );
-        }
+        $content = value_or_null( $content );
 
-        if (count( $content ) === 0) {
+        if (empty( $content )) {
             return;
         }
 
-        $prepend = $this->getLineCount() === 0 ? '[' : ',';
-
         $content = json_encode( $content, $this->jsonEncodeOptions );
-        $content = sprintf( '%s%s', $prepend, $content );
 
         $this->write( $content );
     }
 
     protected function write( $content )
     {
-        $this->writer->fwrite( $content );
+        $prepend = $this->getLineCount() === 0 ? '[' : ',';
+        $content = sprintf( '%s%s', $prepend, $content );
+
+        $this->file->fwrite( $content );
 
         $this->incrementLineCount();
     }

@@ -6,40 +6,39 @@ use League\Csv\Reader as RawCsvReader;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
-use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 
 class CSVFileReader extends FileReader implements ConfigurableReader
 {
-    use CsvControls, ReaderInnerIterator;
+    use CsvControls;
 
     /** @var bool */
     protected $useFirstRowAsHeader = true;
 
-    public function __construct( $fileName )
+    public function __construct( $file )
     {
-        parent::__construct( $fileName );
+        parent::__construct( $file );
 
         // default values
         $this->setDelimiter( ';' );
         $this->setEnclosure( '"' );
         $this->setEscape( '\\' );
-        $this->setUseFirstRowAsHeader( true );
+        $this->useFirstRowAsHeader( true );
     }
 
     /**
      * @param bool $firstRowAsHeader
      */
-    public function setUseFirstRowAsHeader( $firstRowAsHeader = true )
+    public function useFirstRowAsHeader( $firstRowAsHeader = true )
     {
         $this->useFirstRowAsHeader = $firstRowAsHeader;
     }
 
     public function open()
     {
-        $this->lineCount = 0;
+        parent::open();
 
         /** @var RawCsvReader $csvReader */
-        $csvReader = RawCsvReader::createFromFileObject( $this->openFile( 'rb' ) );
+        $csvReader = RawCsvReader::createFromFileObject( $this->file );
 
         $csvReader->setDelimiter( $this->getDelimiter() );
         $csvReader->setEnclosure( $this->getEnclosure() );
@@ -53,19 +52,11 @@ class CSVFileReader extends FileReader implements ConfigurableReader
     }
 
     /**
-     * @return  void
-     */
-    public function close()
-    {
-        $this->setInnerIterator( null );
-    }
-
-    /**
      * @return array
      */
     public function getConfigurableMethods()
     {
-        return [ 'setUseFirstRowAsHeader' ];
+        return [ 'useFirstRowAsHeader' ];
     }
 
     /**

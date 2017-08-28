@@ -18,6 +18,9 @@ class FlushPayload
     /** @var  mixed */
     protected $output = null;
 
+    /** @var  string */
+    protected $writerClassName = null;
+
     /**
      * @return bool
      */
@@ -88,5 +91,21 @@ class FlushPayload
     public function setOutput( $output )
     {
         $this->output = $output;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWriterClassName()
+    {
+        return $this->writerClassName;
+    }
+
+    /**
+     * @param string $writerClassName
+     */
+    public function setWriterClassName( $writerClassName )
+    {
+        $this->writerClassName = $writerClassName;
     }
 }
