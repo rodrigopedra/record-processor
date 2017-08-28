@@ -145,7 +145,7 @@ class FileInfo extends SplFileInfo
         /** @var FileInfo $fileInfo */
         $fileInfo = $file->getFileInfo( static::class );
 
-        if ($fileInfo->isTempFile() || !$fileInfo->isReadable()) {
+        if (!$fileInfo->isTempFile() && !$fileInfo->isReadable()) {
             $fileName = $fileInfo->getPathname();
 
             throw new InvalidArgumentException( "File {$fileName} is not readable" );

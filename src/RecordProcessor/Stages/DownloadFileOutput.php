@@ -82,7 +82,11 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     protected function sendHeaders()
     {
-        header( 'Content-Type: ' . $this->inputFileInfo->guessMimeType() . '; charset=utf-8' );
+        $mimeType = $this->inputFileInfo->isTempFile()
+            ? $this->outputFileInfo->guessMimeType()
+            : $this->inputFileInfo->guessMimeType();
+
+        header( 'Content-Type: ' . $mimeType . '; charset=utf-8' );
         header( 'Content-Transfer-Encoding: binary' );
         header( 'Content-Description: File Transfer' );
 
