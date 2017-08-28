@@ -27,6 +27,25 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     public function flush( FlushPayload $payload )
     {
+        $fileInfo = $this->getOutputFileInfo( $payload );
+
+        if (is_null( $this->downloadFileInfo )) {
+            $this->downloadFileInfo = $fileInfo;
+        }
+
+        if ($fileInfo->isCSV()) {
+            $this->downloadWithLeagueCSV( $fileInfo );
+
+            return $payload;
+        }
+
+        $this->downloadFile( $fileInfo );
+
+        return $payload;
+    }
+
+    protected function getOutputFileInfo( FlushPayload $payload )
+    {
         $output = $payload->getOutput();
 
         if (!is_object( $output )) {
@@ -43,24 +62,10 @@ class DownloadFileOutput implements ProcessorStageFlusher
             throw new RuntimeException( "File {$realPath} does not exist" );
         }
 
-        $fileInfo = new FileInfo( $realPath );
-
-        if (is_null( $this->downloadFileInfo )) {
-            $this->downloadFileInfo = $fileInfo;
-        }
-
-        if ($fileInfo->isCSV()) {
-            $this->downloadWithLeagueCSV( $fileInfo );
-
-            return $payload;
-        }
-
-        $this->outputContent( $fileInfo );
-
-        return $payload;
+        return new FileInfo( $realPath );
     }
 
-    protected function outputContent( FileInfo $fileInfo )
+    protected function downloadFile( FileInfo $fileInfo )
     {
         $this->outputHeaders( $fileInfo );
 
