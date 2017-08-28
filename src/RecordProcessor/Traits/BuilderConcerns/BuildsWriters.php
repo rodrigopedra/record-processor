@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\BuilderConcerns;
+namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use PDO;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;

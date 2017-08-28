@@ -3,11 +3,12 @@
 namespace RodrigoPedra\RecordProcessor\Stages;
 
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Records\RecordKeyAggregate;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 
-class RecordKeyAggregator implements ProcessorStageFlusher
+class RecordKeyAggregator implements ProcessorStageHandler, ProcessorStageFlusher
 {
     /** @var  RecordKeyAggregate|null */
     protected $aggregateRecord = null;

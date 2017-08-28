@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\BuilderConcerns;
+namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use Psr\Log\LogLevel;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
@@ -8,7 +8,6 @@ use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\LogRecordFormatter;
 use RodrigoPedra\RecordProcessor\Stages\Compiler;
-use RodrigoPedra\RecordProcessor\Stages\ValidRecords;
 use RodrigoPedra\RecordProcessor\Writers\EchoWriter;
 use RodrigoPedra\RecordProcessor\Writers\LogWriter;
 
@@ -28,13 +27,6 @@ trait BuildsCompilers
         }
 
         $this->addStage( $compiler );
-
-        return $this;
-    }
-
-    public function onlyValidRecords()
-    {
-        $this->addStage( new ValidRecords );
 
         return $this;
     }

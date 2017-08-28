@@ -32,7 +32,7 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
     {
         $this->lineCount = 0;
 
-        $this->writer = RawCsvWriter::createFromPath( $this->getRealPath(), 'wb' );
+        $this->writer = RawCsvWriter::createFromPath( $this->getPathname(), 'wb' );
 
         $this->writer->setOutputBOM( $this->getOutputBOM() );
         $this->writer->setDelimiter( $this->getDelimiter() );
@@ -53,7 +53,7 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
      */
     public function append( $content )
     {
-        $this->writer->insertOne( $content );
+        $this->writer->insertOne( array_wrap( $content ) );
 
         $this->incrementLineCount();
     }

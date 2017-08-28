@@ -5,8 +5,8 @@ namespace RodrigoPedra\RecordProcessor;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use RodrigoPedra\RecordProcessor\BuilderConcerns;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
+use RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 class ProcessorBuilder implements LoggerAwareInterface
 {
@@ -14,7 +14,8 @@ class ProcessorBuilder implements LoggerAwareInterface
         BuilderConcerns\BuildsReaders,
         BuilderConcerns\BuildsCompilers,
         BuilderConcerns\BuildsWriters,
-        BuilderConcerns\BuildsFormatter;
+        BuilderConcerns\BuildsFormatter,
+        BuilderConcerns\BuildsStages;
 
     /** @var  LoggerInterface */
     protected $logger;

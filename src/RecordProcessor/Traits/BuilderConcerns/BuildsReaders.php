@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\BuilderConcerns;
+namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use Illuminate\Support\Collection;
 use Iterator;

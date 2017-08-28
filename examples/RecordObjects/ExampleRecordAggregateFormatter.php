@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Examples;
+namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
@@ -10,16 +10,11 @@ use RodrigoPedra\RecordProcessor\Records\ArrayRecord;
 
 class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
 {
-    /** @var  string */
-    protected $childField;
-
     /** @var ExampleRecordFormatter */
     protected $recordFormatter;
 
-    public function __construct( $childField )
+    public function __construct()
     {
-        $this->childField = $childField;
-
         $this->recordFormatter = new ExampleRecordFormatter;
     }
 
@@ -55,7 +50,7 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
     public function formatChildren( Writer $writer, array $children )
     {
         return implode( ', ', array_map( function ( Record $record ) {
-            return $record->getField( $this->childField );
+            return $record->getField( 'email' );
         }, $children ) );
     }
 }

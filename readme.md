@@ -9,13 +9,15 @@ Process record-based sources using a pipeline approach
     use RodrigoPedra\RecordProcessor\ProcessorBuilder;
     
     $processor = ( new ProcessorBuilder )
-        ->readFromExcel( __DIR__ . '/storage/input.xlsx' )
+        ->readFromExcelFile( __DIR__ . '/storage/input.xlsx' )
         ->writeToHTMLTable()
         ->build();
     
-    $html = $processor->process();
+    $output = $processor->process();
     
-    echo $html->getOutput();
+    echo $output->getOutput(), PHP_EOL;
+    
+    exit;
 ```
 
 ## TODO

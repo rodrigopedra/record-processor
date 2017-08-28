@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Examples;
+namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;

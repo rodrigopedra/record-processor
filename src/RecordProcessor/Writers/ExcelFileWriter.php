@@ -21,14 +21,14 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
 
         $excel = app( 'excel' );
 
-        $this->writer = $excel->create( $this->getFilename(), $this->getWorkbookConfigurator() );
+        $this->writer = $excel->create( $this->getBasenameWithoutExtension(), $this->getWorkbookConfigurator() );
 
         $this->writer->sheet( 'Worksheet', $this->getWorksheetConfigurator() );
     }
 
     public function close()
     {
-        $this->writer->store( $this->getExtension(), $this->getRealPath() );
+        $this->writer->store( $this->getExtension(), $this->getPath() );
 
         $this->writer = null;
     }
@@ -46,7 +46,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             ) );
         }
 
-        $this->writer->getSheet()->appendRow( $content );
+        $this->writer->getSheet()->appendRow( array_wrap( $content ) );
 
         $this->incrementLineCount();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\BuilderConcerns;
+namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;

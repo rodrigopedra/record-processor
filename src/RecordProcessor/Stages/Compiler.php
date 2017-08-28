@@ -3,6 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Stages;
 
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
@@ -13,7 +14,7 @@ use RodrigoPedra\RecordProcessor\Traits\HasFileTrailler;
 use RodrigoPedra\RecordProcessor\Traits\WritesFileHeader;
 use RodrigoPedra\RecordProcessor\Traits\WritesFileTrailler;
 
-class Compiler implements ProcessorStageFlusher
+class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
 {
     use CountsRecords, HasFileHeader, WritesFileHeader, HasFileTrailler, WritesFileTrailler;
 

@@ -4,9 +4,11 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 
 use League\Csv\HTMLConverter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Contracts\NewLines;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RuntimeException;
+use SplFileObject;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class HTMLTableWriter implements ConfigurableWriter
@@ -20,13 +22,24 @@ class HTMLTableWriter implements ConfigurableWriter
     protected $records = [];
 
     /** @var string */
-    protected $html = '';
+    protected $output = '';
 
     /** @var string */
     protected $tableClassAttribute = '';
 
     /** @var string */
     protected $tableIdAttribute = '';
+
+    /** @var  FileInfo */
+    protected $fileInfo;
+
+    /**
+     * @param  string $fileName
+     */
+    public function writeOutputToFile( $fileName )
+    {
+        $this->fileInfo = new FileInfo( $fileName );
+    }
 
     /**
      * @param  string $tableClassAttribute
@@ -47,7 +60,7 @@ class HTMLTableWriter implements ConfigurableWriter
     public function open()
     {
         $this->lineCount = 0;
-        $this->html      = '';
+        $this->output    = '';
         $this->records   = [];
 
         $this->writer = ( new HTMLConverter )
@@ -57,26 +70,31 @@ class HTMLTableWriter implements ConfigurableWriter
 
     public function close()
     {
-        $this->html = $this->writer->convert( $this->records );
+        $this->output = $this->writer->convert( $this->records );
 
-        $this->writer  = null;
-        $this->records = [];
+        if (!is_null( $this->fileInfo )) {
+            $outputFile = new SplFileObject( $this->fileInfo->getPathname(), 'wb' );
+            $outputFile->fwrite( $this->output );
+            $outputFile->fwrite( NewLines::UNIX_NEWLINE );
+
+            $this->output = $outputFile->getFileInfo( FileInfo::class );
+        }
+
+        $this->fileInfo = null;
+        $this->writer   = null;
+        $this->records  = [];
     }
 
     public function append( $content )
     {
-        if (!is_array( $content )) {
-            throw new RuntimeException( 'content for HTMLTableWriter should be an array' );
-        }
-
-        array_push( $this->records, $content );
+        array_push( $this->records, array_wrap( $content ) );
 
         $this->incrementLineCount();
     }
 
     public function output()
     {
-        return $this->html;
+        return $this->output;
     }
 
     public function getConfigurableMethods()
@@ -84,6 +102,7 @@ class HTMLTableWriter implements ConfigurableWriter
         return [
             'setTableClassAttribute',
             'setTableIdAttribute',
+            'writeOutputToFile',
         ];
     }
 

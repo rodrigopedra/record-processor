@@ -7,6 +7,9 @@ use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use PDO;
 use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
 use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Formats;
 use RodrigoPedra\RecordProcessor\Helpers\WriterCallbackProxy;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
@@ -63,7 +66,7 @@ class ExamplesCommand extends Command
             }
 
             if ($input->getOption( 'aggregate' )) {
-                $builder->aggregateRecordsByKey( new ExampleRecordAggregateFormatter( 'email' ) );
+                $builder->aggregateRecordsByKey( new ExampleRecordAggregateFormatter );
             } else {
                 $builder->usingFormatter( new ExampleRecordFormatter );
             }
@@ -167,29 +170,30 @@ class ExamplesCommand extends Command
                     $configurator->setPrefix( 'PERSIST' );
                 } );
             case 'excel':
-                return $builder->writeToExcelFile( $outputPath . '.xlsx', function ( WriterConfigurator $configurator ) {
-                    $configurator->setHeader( [ 'name', 'email' ] );
+                return $builder->writeToExcelFile( $outputPath . '.xlsx',
+                    function ( WriterConfigurator $configurator ) {
+                        $configurator->setHeader( [ 'name', 'email' ] );
 
-                    $configurator->setTrailler( function ( WriterCallbackProxy $proxy ) {
-                        $proxy->append( [ $proxy->getRecordCount() . ' records' ] );
-                        $proxy->append( [ ( $proxy->getLineCount() + 1 ) . ' lines' ] );
+                        $configurator->setTrailler( function ( WriterCallbackProxy $proxy ) {
+                            $proxy->append( [ $proxy->getRecordCount() . ' records' ] );
+                            $proxy->append( [ ( $proxy->getLineCount() + 1 ) . ' lines' ] );
+                        } );
+
+                        $configurator->setWorkbookConfigurator( function ( $workbook ) {
+                            $workbook->setTitle( 'Workbook title' );
+                            $workbook->setCreator( 'Creator' );
+                            $workbook->setCompany( 'Company' );
+                        } );
+
+                        $configurator->setWorksheetConfigurator( function ( $worksheet ) {
+                            $worksheet->setTitle( 'results', false );
+
+                            $worksheet->setColumnFormat( [
+                                'A' => Formats::text(),
+                                'B' => Formats::general(),
+                            ] );
+                        } );
                     } );
-
-                    $configurator->setWorkbookConfigurator( function ( $workbook ) {
-                        $workbook->setTitle( 'Workbook title' );
-                        $workbook->setCreator( 'Creator' );
-                        $workbook->setCompany( 'Company' );
-                    } );
-
-                    $configurator->setWorksheetConfigurator( function ( $worksheet ) {
-                        $worksheet->setTitle( 'results', false );
-
-                        $worksheet->setColumnFormat( [
-                            'A' => Formats::text(),
-                            'B' => Formats::general(),
-                        ] );
-                    } );
-                } );
             case 'html':
                 return $builder->writeToHTMLTable( function ( WriterConfigurator $configurator ) {
                     $configurator->setHeader( [ 'name', 'email' ] );

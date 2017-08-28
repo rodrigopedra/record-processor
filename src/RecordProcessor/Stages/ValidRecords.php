@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 
-class ValidRecords implements ProcessorStage
+class ValidRecords implements ProcessorStageHandler
 {
     public function handle( Record $record )
     {

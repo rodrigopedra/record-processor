@@ -28,7 +28,7 @@ class PDOBufferedWriter extends PDOWriter
     public function append( $content )
     {
         if (!is_array( $content )) {
-            throw new RuntimeException( 'content for PDOBufferedWriter should be a string' );
+            throw new RuntimeException( 'content for PDOBufferedWriter should be an array' );
         }
 
         $this->pushValues( $content );

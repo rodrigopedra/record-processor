@@ -6,6 +6,7 @@ use League\Pipeline\PipelineBuilder;
 use RodrigoPedra\RecordProcessor\Contracts\Processor as ProcessorContract;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Helpers\StopOnNullPipelineProcessor;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
@@ -68,14 +69,24 @@ class Processor implements ProcessorContract
 
     public function addStage( ProcessorStage $stage )
     {
+        if ($stage instanceof ProcessorStageHandler) {
+            $this->addProcessorStageHandler( $stage );
+        }
+
+        if ($stage instanceof ProcessorStageFlusher) {
+            $this->addProcessorStageFlusher( $stage );
+        }
+    }
+
+    protected function addProcessorStageHandler( ProcessorStageHandler $stage )
+    {
         $this->stages->add( function ( Record $record = null ) use ( $stage ) {
             return $stage->handle( $record );
         } );
+    }
 
-        if (!$stage instanceof ProcessorStageFlusher) {
-            return;
-        }
-
+    protected function addProcessorStageFlusher( ProcessorStageFlusher $stage )
+    {
         $this->flushers->add( function ( FlushPayload $payload ) use ( $stage ) {
             return $stage->flush( $payload );
         } );

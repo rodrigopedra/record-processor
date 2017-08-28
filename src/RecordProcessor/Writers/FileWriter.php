@@ -3,10 +3,10 @@
 namespace RodrigoPedra\RecordProcessor\Writers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use SplFileInfo;
 
-abstract class FileWriter extends SplFileInfo implements Writer
+abstract class FileWriter extends FileInfo implements Writer
 {
     use CountsLines;
 

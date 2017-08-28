@@ -3,16 +3,21 @@
 namespace RodrigoPedra\RecordProcessor\Records;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
+use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
-class ArrayRecord implements Record
+class ArrayRecord implements Record, TextRecord
 {
     /** @var array */
     protected $values;
 
-    public function __construct( array $values )
+    /** @var string */
+    protected $delimiter;
+
+    public function __construct( array $values, $delimiter = ',' )
     {
-        $this->values = $values;
+        $this->values    = $values;
+        $this->delimiter = $delimiter;
     }
 
     public function getField( $field, $default = '' )
@@ -30,6 +35,11 @@ class ArrayRecord implements Record
     public function toArray()
     {
         return $this->values;
+    }
+
+    public function toText()
+    {
+        return implode( $this->delimiter, $this->toArray() );
     }
 
     public function getKey()

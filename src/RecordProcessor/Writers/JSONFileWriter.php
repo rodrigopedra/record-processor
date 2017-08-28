@@ -36,7 +36,7 @@ class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
     {
         $this->lineCount = 0;
 
-        $this->writer = new SplFileObject( $this->getRealPath(), 'wb' );
+        $this->writer = new SplFileObject( $this->getPathname(), 'wb' );
     }
 
     public function close()
