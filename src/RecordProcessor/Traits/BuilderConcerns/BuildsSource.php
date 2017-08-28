@@ -2,8 +2,10 @@
 
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
+use InvalidArgumentException;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;
+use RodrigoPedra\RecordProcessor\Records\Parsers\CallbackRecordParser;
 use RodrigoPedra\RecordProcessor\Source;
 
 trait BuildsSource
@@ -11,8 +13,23 @@ trait BuildsSource
     /** @var  RecordParser */
     protected $recordParser;
 
-    public function usingParser( RecordParser $recordParser )
+    /**
+     * @param  RecordParser|callable $recordParser
+     *
+     * @return $this
+     */
+    public function usingParser( $recordParser )
     {
+        if (is_callable( $recordParser )) {
+            $this->recordParser = new CallbackRecordParser( $recordParser );
+
+            return $this;
+        }
+
+        if (!$recordParser instanceof RecordParser) {
+            throw new InvalidArgumentException( 'Invalid RecordFormatter' );
+        }
+
         $this->recordParser = $recordParser;
 
         return $this;
