@@ -41,7 +41,7 @@ class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
     {
         $this->lineCount = 0;
 
-        $this->writer = new SplFileObject( $this->getPathname(), 'wb' );
+        $this->writer = $this->openFile( 'wb' );
     }
 
     public function close()

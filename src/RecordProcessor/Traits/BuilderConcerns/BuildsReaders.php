@@ -13,7 +13,7 @@ use RodrigoPedra\RecordProcessor\Readers\CSVFileReader;
 use RodrigoPedra\RecordProcessor\Readers\ExcelFileReader;
 use RodrigoPedra\RecordProcessor\Readers\IteratorReader;
 use RodrigoPedra\RecordProcessor\Readers\PDOReader;
-use RodrigoPedra\RecordProcessor\Readers\TextReader;
+use RodrigoPedra\RecordProcessor\Readers\TextFileReader;
 
 trait BuildsReaders
 {
@@ -69,7 +69,7 @@ trait BuildsReaders
 
     public function readFromTextFile( $fileName )
     {
-        $this->reader = new TextReader( $fileName );
+        $this->reader = new TextFileReader( $fileName );
 
         return $this;
     }

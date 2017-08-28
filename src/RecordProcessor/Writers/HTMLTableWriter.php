@@ -8,7 +8,6 @@ use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use SplFileObject;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class HTMLTableWriter implements ConfigurableWriter
@@ -73,11 +72,11 @@ class HTMLTableWriter implements ConfigurableWriter
         $this->output = $this->writer->convert( $this->records );
 
         if (!is_null( $this->fileInfo )) {
-            $outputFile = new SplFileObject( $this->fileInfo->getPathname(), 'wb' );
+            $outputFile = $this->fileInfo->openFile( 'wb' );
             $outputFile->fwrite( $this->output );
             $outputFile->fwrite( NewLines::UNIX_NEWLINE );
 
-            $this->output = $outputFile->getFileInfo( FileInfo::class );
+            $this->output = $this->fileInfo;
         }
 
         $this->fileInfo = null;

@@ -4,7 +4,6 @@ namespace RodrigoPedra\RecordProcessor\Readers;
 
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
-use SplFileObject;
 
 /**
  * Class TextReader
@@ -13,7 +12,7 @@ use SplFileObject;
  *
  * @package RodrigoPedra\Converters\Readers
  */
-class TextReader extends FileReader
+class TextFileReader extends FileReader
 {
     use ReaderInnerIterator {
         current as iteratorCurrent;
@@ -24,7 +23,7 @@ class TextReader extends FileReader
     {
         $this->lineCount = 0;
 
-        $reader = new SplFileObject( $this->getRealPath(), 'r' );
+        $reader = $this->openFile( 'rb' );
 
         $this->setInnerIterator( $reader );
     }

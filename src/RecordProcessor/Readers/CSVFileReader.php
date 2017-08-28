@@ -39,7 +39,7 @@ class CSVFileReader extends FileReader implements ConfigurableReader
         $this->lineCount = 0;
 
         /** @var RawCsvReader $csvReader */
-        $csvReader = RawCsvReader::createFromPath( $this->getRealPath() );
+        $csvReader = RawCsvReader::createFromFileObject( $this->openFile( 'rb' ) );
 
         $csvReader->setDelimiter( $this->getDelimiter() );
         $csvReader->setEnclosure( $this->getEnclosure() );
