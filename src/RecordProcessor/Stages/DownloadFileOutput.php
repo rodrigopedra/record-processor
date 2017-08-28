@@ -31,7 +31,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
     protected $outputFileInfo;
 
     /** @var bool */
-    private $deleteAfterDownload;
+    protected $deleteAfterDownload;
 
     public function __construct( $outputFileName = '', $deleteFileAfterDownload = false )
     {
