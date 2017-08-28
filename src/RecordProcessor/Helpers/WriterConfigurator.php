@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
+use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
 use RodrigoPedra\RecordProcessor\Traits\HasFileHeader;
 use RodrigoPedra\RecordProcessor\Traits\HasFileTrailler;
 
@@ -44,8 +45,21 @@ class WriterConfigurator extends Configurator
         return $defaultRecordFormatter ?: new ArrayRecordFormatter;
     }
 
-    public function setRecordFormatter( RecordFormatter $recordFormatter )
+    /**
+     * @param  RecordFormatter|callable $recordFormatter
+     */
+    public function setRecordFormatter( $recordFormatter )
     {
+        if (is_callable( $recordFormatter )) {
+            $this->recordFormatter = new CallbackRecordFormatter( $recordFormatter );
+
+            return;
+        }
+
+        if (!$recordFormatter instanceof RecordFormatter) {
+            throw new InvalidArgumentException( 'Invalid RecordFormatter' );
+        }
+
         $this->recordFormatter = $recordFormatter;
     }
 
