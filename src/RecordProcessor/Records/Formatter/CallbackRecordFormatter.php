@@ -22,7 +22,7 @@ class CallbackRecordFormatter implements RecordFormatter
             return false;
         }
 
-        $data = call_user_func_array( $this->callback, [ $writer, $record ] );
+        $data = call_user_func_array( $this->callback, [ $record ] );
 
         $writer->append( $data );
 

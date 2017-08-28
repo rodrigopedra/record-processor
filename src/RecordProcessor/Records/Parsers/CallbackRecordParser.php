@@ -19,7 +19,7 @@ class CallbackRecordParser implements RecordParser
 
     public function parseRecord( Reader $reader, $rawContent )
     {
-        $record = call_user_func_array( $this->callback, [ $reader, $rawContent ] );
+        $record = call_user_func_array( $this->callback, [ $rawContent ] );
 
         if (!$record instanceof Record) {
             throw new RuntimeException( 'RecordParser should return a Record implementation' );
