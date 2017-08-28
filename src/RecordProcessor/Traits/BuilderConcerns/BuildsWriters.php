@@ -4,6 +4,8 @@ namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use PDO;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
+use RodrigoPedra\RecordProcessor\Records\Formatter\TextRecordFormatter;
 use RodrigoPedra\RecordProcessor\Writers\ArrayWriter;
 use RodrigoPedra\RecordProcessor\Writers\CollectionWriter;
 use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
@@ -22,6 +24,10 @@ trait BuildsWriters
     {
         $writer = new ArrayWriter;
 
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
+
         $this->addCompiler( $writer );
 
         return $this;
@@ -30,6 +36,10 @@ trait BuildsWriters
     public function writeToCollection()
     {
         $writer = new CollectionWriter;
+
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
 
         $this->addCompiler( $writer );
 
@@ -45,6 +55,10 @@ trait BuildsWriters
 
         $writer = new CSVFileWriter( $fileName );
 
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
+
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
         return $this;
@@ -53,6 +67,10 @@ trait BuildsWriters
     public function writeToEcho( callable $configurator = null )
     {
         $writer = new EchoWriter;
+
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new TextRecordFormatter );
+        }
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -63,6 +81,10 @@ trait BuildsWriters
     {
         $writer = new ExcelFileWriter( $fileName );
 
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
+
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
         return $this;
@@ -71,6 +93,10 @@ trait BuildsWriters
     public function writeToHTMLTable( callable $configurator = null )
     {
         $writer = new HTMLTableWriter;
+
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -86,6 +112,10 @@ trait BuildsWriters
 
         $writer = new JSONFileWriter( $fileName );
 
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
+
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
         return $this;
@@ -94,6 +124,10 @@ trait BuildsWriters
     public function writeToLog( callable $configurator = null )
     {
         $writer = new LogWriter( $this->getLogger() );
+
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 
@@ -111,6 +145,10 @@ trait BuildsWriters
             ? new PDOBufferedWriter( $pdo, $tableName, $columns )
             : new PDOWriter( $pdo, $tableName, $columns );
 
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new ArrayRecordFormatter );
+        }
+
         return $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
     }
 
@@ -122,6 +160,10 @@ trait BuildsWriters
         }
 
         $writer = new TextFileWriter( $fileName );
+
+        if (is_null( $this->recordFormatter )) {
+            $this->usingFormatter( new TextRecordFormatter );
+        }
 
         $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
 

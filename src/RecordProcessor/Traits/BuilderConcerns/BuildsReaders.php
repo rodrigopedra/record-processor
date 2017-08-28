@@ -14,6 +14,7 @@ use RodrigoPedra\RecordProcessor\Readers\ExcelFileReader;
 use RodrigoPedra\RecordProcessor\Readers\IteratorReader;
 use RodrigoPedra\RecordProcessor\Readers\PDOReader;
 use RodrigoPedra\RecordProcessor\Readers\TextFileReader;
+use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;
 
 trait BuildsReaders
 {
@@ -24,6 +25,10 @@ trait BuildsReaders
     {
         $this->reader = new ArrayReader( $items );
 
+        if (is_null( $this->recordParser )) {
+            $this->usingParser( new ArrayRecordParser );
+        }
+
         return $this;
     }
 
@@ -31,12 +36,20 @@ trait BuildsReaders
     {
         $this->reader = new CollectionReader( $collection );
 
+        if (is_null( $this->recordParser )) {
+            $this->usingParser( new ArrayRecordParser );
+        }
+
         return $this;
     }
 
     public function readFromCSVFile( $fileName, callable $configurator = null )
     {
         $this->reader = new CSVFileReader( $fileName );
+
+        if (is_null( $this->recordParser )) {
+            $this->usingParser( new ArrayRecordParser );
+        }
 
         $this->configureReader( $this->reader, $configurator );
 
@@ -46,6 +59,10 @@ trait BuildsReaders
     public function readFromExcelFile( $fileName, callable $configurator = null )
     {
         $this->reader = new ExcelFileReader( $fileName );
+
+        if (is_null( $this->recordParser )) {
+            $this->usingParser( new ArrayRecordParser );
+        }
 
         $this->configureReader( $this->reader, $configurator );
 
@@ -63,6 +80,10 @@ trait BuildsReaders
     {
         $this->reader = new PDOReader( $pdo, $query );
         $this->reader->setQueryParameters( $parameters );
+
+        if (is_null( $this->recordParser )) {
+            $this->usingParser( new ArrayRecordParser );
+        }
 
         return $this;
     }

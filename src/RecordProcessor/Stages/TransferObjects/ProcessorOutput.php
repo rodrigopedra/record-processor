@@ -2,6 +2,9 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages\TransferObjects;
 
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
+use SplFileInfo;
+
 class ProcessorOutput
 {
     /** @var  int */
@@ -35,6 +38,8 @@ class ProcessorOutput
         $this->outputLineCount   = $outputLineCount;
         $this->outputRecordCount = $outputRecordCount;
         $this->output            = $output;
+
+        $this->parseOutput();
     }
 
     /**
@@ -83,5 +88,12 @@ class ProcessorOutput
     public function getOutput()
     {
         return $this->output;
+    }
+
+    protected function parseOutput()
+    {
+        if ($this->output instanceof SplFileInfo) {
+            $this->output = $this->output->getFileInfo( FileInfo::class );
+        }
     }
 }
