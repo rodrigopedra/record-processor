@@ -46,7 +46,9 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
         $this->buildOutputFileInfo( $payload->getWriterClassName() );
 
-        $this->downloadFile();
+        $output = $this->downloadFile();
+
+        $payload->setOutput( $output );
 
         return $payload;
     }
