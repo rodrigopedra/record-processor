@@ -14,7 +14,7 @@ class ArrayRecord implements Record, TextRecord
     /** @var string */
     protected $delimiter;
 
-    public function __construct( array $values, $delimiter = ',' )
+    public function __construct( array $values, $delimiter = ';' )
     {
         $this->values    = $values;
         $this->delimiter = $delimiter;
