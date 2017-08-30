@@ -15,9 +15,9 @@
   "require": {
     "php": ">=7.0",
     "psr/log": "^1.0",
-    "illuminate/support": "^5.4",
-    "illuminate/contracts": "^5.4",
-    "illuminate/filesystem": "^5.4",
+    "illuminate/support": "^5.4|^5.5",
+    "illuminate/contracts": "^5.4|^5.5",
+    "illuminate/filesystem": "^5.4|^5.5",
     "league/csv": "^9.0",
     "league/pipeline": "^0.3.0",
     "maatwebsite/excel": "^2.1"
