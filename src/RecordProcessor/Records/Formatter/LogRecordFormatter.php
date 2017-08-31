@@ -28,8 +28,6 @@ class LogRecordFormatter implements RecordFormatter
 
     protected function mapRecords( array $records )
     {
-        return array_map( function ( Record $record ) {
-            return $record->toArray();
-        }, $records );
+        return array_map( function ( Record $record ) { return $record->toArray(); }, $records );
     }
 }

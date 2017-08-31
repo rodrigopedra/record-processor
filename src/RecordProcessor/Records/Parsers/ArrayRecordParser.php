@@ -4,7 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Records\Parsers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
-use RodrigoPedra\RecordProcessor\Records\ArrayRecord;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 use RuntimeException;
 
 class ArrayRecordParser implements RecordParser
@@ -23,6 +23,6 @@ class ArrayRecordParser implements RecordParser
             throw new RuntimeException( 'content for ArrayRecordParser should be an array' );
         }
 
-        return new ArrayRecord( $rawContent );
+        return new SimpleRecord( $rawContent );
     }
 }

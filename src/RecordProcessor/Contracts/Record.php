@@ -2,28 +2,33 @@
 
 namespace RodrigoPedra\RecordProcessor\Contracts;
 
-interface Record
+use Illuminate\Contracts\Support\Arrayable;
+
+interface Record extends Arrayable
 {
     /**
-     * @param  string $field
-     * @param  string $default
+     * @param  string      $field
+     * @param  string|null $default
      *
      * @return mixed
      */
-    public function getField( $field, $default = '' );
+    public function get( $field, $default = '' );
 
     /**
-     * @return bool
+     * @param  string      $field
+     * @param  string|null $value
+     *
+     * @return mixed
      */
-    public function valid();
-
-    /**
-     * @return array
-     */
-    public function toArray();
+    public function set( $field, $value );
 
     /**
      * @return string|null
      */
     public function getKey();
+
+    /**
+     * @return bool
+     */
+    public function valid();
 }

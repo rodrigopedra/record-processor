@@ -4,6 +4,13 @@ namespace RodrigoPedra\RecordProcessor\Helpers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 
+/**
+ * Trait FillsArrayWithRecords
+ *
+ * Use with a \RodrigoPedra\RecordProcessor\Contracts\RecordAggregate implementation
+ *
+ * @package RodrigoPedra\RecordProcessor\Helpers
+ */
 trait FillsArrayWithRecords
 {
     /**

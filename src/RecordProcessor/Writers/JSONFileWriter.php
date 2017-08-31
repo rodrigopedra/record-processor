@@ -9,8 +9,10 @@ use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
 {
+    const JSON_ENCODE_OPTIONS = JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+
     /** @var int */
-    protected $jsonEncodeOptions = JSON_NUMERIC_CHECK | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+    protected $jsonEncodeOptions = self::JSON_ENCODE_OPTIONS;
 
     /**
      * @param int $jsonEncodeOptions

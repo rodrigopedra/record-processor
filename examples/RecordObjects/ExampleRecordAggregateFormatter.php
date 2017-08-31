@@ -6,7 +6,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Records\ArrayRecord;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
 {
@@ -36,7 +36,7 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
             'email' => $children,
         ];
 
-        return $this->recordFormatter->formatRecord( $writer, new ArrayRecord( $content ) );
+        return $this->recordFormatter->formatRecord( $writer, new SimpleRecord( $content ) );
     }
 
     /**
@@ -49,8 +49,6 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
      */
     public function formatChildren( Writer $writer, array $children )
     {
-        return implode( ', ', array_map( function ( Record $record ) {
-            return $record->getField( 'email' );
-        }, $children ) );
+        return implode( ', ', array_map( function ( Record $record ) { return $record->get( 'email' ); }, $children ) );
     }
 }

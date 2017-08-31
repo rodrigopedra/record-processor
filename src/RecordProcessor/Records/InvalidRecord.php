@@ -3,11 +3,20 @@
 namespace RodrigoPedra\RecordProcessor\Records;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 
-class InvalidRecord implements Record, TextRecord
+class InvalidRecord implements Record
 {
-    public function getField( $field, $default = '' )
+    public function get( $field, $default = null )
+    {
+        return '';
+    }
+
+    public function set( $field, $value )
+    {
+        //
+    }
+
+    public function getKey()
     {
         return '';
     }
@@ -20,15 +29,5 @@ class InvalidRecord implements Record, TextRecord
     public function toArray()
     {
         return [];
-    }
-
-    public function toText()
-    {
-        return '';
-    }
-
-    public function getKey()
-    {
-        return '';
     }
 }

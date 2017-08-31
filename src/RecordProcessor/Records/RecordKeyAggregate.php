@@ -20,28 +20,25 @@ class RecordKeyAggregate implements RecordAggregate
         $this->pushRecord( $record );
     }
 
-    public function getField( $field, $default = '' )
+    public function get( $field, $default = null )
     {
-        return $this->master->getField( $field, $default );
+        return $this->master->get( $field, $default );
+    }
+
+    public function set( $field, $value )
+    {
+        $this->master->set( $field, $value );
+    }
+
+    public function getKey()
+    {
+        return $this->master->getKey();
     }
 
     public function valid()
     {
         return $this->master->valid()
                && count( $this->records ) > 0;
-    }
-
-    public function toArray()
-    {
-        return [
-            'master'  => $this->master->toArray(),
-            'records' => array_map( function ( Record $record ) { return $record->toArray(); }, $this->records )
-        ];
-    }
-
-    public function getKey()
-    {
-        return $this->master->getKey();
     }
 
     public function pushRecord( Record $record )
@@ -60,5 +57,13 @@ class RecordKeyAggregate implements RecordAggregate
     public function getRecords()
     {
         return $this->records;
+    }
+
+    public function toArray()
+    {
+        return [
+            'master'  => $this->master->toArray(),
+            'records' => array_map( function ( Record $record ) { return $record->toArray(); }, $this->records )
+        ];
     }
 }

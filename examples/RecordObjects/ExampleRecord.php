@@ -3,18 +3,18 @@
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
-use RodrigoPedra\RecordProcessor\Records\ArrayRecord;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
-class ExampleRecord extends ArrayRecord implements TextRecord
+class ExampleRecord extends SimpleRecord implements TextRecord
 {
     public function getKey()
     {
-        return $this->getField( 'name' );
+        return $this->get( 'name' );
     }
 
     public function valid()
     {
-        return filter_var( $this->getField( 'email' ), FILTER_VALIDATE_EMAIL ) !== false;
+        return filter_var( $this->get( 'email' ), FILTER_VALIDATE_EMAIL ) !== false;
     }
 
     /**
