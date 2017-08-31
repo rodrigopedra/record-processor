@@ -9,7 +9,7 @@ Process record-based sources using a pipeline approach
     use RodrigoPedra\RecordProcessor\ProcessorBuilder;
     
     $processor = ( new ProcessorBuilder )
-        ->readFromExcelFile( __DIR__ . '/storage/input.xlsx' )
+        ->readFromCSVFile( __DIR__ . '/storage/input.xlsx' )
         ->writeToHTMLTable()
         ->build();
     

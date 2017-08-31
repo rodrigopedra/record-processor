@@ -44,6 +44,7 @@ class Source extends IteratorIterator implements Iterator
     {
         $this->recordCount = 0;
 
+        // implict opens on Reader::rewind()
         $this->reader->open();
     }
 

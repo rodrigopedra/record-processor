@@ -30,7 +30,6 @@ abstract class FileReader implements Reader
     public function open()
     {
         $this->lineCount = 0;
-        $this->file->rewind();
     }
 
     public function close()

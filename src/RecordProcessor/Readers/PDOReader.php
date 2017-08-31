@@ -51,9 +51,11 @@ class PDOReader implements Reader
         if (is_null( $this->reader )) {
             $this->reader = $this->pdo->prepare( $this->query, [ PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY ] );
             $this->reader->setFetchMode( PDO::FETCH_ASSOC );
+        } else {
+            $this->reader->closeCursor();
         }
 
-        return $this->reader->execute( $this->queryParameters );
+        $this->currentRecord = null;
     }
 
     public function close()
@@ -71,7 +73,7 @@ class PDOReader implements Reader
 
     public function next()
     {
-        $this->currentRecord = $this->reader->fetch();
+        $this->currentRecord = $this->reader->fetch() ?: null;
     }
 
     public function key()
@@ -81,7 +83,7 @@ class PDOReader implements Reader
 
     public function valid()
     {
-        $valid = !is_null( $this->reader ) && $this->currentRecord !== false;
+        $valid = !is_null( $this->currentRecord );
 
         if ($valid) {
             $this->incrementLineCount();
@@ -92,11 +94,16 @@ class PDOReader implements Reader
 
     public function rewind()
     {
-        if (!is_null( $this->reader )) {
+        if (!is_null( $this->currentRecord )) {
             $this->reader->closeCursor();
+            $this->currentRecord = null;
         }
 
-        $this->currentRecord = $this->open() ? $this->reader->fetch() : null;
+        if ($this->reader->execute( $this->queryParameters ) === false) {
+            return;
+        }
+
+        $this->currentRecord = $this->reader->fetch() ?: null;
     }
 
     public function getInnerIterator()

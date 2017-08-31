@@ -37,8 +37,7 @@ trait ReaderInnerIterator
 
     public function rewind()
     {
-        $this->close();
-        $this->open();
+        $this->lineCount = 0;
 
         $this->iterator->rewind();
     }

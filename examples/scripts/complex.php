@@ -5,13 +5,17 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
+use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory;
 use RodrigoPedra\RecordProcessor\Helpers\WriterCallbackProxy;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
 $storagePath = __DIR__ . '/../../storage/';
 
+$excel = Factory::getExcel();
+
 $processor = ( new ProcessorBuilder )
+    ->setExcel( $excel )
     ->readFromExcelFile( $storagePath . 'input.xlsx' )
     ->usingFormatter( new ExampleRecordFormatter )
     ->writeToExcelFile( $storagePath . 'output.xlsx' )

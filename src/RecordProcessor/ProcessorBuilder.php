@@ -3,6 +3,7 @@
 namespace RodrigoPedra\RecordProcessor;
 
 use InvalidArgumentException;
+use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
@@ -19,6 +20,9 @@ class ProcessorBuilder implements LoggerAwareInterface
 
     /** @var  LoggerInterface */
     protected $logger;
+
+    /** @var Excel */
+    protected $excel = null;
 
     /** @var ProcessorStage[] */
     protected $stages = [];
@@ -54,12 +58,32 @@ class ProcessorBuilder implements LoggerAwareInterface
         return $this;
     }
 
+    public function setExcel( Excel $excel )
+    {
+        if (is_null( $excel )) {
+            return $this;
+        }
+
+        $this->excel = $excel;
+
+        return $this;
+    }
+
     protected function getLogger()
     {
         if (is_null( $this->logger )) {
-            throw new InvalidArgumentException( 'Missing Logger instance. Use setLogger(...) to provide a Logger' );
+            throw new InvalidArgumentException( 'Missing Logger instance. Use setLogger(...) to provide an instance' );
         }
 
         return $this->logger;
+    }
+
+    protected function getExcel()
+    {
+        if (is_null( $this->excel )) {
+            throw new InvalidArgumentException( 'Missing \Maatwebsite\Excel\Excel instance. Use setExcel(...) to provide an instance' );
+        }
+
+        return $this->excel;
     }
 }

@@ -4,11 +4,10 @@ namespace RodrigoPedra\RecordProcessor\Readers;
 
 use ArrayIterator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\ReaderInnerIterator;
 
 class ArrayReader extends IteratorReader
 {
-    use CountsLines, ReaderInnerIterator;
+    use CountsLines;
 
     public function __construct( array $items )
     {

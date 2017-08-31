@@ -3,6 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Writers;
 
 use InvalidArgumentException;
+use Maatwebsite\Excel\Excel;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelWriter;
@@ -20,10 +21,13 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
 
     const ROW_LIMIT = 1048576;
 
+    /** @var Excel */
+    protected $excel;
+
     /** @var  \Maatwebsite\Excel\Writers\LaravelExcelWriter|null */
     protected $writer = null;
 
-    public function __construct( $file )
+    public function __construct( $file, Excel $excel )
     {
         parent::__construct( $file );
 
@@ -31,7 +35,8 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             throw new InvalidArgumentException( 'Cannot write Excel to a temporary file' );
         }
 
-        $this->file = null;
+        $this->file  = null;
+        $this->excel = $excel;
     }
 
     public function open()
@@ -39,9 +44,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
         $this->lineCount = 0;
         $this->file      = null;
 
-        $excel = app( 'excel' );
-
-        $this->writer = $excel->create( $this->fileInfo->getBasenameWithoutExtension(),
+        $this->writer = $this->excel->create( $this->fileInfo->getBasenameWithoutExtension(),
             $this->getWorkbookConfigurator() );
         $this->writer->sheet( 'Worksheet', $this->getWorksheetConfigurator() );
     }

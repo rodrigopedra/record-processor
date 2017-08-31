@@ -60,22 +60,3 @@ if (!function_exists( 'storage_path' )) {
         return sys_get_temp_dir();
     }
 }
-
-if (!function_exists( 'app' )) {
-    /**
-     * Get the available container instance.
-     *
-     * @param  string $abstract
-     * @param  array  $parameters
-     *
-     * @return mixed
-     */
-    function app( $abstract = null, array $parameters = [] )
-    {
-        if ($abstract === 'excel') {
-            return \RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory::getExcel();
-        }
-
-        return null;
-    }
-}

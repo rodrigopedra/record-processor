@@ -10,6 +10,7 @@ use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
+use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory;
 use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Formats;
 use RodrigoPedra\RecordProcessor\Helpers\WriterCallbackProxy;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
@@ -110,7 +111,9 @@ class ExamplesCommand extends Command
 
     protected function makeBuilder()
     {
-        return new ProcessorBuilder;
+        $excel = Factory::getExcel();
+
+        return ( new ProcessorBuilder )->setExcel( $excel );
     }
 
     /**
@@ -136,7 +139,7 @@ class ExamplesCommand extends Command
                 return $builder->readFromIterator( new ArrayIterator( $this->sampleData() ) );
             case 'pdo':
                 $pdo   = $this->makeConnection();
-                $query = 'SELECT name, email FROM users ORDER BY name LIMIT 25';
+                $query = 'SELECT name, email FROM users ORDER BY rowid LIMIT 25';
 
                 return $builder->readFromPDO( $pdo, $query );
             case 'text':

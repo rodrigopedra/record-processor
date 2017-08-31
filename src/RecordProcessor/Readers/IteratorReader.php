@@ -19,6 +19,8 @@ class IteratorReader implements Reader
     public function open()
     {
         $this->lineCount = 0;
+
+        $this->iterator->rewind();
     }
 
     public function close()
