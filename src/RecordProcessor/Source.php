@@ -25,13 +25,13 @@ class Source extends IteratorIterator
 
     public function current()
     {
-        $record = $this->recordParser->parseRecord( $this->reader, parent::current() );
+        $result = $this->recordParser->parseRecord( $this->reader, parent::current() );
 
-        if ($record instanceof Traversable) {
-            return $record;
+        if (is_array( $result ) || $result instanceof Traversable) {
+            return $result;
         }
 
-        return [ $record ];
+        return [ $result ];
     }
 
     /**
