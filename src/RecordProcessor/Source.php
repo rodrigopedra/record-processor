@@ -2,13 +2,12 @@
 
 namespace RodrigoPedra\RecordProcessor;
 
-use Iterator;
 use IteratorIterator;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use Traversable;
 
-class Source extends IteratorIterator implements Iterator
+class Source extends IteratorIterator
 {
     /** @var Reader */
     protected $reader;
@@ -49,14 +48,6 @@ class Source extends IteratorIterator implements Iterator
     public function close()
     {
         $this->reader->close();
-    }
-
-    /**
-     * @return  Reader
-     */
-    public function getReader()
-    {
-        return $this->reader;
     }
 
     /**
