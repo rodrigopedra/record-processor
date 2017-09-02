@@ -44,6 +44,10 @@ class Processor implements ProcessorContract
             $stages = $this->stages->build( new StopOnNullPipelineProcessor );
 
             foreach ($this->source as $record) {
+                if (is_null( $record )) {
+                    continue;
+                }
+
                 $stages->process( $record );
             }
 
