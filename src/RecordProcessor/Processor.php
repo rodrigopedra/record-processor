@@ -12,6 +12,7 @@ use RodrigoPedra\RecordProcessor\Helpers\StopOnNullPipelineProcessor;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\ProcessorOutput;
 use RodrigoPedra\RecordProcessor\Traits\CountsRecords;
+use RuntimeException;
 
 class Processor implements ProcessorContract
 {
@@ -43,12 +44,20 @@ class Processor implements ProcessorContract
             /** @var \League\Pipeline\Pipeline $stages */
             $stages = $this->stages->build( new StopOnNullPipelineProcessor );
 
-            foreach ($this->source as $record) {
-                if (is_null( $record )) {
-                    continue;
-                }
+            $this->recordCount = 0;
 
-                $stages->process( $record );
+            foreach ($this->source as $records) {
+                foreach ($records as $record) {
+                    if (!$record instanceof Record) {
+                        throw new RuntimeException( 'Record parser should return or generate a Record instance' );
+                    }
+
+                    if ($record->valid()) {
+                        $this->incrementRecordCount();
+                    }
+
+                    $stages->process( $record );
+                }
             }
 
             /** @var \League\Pipeline\Pipeline $flushers */
@@ -56,19 +65,19 @@ class Processor implements ProcessorContract
 
             /** @var FlushPayload $payload */
             $payload = $flushers->process( new FlushPayload );
+
+            $results = new ProcessorOutput(
+                $this->source->getLineCount(),
+                $this->getRecordCount(),
+                $payload->getLineCount(),
+                $payload->getRecordCount(),
+                $payload->getOutput()
+            );
+
+            return $results;
         } finally {
             $this->source->close();
         }
-
-        $results = new ProcessorOutput(
-            $this->source->getLineCount(),
-            $this->source->getRecordCount(),
-            $payload->getLineCount(),
-            $payload->getRecordCount(),
-            $payload->getOutput()
-        );
-
-        return $results;
     }
 
     public function addStage( ProcessorStage $stage )
