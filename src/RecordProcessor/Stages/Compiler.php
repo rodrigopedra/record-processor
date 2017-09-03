@@ -56,6 +56,10 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
      */
     public function flush( FlushPayload $payload )
     {
+        if (!$this->isOpen) {
+            $this->open();
+        }
+
         if ($payload->hasRecord()) {
             $record = $this->handle( $payload->getRecord() );
 

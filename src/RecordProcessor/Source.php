@@ -27,11 +27,11 @@ class Source extends IteratorIterator
     {
         $result = $this->recordParser->parseRecord( $this->reader, parent::current() );
 
-        if (is_array( $result ) || $result instanceof Traversable) {
+        if ($result instanceof Traversable) {
             return $result;
         }
 
-        return [ $result ];
+        return is_array( $result ) ? $result : [ $result ];
     }
 
     /**
