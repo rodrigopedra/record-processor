@@ -22,7 +22,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 
     public function valid()
     {
-        return count( $this->attributes ) > 0;
+        return strlen( $this->getKey() ) > 0;
     }
 
     public function getKey()
