@@ -9,5 +9,5 @@ interface RecordAggregateFactory
      *
      * @return Record
      */
-    public static function makeRecordAggregate( Record $master );
+    public function makeRecordAggregate( Record $master );
 }

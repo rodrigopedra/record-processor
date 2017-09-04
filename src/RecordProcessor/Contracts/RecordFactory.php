@@ -9,5 +9,5 @@ interface RecordFactory
      *
      * @return Record
      */
-    public static function makeRecord( array $fields );
+    public function makeRecord( array $fields );
 }

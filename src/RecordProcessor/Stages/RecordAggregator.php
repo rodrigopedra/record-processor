@@ -63,18 +63,12 @@ class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, 
 
         $current = $this->aggregateRecord;
 
-        /**
-         * A property declared as static cannot be accessed with an instantiated class object
-         * (**though a static method can**).
-         *
-         * @see http://php.net/manual/en/language.oop5.static.php
-         */
         $this->aggregateRecord = $this->recordAggregateFactory->makeRecordAggregate( $record );
 
         return $current;
     }
 
-    public static function makeRecordAggregate( Record $record )
+    public function makeRecordAggregate( Record $record )
     {
         // default RecordAggregate
         return new RecordKeyAggregate( $record );
