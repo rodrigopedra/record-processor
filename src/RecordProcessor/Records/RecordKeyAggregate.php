@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Records;
 
+use BadMethodCallException;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 
@@ -65,5 +66,16 @@ class RecordKeyAggregate implements RecordAggregate
             'master'  => $this->master->toArray(),
             'records' => array_map( function ( Record $record ) { return $record->toArray(); }, $this->records )
         ];
+    }
+
+    public function __call( $method, $parameters )
+    {
+        if (method_exists( $this->master, $method )) {
+            return $this->master->{$method}( ...$parameters );
+        }
+
+        $className = get_class( $this->master );
+
+        throw new BadMethodCallException( "Call to undefined method {$className}::{$method}()" );
     }
 }
