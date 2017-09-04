@@ -18,11 +18,11 @@ class CallbackRecordFormatter implements RecordFormatter
 
     public function formatRecord( Writer $writer, Record $record )
     {
-        if (!$record->valid()) {
+        $data = call_user_func_array( $this->callback, [ $record ] );
+
+        if ($data === false) {
             return false;
         }
-
-        $data = call_user_func_array( $this->callback, [ $record ] );
 
         $writer->append( $data );
 

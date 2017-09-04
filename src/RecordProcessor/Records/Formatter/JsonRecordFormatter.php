@@ -11,11 +11,16 @@ use RuntimeException;
 
 class JsonRecordFormatter implements RecordFormatter
 {
-    /** @var int */
+    /** @var  bool */
+    protected $writesValidRecords = true;
+
+    /** @var  int */
     protected $jsonEncodeOptions;
 
-    public function __construct( $jsonEncodeOptions = null )
+    public function __construct( $writesValidRecords = true, $jsonEncodeOptions = null )
     {
+        $this->writesValidRecords = $writesValidRecords;
+
         $this->jsonEncodeOptions = is_int( $jsonEncodeOptions )
             ? $jsonEncodeOptions
             : JSONFileWriter::JSON_ENCODE_OPTIONS;
@@ -29,7 +34,7 @@ class JsonRecordFormatter implements RecordFormatter
             throw new RuntimeException( "'{$className}' should implement JsonRecord interface" );
         }
 
-        if (!$record->valid()) {
+        if ($this->writesValidRecords xor $record->valid()) {
             return false;
         }
 

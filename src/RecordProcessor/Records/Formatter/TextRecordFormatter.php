@@ -10,6 +10,14 @@ use RuntimeException;
 
 class TextRecordFormatter implements RecordFormatter
 {
+    /** @var  bool */
+    protected $writesValidRecords = true;
+
+    public function __construct( $writesValidRecords = true )
+    {
+        $this->writesValidRecords = $writesValidRecords;
+    }
+
     public function formatRecord( Writer $writer, Record $record )
     {
         if (!$record instanceof TextRecord) {
@@ -18,7 +26,7 @@ class TextRecordFormatter implements RecordFormatter
             throw new RuntimeException( "'{$className}' should implement TextRecord interface" );
         }
 
-        if (!$record->valid()) {
+        if ($this->writesValidRecords xor $record->valid()) {
             return false;
         }
 
