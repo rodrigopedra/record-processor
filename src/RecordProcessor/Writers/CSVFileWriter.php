@@ -64,8 +64,8 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
             'setOutputBOM',
             'setDelimiter',
             'setEnclosure',
-            'setNewline',
             'setEscape',
+            'setNewline',
         ];
     }
 

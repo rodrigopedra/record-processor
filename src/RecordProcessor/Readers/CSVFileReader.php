@@ -56,7 +56,12 @@ class CSVFileReader extends FileReader implements ConfigurableReader
      */
     public function getConfigurableMethods()
     {
-        return [ 'useFirstRowAsHeader' ];
+        return [
+            'setDelimiter',
+            'setEnclosure',
+            'setEscape',
+            'useFirstRowAsHeader',
+        ];
     }
 
     /**
