@@ -23,22 +23,27 @@ trait FillsArrayWithRecords
     abstract protected function fillArrayWithSingleRecord( array &$results, Record $record, $offset );
 
     /**
-     * @param  array $results
-     * @param  int   $limit
-     * @param  int   $offset
+     * @param  array    $results
+     * @param  Record[] $records
+     * @param  int      $limit
+     * @param  int      $offset
      *
      * @return void
      */
-    protected function fillArrayWithRecords( array &$results, $limit, $offset )
+    protected function fillArrayWithRecords( array &$results, array $records, $limit, $offset )
     {
-        $records = $this->getRecords();
-        $length  = min( count( $records ), $limit );
+        $length = min( count( $records ), $limit );
 
-        for ($index = 0; $index < $length; $index++) {
-            /** @var Record $record */
-            $record = $records[ $index ];
+        $index = 0;
 
+        foreach ($records as $record) {
             $offset += $this->fillArrayWithSingleRecord( $results, $record, $offset );
+
+            $index++;
+
+            if ($index >= $length) {
+                break;
+            }
         }
     }
 }
