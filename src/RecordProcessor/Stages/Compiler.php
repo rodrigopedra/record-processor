@@ -40,7 +40,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
      */
     public function handle( Record $record )
     {
-        $this->open();
+        $this->open( $record );
 
         if ($this->recordFormatter->formatRecord( $this->writer, $record )) {
             $this->incrementRecordCount();
@@ -77,9 +77,11 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
     }
 
     /**
-     * @return  void
+     * @param  Record|null $record
+     *
+     * @return void
      */
-    protected function open()
+    protected function open( Record $record = null )
     {
         if ($this->isOpen) {
             return;
@@ -89,7 +91,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         $this->isOpen      = true;
 
         $this->writer->open();
-        $this->writeHeader();
+        $this->writeHeader( $record );
     }
 
     protected function close()

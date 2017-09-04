@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Helpers;
 
+use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 
 class WriterCallbackProxy
@@ -12,10 +13,14 @@ class WriterCallbackProxy
     /** @var  int */
     protected $recordCount;
 
-    public function __construct( Writer $writer, $recordCount )
+    /** @var Record */
+    protected $firstRecord;
+
+    public function __construct( Writer $writer, $recordCount, Record $firstRecord = null )
     {
         $this->writer      = $writer;
         $this->recordCount = $recordCount;
+        $this->firstRecord = $firstRecord;
     }
 
     public function append( $content )
@@ -31,5 +36,10 @@ class WriterCallbackProxy
     public function getRecordCount()
     {
         return $this->recordCount;
+    }
+
+    public function getFirstRecord()
+    {
+        return $this->firstRecord;
     }
 }
