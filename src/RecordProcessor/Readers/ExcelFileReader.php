@@ -31,6 +31,7 @@ class ExcelFileReader extends FileReader implements ConfigurableReader
 
         if (is_null( $configuratorCallback )) {
             $reader->setSelectedSheetIndices( 0 );
+            $reader->noHeading( false );
         }
 
         /** @var  \Maatwebsite\Excel\Collections\ExcelCollection $collection */
