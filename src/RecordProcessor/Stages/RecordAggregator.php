@@ -5,13 +5,23 @@ namespace RodrigoPedra\RecordProcessor\Stages;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
+use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
+use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFactory;
 use RodrigoPedra\RecordProcessor\Records\RecordKeyAggregate;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 
-class RecordKeyAggregator implements ProcessorStageHandler, ProcessorStageFlusher
+class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, RecordAggregateFactory
 {
-    /** @var  RecordKeyAggregate|null */
+    /** @var  RecordAggregate|null */
     protected $aggregateRecord = null;
+
+    /** @var  RecordAggregateFactory */
+    protected $recordAggregateFactory;
+
+    public function __construct( RecordAggregateFactory $recordAggregateFactory = null )
+    {
+        $this->recordAggregateFactory = $recordAggregateFactory ?: $this;
+    }
 
     /**
      * @param  Record $record
@@ -53,9 +63,20 @@ class RecordKeyAggregator implements ProcessorStageHandler, ProcessorStageFlushe
 
         $current = $this->aggregateRecord;
 
-        $this->aggregateRecord = new RecordKeyAggregate( $record );
+        /**
+         * A property declared as static cannot be accessed with an instantiated class object
+         * (**though a static method can**).
+         *
+         * @see http://php.net/manual/en/language.oop5.static.php
+         */
+        $this->aggregateRecord = $this->recordAggregateFactory->makeRecordAggregate( $record );
 
         return $current;
     }
-}
 
+    public static function makeRecordAggregate( Record $record )
+    {
+        // default RecordAggregate
+        return new RecordKeyAggregate( $record );
+    }
+}

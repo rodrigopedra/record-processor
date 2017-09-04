@@ -3,19 +3,20 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use Psr\Log\LogLevel;
+use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFactory;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Stages\Compiler;
 use RodrigoPedra\RecordProcessor\Stages\DownloadFileOutput;
-use RodrigoPedra\RecordProcessor\Stages\RecordKeyAggregator;
+use RodrigoPedra\RecordProcessor\Stages\RecordAggregator;
 use RodrigoPedra\RecordProcessor\Stages\ValidRecords;
 use RodrigoPedra\RecordProcessor\Writers\EchoWriter;
 use RodrigoPedra\RecordProcessor\Writers\LogWriter;
 
 trait BuildsStages
 {
-    public function aggregateRecordsByKey()
+    public function aggregateRecordsByKey( RecordAggregateFactory $recordAggregateFactory = null )
     {
-        $this->addStage( new RecordKeyAggregator );
+        $this->addStage( new RecordAggregator( $recordAggregateFactory ) );
 
         return $this;
     }
