@@ -2,12 +2,12 @@
 
 namespace RodrigoPedra\RecordProcessor\Contracts;
 
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 
 interface ConfigurableReader extends Configurable, Reader
 {
     /**
-     * @return WriterConfigurator
+     * @return Configurator
      */
     public function createConfigurator();
 }
