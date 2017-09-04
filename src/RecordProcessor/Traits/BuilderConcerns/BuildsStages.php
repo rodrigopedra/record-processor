@@ -7,7 +7,7 @@ use RodrigoPedra\RecordProcessor\Stages\ValidRecords;
 
 trait BuildsStages
 {
-    public function onlyValidRecords()
+    public function filterValidRecords()
     {
         $this->addStage( new ValidRecords );
 

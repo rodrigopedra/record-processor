@@ -83,7 +83,7 @@ class ExamplesCommand extends Command
             $builder->usingParser( new ExampleRecordParser );
             $this->readFrom( $builder, $input->getArgument( 'reader' ) );
 
-            $builder->onlyValidRecords();
+            $builder->filterValidRecords();
 
             $this->writeTo( $builder, $input->getArgument( 'writer' ) );
 
