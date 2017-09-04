@@ -35,7 +35,7 @@ trait BuildsSource
         return $this;
     }
 
-    protected function makeRecordParser()
+    protected function getRecordParser()
     {
         if (is_null( $this->recordParser )) {
             return new ArrayRecordParser;
@@ -46,7 +46,7 @@ trait BuildsSource
 
     protected function makeSource()
     {
-        $recordParser = $this->makeRecordParser();
+        $recordParser = $this->getRecordParser();
 
         return new Source( $this->reader, $recordParser );
     }

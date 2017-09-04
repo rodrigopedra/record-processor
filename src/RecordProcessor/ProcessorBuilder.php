@@ -7,16 +7,17 @@ use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
+use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
 use RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 class ProcessorBuilder implements LoggerAwareInterface
 {
     use BuilderConcerns\BuildsSource,
         BuilderConcerns\BuildsReaders,
-        BuilderConcerns\BuildsCompilers,
-        BuilderConcerns\BuildsWriters,
         BuilderConcerns\BuildsFormatter,
-        BuilderConcerns\BuildsStages;
+        BuilderConcerns\BuildsWriters,
+        BuilderConcerns\BuildsStages,
+        BuilderConcerns\BuildsCompilers;
 
     /** @var  LoggerInterface */
     protected $logger;
@@ -34,6 +35,11 @@ class ProcessorBuilder implements LoggerAwareInterface
         $converter = new Processor( $source );
 
         foreach ($this->stages as $stage) {
+            if ($stage instanceof DeferredStageBuilder) {
+                // deferred stage creation
+                $stage = $stage->build();
+            }
+
             $converter->addStage( $stage );
         }
 

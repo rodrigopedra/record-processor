@@ -17,7 +17,6 @@ $excel = Factory::getExcel();
 $processor = ( new ProcessorBuilder )
     ->setExcel( $excel )
     ->readFromExcelFile( $storagePath . 'input.xlsx' )
-    ->usingFormatter( new ExampleRecordFormatter )
     ->writeToExcelFile( $storagePath . 'output.xlsx' )
     ->writeToHTMLTable( function ( WriterConfigurator $configurator ) use ( $storagePath ) {
         $configurator->setHeader( [ 'name', 'email' ] );
@@ -32,6 +31,7 @@ $processor = ( new ProcessorBuilder )
 
         $configurator->writeOutputToFile( $storagePath . 'output.html' );
     } )
+    ->usingFormatter( new ExampleRecordFormatter )
     ->aggregateRecordsByKey( new ExampleRecordAggregateFormatter )
     ->writeToCSVFile( $storagePath . 'output.csv' )
     ->build();

@@ -38,11 +38,11 @@ class WriterConfigurator extends Configurator
 
     public function getRecordFormatter( RecordFormatter $defaultRecordFormatter = null )
     {
-        if (!is_null( $this->recordFormatter )) {
-            return $this->recordFormatter;
+        if (is_null( $this->recordFormatter )) {
+            return $defaultRecordFormatter ?: new ArrayRecordFormatter;
         }
 
-        return $defaultRecordFormatter ?: new ArrayRecordFormatter;
+        return $this->recordFormatter;
     }
 
     /**

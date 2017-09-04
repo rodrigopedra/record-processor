@@ -3,11 +3,9 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
-use RodrigoPedra\RecordProcessor\Stages\RecordKeyAggregator;
 
 trait BuildsFormatter
 {
@@ -43,14 +41,5 @@ trait BuildsFormatter
         }
 
         return $this->recordFormatter;
-    }
-
-    public function aggregateRecordsByKey( RecordAggregateFormatter $formatter = null )
-    {
-        $this->usingFormatter( $formatter );
-
-        $this->addStage( new RecordKeyAggregator );
-
-        return $this;
     }
 }

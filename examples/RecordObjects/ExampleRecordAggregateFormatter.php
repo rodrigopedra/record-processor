@@ -7,6 +7,7 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
+use RuntimeException;
 
 class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
 {
@@ -26,6 +27,10 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
      */
     public function formatRecord( Writer $writer, Record $master )
     {
+        if (!$master instanceof RecordAggregate) {
+            throw new RuntimeException( 'Record for ExampleRecordAggregateFormatter should implement RecordAggregate interface' );
+        }
+
         if (!$master->valid()) {
             return false;
         }

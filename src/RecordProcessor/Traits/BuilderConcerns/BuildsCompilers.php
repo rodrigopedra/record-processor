@@ -2,66 +2,37 @@
 
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
-use Psr\Log\LogLevel;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Stages\Compiler;
-use RodrigoPedra\RecordProcessor\Writers\EchoWriter;
-use RodrigoPedra\RecordProcessor\Writers\LogWriter;
+use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
 
 trait BuildsCompilers
 {
-    protected function addCompiler( Writer $writer, WriterConfigurator $fileConfigurator = null )
+    protected function addCompiler( Writer $writer, WriterConfigurator $writerConfigurator = null )
     {
-        $recordFormatter = is_null( $fileConfigurator )
-            ? $this->getRecordFormatter()
-            : $fileConfigurator->getRecordFormatter( $this->getRecordFormatter() );
+        $compilerBuilder = function () use ( $writer, $writerConfigurator ) {
+            if (is_null( $writerConfigurator )) {
+                return new Compiler( $writer, $this->getRecordFormatter() );
+            }
 
-        $compiler = new Compiler( $writer, $recordFormatter );
+            $recordFormatter = $writerConfigurator->getRecordFormatter( $this->getRecordFormatter() );
 
-        if (!is_null( $fileConfigurator )) {
-            $compiler->setHeader( $fileConfigurator->getHeader() );
-            $compiler->setTrailler( $fileConfigurator->getTrailler() );
+            $compiler = new Compiler( $writer, $recordFormatter );
+
+            $compiler->setHeader( $writerConfigurator->getHeader() );
+            $compiler->setTrailler( $writerConfigurator->getTrailler() );
+
+            return $compiler;
+        };
+
+        if (is_null( $this->recordFormatter )) {
+            $this->addStage( new DeferredStageBuilder( $compilerBuilder ) );
+
+            return $this;
         }
 
-        $this->addStage( $compiler );
-
-        return $this;
-    }
-
-    public function logRecords( $prefix = null )
-    {
-        $writer = new LogWriter( $this->getLogger() );
-        $writer->setLevel( LogLevel::DEBUG );
-        $writer->setPrefix( $prefix );
-
-        $compiler = new Compiler( $writer, new ArrayRecordFormatter );
-
-        $this->addStage( $compiler );
-
-        return $this;
-    }
-
-    public function logInvalidRecords( $prefix = 'INVALID' )
-    {
-        $writer = new LogWriter( $this->getLogger() );
-        $writer->setLevel( LogLevel::ERROR );
-        $writer->setPrefix( $prefix );
-
-        $compiler = new Compiler( $writer, new ArrayRecordFormatter( false ) );
-        $this->addStage( $compiler );
-
-        return $this;
-    }
-
-    public function echoRecords( $prefix = null )
-    {
-        $writer = new EchoWriter;
-        $writer->setPrefix( $prefix );
-
-        $compiler = new Compiler( $writer, new ArrayRecordFormatter );
-        $this->addStage( $compiler );
+        $this->addStage( $compilerBuilder() );
 
         return $this;
     }
