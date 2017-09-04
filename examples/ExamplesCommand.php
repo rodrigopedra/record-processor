@@ -67,7 +67,8 @@ class ExamplesCommand extends Command
             }
 
             if ($input->getOption( 'aggregate' )) {
-                $builder->aggregateRecordsByKey( new ExampleRecordAggregateFormatter );
+                $builder->usingFormatter( new ExampleRecordAggregateFormatter );
+                $builder->aggregateRecordsByKey();
             } else {
                 $builder->usingFormatter( new ExampleRecordFormatter );
             }

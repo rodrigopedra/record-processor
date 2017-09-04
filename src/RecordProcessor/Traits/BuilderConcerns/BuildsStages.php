@@ -3,7 +3,6 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use Psr\Log\LogLevel;
-use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Stages\Compiler;
 use RodrigoPedra\RecordProcessor\Stages\DownloadFileOutput;
@@ -14,10 +13,8 @@ use RodrigoPedra\RecordProcessor\Writers\LogWriter;
 
 trait BuildsStages
 {
-    public function aggregateRecordsByKey( RecordAggregateFormatter $formatter = null )
+    public function aggregateRecordsByKey()
     {
-        $this->usingFormatter( $formatter );
-
         $this->addStage( new RecordKeyAggregator );
 
         return $this;

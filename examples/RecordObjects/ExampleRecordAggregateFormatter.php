@@ -4,12 +4,12 @@ namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
-use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFormatter;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 use RuntimeException;
 
-class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
+class ExampleRecordAggregateFormatter implements RecordFormatter
 {
     /** @var ExampleRecordFormatter */
     protected $recordFormatter;
@@ -35,7 +35,7 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
             return false;
         }
 
-        $children = $this->formatChildren( $writer, $master->getRecords() );
+        $children = $this->formatChildren( $master->getRecords() );
         $content  = [
             'name'  => $master->getKey(),
             'email' => $children,
@@ -44,15 +44,7 @@ class ExampleRecordAggregateFormatter implements RecordAggregateFormatter
         return $this->recordFormatter->formatRecord( $writer, new SimpleRecord( $content ) );
     }
 
-    /**
-     * Encode Record objects content to writer format
-     *
-     * @param  Writer   $writer
-     * @param  Record[] $children
-     *
-     * @return bool
-     */
-    public function formatChildren( Writer $writer, array $children )
+    public function formatChildren( array $children )
     {
         return implode( ', ', array_map( function ( Record $record ) { return $record->get( 'email' ); }, $children ) );
     }
