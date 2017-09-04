@@ -63,7 +63,8 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         }
 
         if (!$this->isOpen) {
-            $this->open( $payload->getRecord() );
+            // writes header if result is still empty (no records were written)
+            $this->open();
         }
 
         $this->close();
