@@ -50,7 +50,7 @@ class PDOWriter implements ConfigurableWriter
         $this->columnCount = count( $columns );
 
         if ($this->columnCount < 1) {
-            throw new InvalidArgumentException( 'Columns array should containt at least one column' );
+            throw new InvalidArgumentException( 'Columns array should contain at least one column' );
         }
 
         $this->pdo             = $pdo;

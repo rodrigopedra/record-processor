@@ -58,7 +58,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $inputFile = $payload->getOutput();
 
         if (!$inputFile instanceof SplFileObject) {
-            throw new RuntimeException( 'Output is not a file' );
+            throw new RuntimeException( 'Process output should be a file to be downloadable' );
         }
 
         return $inputFile;

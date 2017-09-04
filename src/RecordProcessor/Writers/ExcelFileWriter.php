@@ -32,7 +32,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
         parent::__construct( $file );
 
         if ($this->fileInfo->isTempFile()) {
-            throw new InvalidArgumentException( 'Cannot write Excel to a temporary file' );
+            throw new InvalidArgumentException( 'Cannot write Excel as a temporary file' );
         }
 
         $this->file  = null;

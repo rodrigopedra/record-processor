@@ -27,7 +27,7 @@ trait BuildsSource
         }
 
         if (!$recordParser instanceof RecordParser) {
-            throw new InvalidArgumentException( 'Invalid RecordFormatter' );
+            throw new InvalidArgumentException( 'Parser should implement RecordParser interface' );
         }
 
         $this->recordParser = $recordParser;

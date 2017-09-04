@@ -28,7 +28,7 @@ trait BuildsFormatter
         }
 
         if (!$recordFormatter instanceof RecordFormatter) {
-            throw new InvalidArgumentException( 'Invalid RecordFormatter' );
+            throw new InvalidArgumentException( 'Formatter should implement RecordFormatter interface' );
         }
 
         $this->recordFormatter = $recordFormatter;
