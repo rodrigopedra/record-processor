@@ -1,14 +1,15 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Helpers;
+namespace RodrigoPedra\RecordProcessor\Helpers\Writers;
 
 use InvalidArgumentException;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
-use RodrigoPedra\RecordProcessor\Traits\HasFileHeader;
-use RodrigoPedra\RecordProcessor\Traits\HasFileTrailler;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
 
 /**
  * Class WriterConfigurator
@@ -17,7 +18,7 @@ use RodrigoPedra\RecordProcessor\Traits\HasFileTrailler;
  */
 class WriterConfigurator extends Configurator
 {
-    use HasFileHeader, HasFileTrailler;
+    use HasHeader, HasTrailler;
 
     /** @var  bool */
     protected $hasHeader;

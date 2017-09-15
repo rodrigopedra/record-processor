@@ -4,7 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RuntimeException;
 
 class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines

@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use PDO;
 use PDOStatement;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 use RuntimeException;

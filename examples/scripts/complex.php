@@ -6,8 +6,8 @@ require __DIR__ . '/../../vendor/autoload.php';
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
 use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory;
-use RodrigoPedra\RecordProcessor\Helpers\WriterCallbackProxy;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
 $storagePath = __DIR__ . '/../../storage/';
@@ -21,7 +21,7 @@ $processor = ( new ProcessorBuilder )
     ->writeToHTMLTable( function ( WriterConfigurator $configurator ) use ( $storagePath ) {
         $configurator->setHeader( [ 'name', 'email' ] );
 
-        $configurator->setTrailler( function ( WriterCallbackProxy $writer ) use ( $storagePath ) {
+        $configurator->setTrailler( function ( WriterCallbackProxy $writer ) {
             $recordCount = $writer->getRecordCount();
             $writer->append( $recordCount . ' records' );
         } );

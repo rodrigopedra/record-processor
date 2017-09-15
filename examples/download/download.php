@@ -3,7 +3,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 use RodrigoPedra\RecordProcessor\Stages\DownloadFileOutput;
 

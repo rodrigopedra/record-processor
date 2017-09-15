@@ -6,7 +6,7 @@ use League\Csv\ByteSequence;
 use League\Csv\Writer as RawCsvWriter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 
 class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequence, NewLines

@@ -1,10 +1,10 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Traits;
+namespace RodrigoPedra\RecordProcessor\Traits\Readers;
 
 use Iterator;
 
-trait ReaderInnerIterator
+trait HasInnerIterator
 {
     /** @var Iterator|null */
     protected $iterator = null;

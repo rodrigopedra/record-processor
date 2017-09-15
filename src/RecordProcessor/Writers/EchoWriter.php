@@ -3,7 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Writers;
 
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
 use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 

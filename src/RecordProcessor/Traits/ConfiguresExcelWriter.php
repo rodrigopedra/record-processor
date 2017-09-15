@@ -2,7 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Traits;
 
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 
 trait ConfiguresExcelWriter
 {

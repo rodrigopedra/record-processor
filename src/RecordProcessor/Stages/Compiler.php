@@ -9,14 +9,14 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Traits\CountsRecords;
-use RodrigoPedra\RecordProcessor\Traits\HasFileHeader;
-use RodrigoPedra\RecordProcessor\Traits\HasFileTrailler;
-use RodrigoPedra\RecordProcessor\Traits\WritesFileHeader;
-use RodrigoPedra\RecordProcessor\Traits\WritesFileTrailler;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
+use RodrigoPedra\RecordProcessor\Traits\Writers\WritesHeader;
+use RodrigoPedra\RecordProcessor\Traits\Writers\WritesTrailler;
 
 class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
 {
-    use CountsRecords, HasFileHeader, WritesFileHeader, HasFileTrailler, WritesFileTrailler;
+    use CountsRecords, HasHeader, WritesHeader, HasTrailler, WritesTrailler;
 
     /** @var Writer */
     protected $writer;

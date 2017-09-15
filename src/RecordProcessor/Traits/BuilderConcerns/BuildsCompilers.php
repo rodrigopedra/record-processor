@@ -3,7 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Helpers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Stages\Compiler;
 use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
 
