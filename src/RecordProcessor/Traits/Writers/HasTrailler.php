@@ -18,6 +18,10 @@ trait HasTrailler
 
     public function setTrailler( $trailler )
     {
+        if (is_null( $trailler )) {
+            return $this;
+        }
+
         try {
             $this->trailler = new WriterAddon( $trailler );
         } catch ( InvalidAddonException $ex ) {

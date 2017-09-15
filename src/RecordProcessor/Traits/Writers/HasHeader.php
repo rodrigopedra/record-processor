@@ -18,6 +18,10 @@ trait HasHeader
 
     public function setHeader( $header )
     {
+        if (is_null( $header )) {
+            return $this;
+        }
+
         try {
             $this->header = new WriterAddon( $header );
         } catch ( InvalidAddonException $ex ) {
