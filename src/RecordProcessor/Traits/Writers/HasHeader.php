@@ -21,7 +21,7 @@ trait HasHeader
         try {
             $this->header = new WriterAddon( $header );
         } catch ( InvalidAddonException $ex ) {
-            throw new InvalidArgumentException( 'Writer header should be an array or an callable' );
+            throw new InvalidArgumentException( 'Writer header should be an array or a callable' );
         }
 
         return $this;
