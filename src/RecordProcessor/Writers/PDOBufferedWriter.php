@@ -7,7 +7,7 @@ use RuntimeException;
 
 class PDOBufferedWriter extends PDOWriter
 {
-    const BUFFER_LIMIT = 1000;
+    const BUFFER_LIMIT = 100;
 
     /** @var array */
     protected $buffer = [];

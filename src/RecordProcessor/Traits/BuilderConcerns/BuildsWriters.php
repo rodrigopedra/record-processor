@@ -149,7 +149,9 @@ trait BuildsWriters
             $this->usingFormatter( new ArrayRecordFormatter );
         }
 
-        return $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
+        $this->addCompiler( $writer, $this->configureWriter( $writer, $configurator ) );
+
+        return $this;
     }
 
     public function writeToTextFile( $fileName = null, callable $configurator = null )
