@@ -10,8 +10,7 @@ use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
-use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Factory;
-use RodrigoPedra\RecordProcessor\Helpers\LaravelExcel\Formats;
+use RodrigoPedra\RecordProcessor\Helpers\Excel\Formats;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
@@ -55,7 +54,7 @@ class ExamplesCommand extends Command
         $logger     = new ConsoleOutputLogger( $output );
 
         try {
-            $builder = $this->makeBuilder();
+            $builder = new ProcessorBuilder;
             $builder->setLogger( $logger );
 
             if ($input->getOption( 'invalid' )) {
@@ -108,13 +107,6 @@ class ExamplesCommand extends Command
 
             $logger->info( 'Total Execution Time: ' . $execution_time . ' seconds' );
         }
-    }
-
-    protected function makeBuilder()
-    {
-        $excel = Factory::getExcel();
-
-        return ( new ProcessorBuilder )->setExcel( $excel );
     }
 
     /**

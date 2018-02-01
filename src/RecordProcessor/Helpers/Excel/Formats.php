@@ -1,9 +1,9 @@
 <?php
 
-namespace RodrigoPedra\RecordProcessor\Helpers\LaravelExcel;
+namespace RodrigoPedra\RecordProcessor\Helpers\Excel;
 
 use DateTime;
-use PHPExcel_Shared_Date;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class Formats
 {
@@ -55,6 +55,6 @@ class Formats
             return null;
         }
 
-        return number_format( PHPExcel_Shared_Date::PHPToExcel( $value, true, 'America/Sao_Paulo' ), 12, '.', '' );
+        return number_format( Date::dateTimeToExcel( $value ), 12, '.', '' );
     }
 }

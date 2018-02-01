@@ -3,7 +3,11 @@
 namespace RodrigoPedra\RecordProcessor\Writers;
 
 use InvalidArgumentException;
-use Maatwebsite\Excel\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelWriter;
@@ -21,13 +25,13 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
 
     const ROW_LIMIT = 1048576;
 
-    /** @var Excel */
-    protected $excel;
-
-    /** @var  \Maatwebsite\Excel\Writers\LaravelExcelWriter|null */
+    /** @var  IWriter|null */
     protected $writer = null;
 
-    public function __construct( $file, Excel $excel )
+    /** @var  Spreadsheet|null */
+    protected $workbook = null;
+
+    public function __construct( $file )
     {
         parent::__construct( $file );
 
@@ -35,8 +39,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             throw new InvalidArgumentException( 'Cannot write Excel as a temporary file' );
         }
 
-        $this->file  = null;
-        $this->excel = $excel;
+        $this->file = null;
     }
 
     public function open()
@@ -44,14 +47,12 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
         $this->lineCount = 0;
         $this->file      = null;
 
-        $this->writer = $this->excel->create( $this->fileInfo->getBasenameWithoutExtension(),
-            $this->getWorkbookConfigurator() );
-        $this->writer->sheet( 'Worksheet', $this->getWorksheetConfigurator() );
+        $this->writer = $this->createWriter();
     }
 
     public function close()
     {
-        $this->writer->store( $this->fileInfo->getExtension(), $this->fileInfo->getPath() );
+        $this->writer->save( $this->fileInfo->getRealPath() );
         $this->writer = null;
 
         $this->file = FileInfo::createReadableFileObject( $this->fileInfo->getRealPath() );
@@ -61,6 +62,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
      * @param  array $content
      *
      * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function append( $content )
     {
@@ -70,8 +72,86 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             ) );
         }
 
-        $this->writer->getSheet()->appendRow( array_wrap( $content ) );
+        $worksheet = $this->workbook->getActiveSheet();
+
+        $this->appendRowToWorksheet( $worksheet, array_wrap( $content ) );
 
         $this->incrementLineCount();
+    }
+
+    protected function createWriter()
+    {
+        $extension = $this->fileInfo->getExtension();
+
+        if (in_array( $extension, [ 'xls', 'xlt' ] )) {
+            $this->workbook = $this->createWorkbook();
+
+            return IOFactory::createWriter( $this->workbook, 'Xls' );
+        }
+
+        if (in_array( $extension, [ 'xlsx', 'xlsm', 'xltx', 'xltm' ] )) {
+            $this->workbook = $this->createWorkbook();
+
+            return IOFactory::createWriter( $this->workbook, 'Xlsx' );
+        }
+
+        throw new RuntimeException( 'The file must have a valid Excel extension' );
+    }
+
+    protected function createWorkbook()
+    {
+        $workbook = new Spreadsheet;
+
+        $this->configureWorkbook( $workbook );
+
+        $workbook->setActiveSheetIndex( 0 );
+
+        $worksheet = $workbook->getActiveSheet();
+
+        $worksheet->setSelectedCell( 'A1' );
+
+        $this->configureWorksheet( $worksheet );
+
+        return $workbook;
+    }
+
+    protected function configureWorkbook( Spreadsheet $workbook )
+    {
+        $configurator = $this->getWorkbookConfigurator();
+
+        if (!is_callable( $configurator )) {
+            return;
+        }
+
+        $configurator( $workbook->getProperties() );
+    }
+
+    protected function configureWorksheet( Worksheet $worksheet )
+    {
+        $configurator = $this->getWorksheetConfigurator();
+
+        if (!is_callable( $configurator )) {
+            return;
+        }
+
+        // TODO: create Configurator wrapper
+        // $configurator( $worksheet );
+    }
+
+    protected function appendRowToWorksheet( Worksheet $worksheet, array $values )
+    {
+        $currentCell = $worksheet->getActiveCell();
+
+        list( $column, $row ) = Coordinate::coordinateFromString( $currentCell );
+
+        $startColumn = Coordinate::columnIndexFromString( $column );
+
+        foreach (array_values( $values ) as $index => $value) {
+            $currentColumn = Coordinate::stringFromColumnIndex( $startColumn + $index );
+
+            $worksheet->setCellValue( $currentColumn . $row, $value );
+        }
+
+        $worksheet->setSelectedCell( $column . ( $row + 1 ) );
     }
 }

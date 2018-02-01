@@ -79,7 +79,7 @@ trait BuildsWriters
 
     public function writeToExcelFile( $fileName, callable $configurator = null )
     {
-        $writer = new ExcelFileWriter( $fileName, $this->getExcel() );
+        $writer = new ExcelFileWriter( $fileName );
 
         if (is_null( $this->recordFormatter )) {
             $this->usingFormatter( new ArrayRecordFormatter );

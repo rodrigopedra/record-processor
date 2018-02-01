@@ -58,7 +58,7 @@ trait BuildsReaders
 
     public function readFromExcelFile( $fileName, callable $configurator = null )
     {
-        $this->reader = new ExcelFileReader( $fileName, $this->getExcel() );
+        $this->reader = new ExcelFileReader( $fileName );
 
         if (is_null( $this->recordParser )) {
             $this->usingParser( new ArrayRecordParser );

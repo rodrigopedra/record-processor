@@ -2,47 +2,68 @@
 
 namespace RodrigoPedra\RecordProcessor\Readers;
 
-use Maatwebsite\Excel\Excel;
+use Illuminate\Support\Collection;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
-use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelReader;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
+use RodrigoPedra\RecordProcessor\Traits\ExcelReaderConfigurations;
 
 class ExcelFileReader extends FileReader implements ConfigurableReader
 {
-    use ConfiguresExcelReader;
-
-    /** @var Excel */
-    protected $excel;
-
-    public function __construct( $file, Excel $excel )
-    {
-        parent::__construct( $file );
-
-        $this->excel = $excel;
-    }
+    use ExcelReaderConfigurations;
 
     public function open()
     {
         parent::open();
 
-        /** @var  \Maatwebsite\Excel\Readers\LaravelExcelReader $reader */
-        $configuratorCallback = $this->getReaderConfigurator();
+        /** @var  \PhpOffice\PhpSpreadsheet\Spreadsheet $spreadsheet */
+        $spreadsheet = IOFactory::load( $this->file->getRealPath() );
 
-        $reader = $this->excel->load( $this->file->getRealPath(), $this->getReaderConfigurator() );
+        $spreadsheet->setActiveSheetIndex( $this->getSelectedSheetIndex() );
 
-        if (is_null( $configuratorCallback )) {
-            $reader->setSelectedSheetIndices( 0 );
-            $reader->noHeading( false );
-        }
+        // RowIterators starts at 1
+        $iterator = $spreadsheet->getActiveSheet()->getRowIterator( $this->getSkipRows() + 1 );
 
-        /** @var  \Maatwebsite\Excel\Collections\ExcelCollection $collection */
-        $collection = $reader->get();
-        $this->setInnerIterator( $collection->getIterator() );
+        $this->setInnerIterator( $iterator );
     }
 
     public function current()
     {
-        $cellCollection = $this->iteratorCurrent();
+        /** @var  \PhpOffice\PhpSpreadsheet\Worksheet\Row $row */
+        $row = $this->iteratorCurrent();
 
-        return $cellCollection->toArray();
+        $cells = new Collection( [] );
+
+        $cellsIterator = $row->getCellIterator();
+        $cellsIterator->setIterateOnlyExistingCells( true );
+
+        foreach ($cellsIterator as $cell) {
+            /** @var  \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
+            $column = $cell->getColumn();
+            $value  = $cell->getCalculatedValue();
+
+            $cells->put( $column, $value );
+        }
+
+        return $cells->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurableMethods()
+    {
+        return [
+            'noHeading',
+            'setSelectedSheetIndices',
+        ];
+    }
+
+    /**
+     * @return Configurator
+     */
+    public function createConfigurator()
+    {
+        return new Configurator( $this );
     }
 }
