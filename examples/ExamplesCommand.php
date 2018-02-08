@@ -54,7 +54,7 @@ class ExamplesCommand extends Command
         $logger     = new ConsoleOutputLogger( $output );
 
         try {
-            $builder = new ProcessorBuilder;
+            $builder = $this->makeBuilder();
             $builder->setLogger( $logger );
 
             if ($input->getOption( 'invalid' )) {
@@ -107,6 +107,11 @@ class ExamplesCommand extends Command
 
             $logger->info( 'Total Execution Time: ' . $execution_time . ' seconds' );
         }
+    }
+
+    protected function makeBuilder()
+    {
+        return new ProcessorBuilder;
     }
 
     /**
@@ -196,7 +201,6 @@ class ExamplesCommand extends Command
                                 $cells->setBorder( 'node', 'none', 'solid', 'none' );
                             } );
                             $worksheet->getStyle( 'A1:B1' )->getNumberFormat()->setFormatCode( Formats::text() );
-
                         } );
                     } );
             case 'html':
