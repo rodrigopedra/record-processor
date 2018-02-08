@@ -188,6 +188,15 @@ class ExamplesCommand extends Command
                                 'A' => Formats::text(),
                                 'B' => Formats::general(),
                             ] );
+
+                            // header
+                            $worksheet->freezeFirstRow();
+                            $worksheet->cells( 'A1:B1', function ( $cells ) {
+                                $cells->setFontWeight( 'bold' );
+                                $cells->setBorder( 'node', 'none', 'solid', 'none' );
+                            } );
+                            $worksheet->getStyle( 'A1:B1' )->getNumberFormat()->setFormatCode( Formats::text() );
+
                         } );
                     } );
             case 'html':

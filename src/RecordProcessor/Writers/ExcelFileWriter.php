@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Excel\WorksheetConfigurator;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelWriter;
 use RuntimeException;
@@ -123,7 +124,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             return;
         }
 
-        $configurator( $workbook->getProperties() );
+        call_user_func( $configurator, $workbook->getProperties() );
     }
 
     protected function configureWorksheet( Worksheet $worksheet )
@@ -134,8 +135,9 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             return;
         }
 
-        // TODO: create Configurator wrapper
-        // $configurator( $worksheet );
+        call_user_func( $configurator, new WorksheetConfigurator( $worksheet ) );
+
+        $worksheet->setSelectedCell( 'A1' );
     }
 
     protected function appendRowToWorksheet( Worksheet $worksheet, array $values )
