@@ -27,7 +27,7 @@ class WorkbookConfigurator
     public function __call( $method, $parameters )
     {
         if (method_exists( $this->properties, $method )) {
-            $this->properties->{$method}( ...$parameters );
+            return $this->properties->{$method}( ...$parameters );
         }
 
         $className = get_class( $this );
