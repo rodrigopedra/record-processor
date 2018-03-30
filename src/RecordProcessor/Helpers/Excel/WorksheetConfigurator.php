@@ -6,10 +6,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class WorksheetConfigurator
 {
-    /**
-     * @var Worksheet
-     */
-    private $worksheet;
+    /** @var Worksheet */
+    protected $worksheet;
 
     public function __construct( Worksheet $worksheet )
     {
@@ -58,5 +56,10 @@ class WorksheetConfigurator
     public function getStyle( $range )
     {
         return $this->worksheet->getStyle( $range );
+    }
+
+    public function getWorksheet()
+    {
+        return $this->worksheet;
     }
 }
