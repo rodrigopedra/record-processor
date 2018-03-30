@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Excel\WorkbookConfigurator;
 use RodrigoPedra\RecordProcessor\Helpers\Excel\WorksheetConfigurator;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\ConfiguresExcelWriter;
@@ -124,7 +125,7 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
             return;
         }
 
-        call_user_func( $configurator, $workbook->getProperties() );
+        call_user_func( $configurator, new WorkbookConfigurator( $workbook ) );
     }
 
     protected function configureWorksheet( Worksheet $worksheet )
