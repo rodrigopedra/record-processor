@@ -7,10 +7,9 @@ interface RecordParser
     /**
      * Generates Record objects from raw data
      *
-     * @param  Reader $reader
+     * @param  Reader  $reader
      * @param  mixed  $rawContent
-     *
      * @return Record
      */
-    public function parseRecord( Reader $reader, $rawContent );
+    public function parseRecord(Reader $reader, $rawContent);
 }

@@ -13,9 +13,9 @@ class WorkbookConfigurator
     /** @var \PhpOffice\PhpSpreadsheet\Document\Properties */
     protected $properties;
 
-    public function __construct( Spreadsheet $workbook )
+    public function __construct(Spreadsheet $workbook)
     {
-        $this->workbook   = $workbook;
+        $this->workbook = $workbook;
         $this->properties = $workbook->getProperties();
     }
 
@@ -24,14 +24,14 @@ class WorkbookConfigurator
         return $this->workbook;
     }
 
-    public function __call( $method, $parameters )
+    public function __call($method, $parameters)
     {
-        if (method_exists( $this->properties, $method )) {
-            return $this->properties->{$method}( ...$parameters );
+        if (method_exists($this->properties, $method)) {
+            return $this->properties->{$method}(...$parameters);
         }
 
-        $className = get_class( $this );
+        $className = get_class($this);
 
-        throw new BadMethodCallException( "Call to undefined method {$className}::{$method}()" );
+        throw new BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
 }

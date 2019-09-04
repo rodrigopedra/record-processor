@@ -10,11 +10,10 @@ trait HasLogger
     protected $logger;
 
     /**
-     * @param LoggerInterface $logger
-     *
+     * @param  LoggerInterface  $logger
      * @return void
      */
-    public function setLogger( LoggerInterface $logger = null )
+    public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }

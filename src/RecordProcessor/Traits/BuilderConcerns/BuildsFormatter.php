@@ -13,20 +13,19 @@ trait BuildsFormatter
     protected $recordFormatter;
 
     /**
-     * @param  RecordFormatter|callable $recordFormatter
-     *
+     * @param  RecordFormatter|callable  $recordFormatter
      * @return $this
      */
-    public function usingFormatter( $recordFormatter = null )
+    public function usingFormatter($recordFormatter = null)
     {
-        if (is_callable( $recordFormatter )) {
-            $this->recordFormatter = new CallbackRecordFormatter( $recordFormatter );
+        if (is_callable($recordFormatter)) {
+            $this->recordFormatter = new CallbackRecordFormatter($recordFormatter);
 
             return $this;
         }
 
-        if (!$recordFormatter instanceof RecordFormatter) {
-            throw new InvalidArgumentException( 'Formatter should implement RecordFormatter interface' );
+        if (! $recordFormatter instanceof RecordFormatter) {
+            throw new InvalidArgumentException('Formatter should implement RecordFormatter interface');
         }
 
         $this->recordFormatter = $recordFormatter;
@@ -36,7 +35,7 @@ trait BuildsFormatter
 
     protected function getRecordFormatter()
     {
-        if (is_null( $this->recordFormatter )) {
+        if (is_null($this->recordFormatter)) {
             return new ArrayRecordFormatter;
         }
 

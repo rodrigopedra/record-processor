@@ -2,13 +2,14 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use League\Csv\HTMLConverter;
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
-use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use SplFileObject;
+use Illuminate\Support\Arr;
+use League\Csv\HTMLConverter;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
+use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use RodrigoPedra\RecordProcessor\Contracts\NewLines;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class HTMLTableWriter implements ConfigurableWriter
@@ -34,58 +35,58 @@ class HTMLTableWriter implements ConfigurableWriter
     protected $file = null;
 
     /**
-     * @param  string $fileName
+     * @param  string  $fileName
      */
-    public function writeOutputToFile( $fileName )
+    public function writeOutputToFile($fileName)
     {
-        $this->file = FileInfo::createWritableFileObject( $fileName, 'wb' );
+        $this->file = FileInfo::createWritableFileObject($fileName, 'wb');
     }
 
     /**
-     * @param  string $tableClassAttribute
+     * @param  string  $tableClassAttribute
      */
-    public function setTableClassAttribute( $tableClassAttribute )
+    public function setTableClassAttribute($tableClassAttribute)
     {
-        $this->tableClassAttribute = value_or_null( $tableClassAttribute ) ?: '';
+        $this->tableClassAttribute = value_or_null($tableClassAttribute) ?: '';
     }
 
     /**
-     * @param  string $tableIdAttribute
+     * @param  string  $tableIdAttribute
      */
-    public function setTableIdAttribute( $tableIdAttribute )
+    public function setTableIdAttribute($tableIdAttribute)
     {
-        $this->tableIdAttribute = value_or_null( $tableIdAttribute ) ?: '';
+        $this->tableIdAttribute = value_or_null($tableIdAttribute) ?: '';
     }
 
     public function open()
     {
         $this->lineCount = 0;
-        $this->output    = '';
-        $this->records   = [];
+        $this->output = '';
+        $this->records = [];
 
-        $this->writer = ( new HTMLConverter )
+        $this->writer = (new HTMLConverter)
             // should be chained, ->table() returns a cloned HTMLConverter instance
-            ->table( $this->tableClassAttribute, $this->tableIdAttribute );
+            ->table($this->tableClassAttribute, $this->tableIdAttribute);
     }
 
     public function close()
     {
-        $this->output = $this->writer->convert( $this->records );
+        $this->output = $this->writer->convert($this->records);
 
-        if (!is_null( $this->file )) {
-            $this->file->fwrite( $this->output );
-            $this->file->fwrite( NewLines::UNIX_NEWLINE );
+        if (! is_null($this->file)) {
+            $this->file->fwrite($this->output);
+            $this->file->fwrite(NewLines::UNIX_NEWLINE);
 
-            $this->output = FileInfo::createReadableFileObject( $this->file );
+            $this->output = FileInfo::createReadableFileObject($this->file);
         }
 
-        $this->writer  = null;
+        $this->writer = null;
         $this->records = [];
     }
 
-    public function append( $content )
+    public function append($content)
     {
-        array_push( $this->records, array_wrap( $content ) );
+        array_push($this->records, Arr::wrap($content));
 
         $this->incrementLineCount();
     }
@@ -106,6 +107,6 @@ class HTMLTableWriter implements ConfigurableWriter
 
     public function createConfigurator()
     {
-        return new WriterConfigurator( $this, true, true );
+        return new WriterConfigurator($this, true, true);
     }
 }

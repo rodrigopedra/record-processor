@@ -2,8 +2,8 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
@@ -15,60 +15,60 @@ class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
     protected $jsonEncodeOptions = self::JSON_ENCODE_OPTIONS;
 
     /**
-     * @param int $jsonEncodeOptions
+     * @param  int  $jsonEncodeOptions
      */
-    public function setJsonEncodeOptions( $jsonEncodeOptions )
+    public function setJsonEncodeOptions($jsonEncodeOptions)
     {
         $this->jsonEncodeOptions = $jsonEncodeOptions;
     }
 
     public function close()
     {
-        $this->file->fwrite( ']' );
+        $this->file->fwrite(']');
     }
 
-    public function append( $content )
+    public function append($content)
     {
-        if (is_object( $content ) && method_exists( $content, 'toJson' )) {
+        if (is_object($content) && method_exists($content, 'toJson')) {
             $content = $content->toJson();
 
-            $this->write( $content );
+            $this->write($content);
 
             return;
         }
 
-        if (is_object( $content ) && method_exists( $content, 'jsonSerialize' )) {
+        if (is_object($content) && method_exists($content, 'jsonSerialize')) {
             $content = $content->jsonSerialize();
         }
 
-        $content = value_or_null( $content );
+        $content = value_or_null($content);
 
-        if (empty( $content )) {
+        if (empty($content)) {
             return;
         }
 
-        $content = json_encode( $content, $this->jsonEncodeOptions );
+        $content = json_encode($content, $this->jsonEncodeOptions);
 
-        $this->write( $content );
+        $this->write($content);
     }
 
-    protected function write( $content )
+    protected function write($content)
     {
         $prepend = $this->getLineCount() === 0 ? '[' : ',';
-        $content = sprintf( '%s%s', $prepend, $content );
+        $content = sprintf('%s%s', $prepend, $content);
 
-        $this->file->fwrite( $content );
+        $this->file->fwrite($content);
 
         $this->incrementLineCount();
     }
 
     public function getConfigurableMethods()
     {
-        return [ 'setJsonEncodeOptions' ];
+        return ['setJsonEncodeOptions'];
     }
 
     public function createConfigurator()
     {
-        return new WriterConfigurator( $this, false, false );
+        return new WriterConfigurator($this, false, false);
     }
 }

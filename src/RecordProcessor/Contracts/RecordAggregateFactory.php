@@ -5,9 +5,8 @@ namespace RodrigoPedra\RecordProcessor\Contracts;
 interface RecordAggregateFactory
 {
     /**
-     * @param Record $master
-     *
+     * @param  Record  $master
      * @return Record
      */
-    public function makeRecordAggregate( Record $master );
+    public function makeRecordAggregate(Record $master);
 }

@@ -3,10 +3,10 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use InvalidArgumentException;
+use RodrigoPedra\RecordProcessor\Source;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\CallbackRecordParser;
-use RodrigoPedra\RecordProcessor\Source;
 
 trait BuildsSource
 {
@@ -14,20 +14,19 @@ trait BuildsSource
     protected $recordParser;
 
     /**
-     * @param  RecordParser|callable $recordParser
-     *
+     * @param  RecordParser|callable  $recordParser
      * @return $this
      */
-    public function usingParser( $recordParser )
+    public function usingParser($recordParser)
     {
-        if (is_callable( $recordParser )) {
-            $this->recordParser = new CallbackRecordParser( $recordParser );
+        if (is_callable($recordParser)) {
+            $this->recordParser = new CallbackRecordParser($recordParser);
 
             return $this;
         }
 
-        if (!$recordParser instanceof RecordParser) {
-            throw new InvalidArgumentException( 'Parser should implement RecordParser interface' );
+        if (! $recordParser instanceof RecordParser) {
+            throw new InvalidArgumentException('Parser should implement RecordParser interface');
         }
 
         $this->recordParser = $recordParser;
@@ -37,7 +36,7 @@ trait BuildsSource
 
     protected function getRecordParser()
     {
-        if (is_null( $this->recordParser )) {
+        if (is_null($this->recordParser)) {
             return new ArrayRecordParser;
         }
 
@@ -48,6 +47,6 @@ trait BuildsSource
     {
         $recordParser = $this->getRecordParser();
 
-        return new Source( $this->reader, $recordParser );
+        return new Source($this->reader, $recordParser);
     }
 }

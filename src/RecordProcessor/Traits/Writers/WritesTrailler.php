@@ -9,10 +9,10 @@ trait WritesTrailler
         /** @var \RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon|null $trailler */
         $trailler = $this->getTrailler();
 
-        if (is_null( $trailler )) {
+        if (is_null($trailler)) {
             return;
         }
 
-        $trailler->handle( $this->writer, $this->getRecordCount() );
+        $trailler->handle($this->writer, $this->getRecordCount());
     }
 }

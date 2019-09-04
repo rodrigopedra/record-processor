@@ -7,7 +7,9 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class Formats
 {
-    protected function __construct() { }
+    protected function __construct()
+    {
+    }
 
     public static function currency()
     {
@@ -49,12 +51,12 @@ class Formats
         return 'General';
     }
 
-    public static function formatExcelDatetime( DateTime $value = null )
+    public static function formatExcelDatetime(DateTime $value = null)
     {
-        if (empty( $value )) {
+        if (empty($value)) {
             return null;
         }
 
-        return number_format( Date::dateTimeToExcel( $value ), 12, '.', '' );
+        return number_format(Date::dateTimeToExcel($value), 12, '.', '');
     }
 }

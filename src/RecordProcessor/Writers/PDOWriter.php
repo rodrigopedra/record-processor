@@ -2,17 +2,17 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use Exception;
-use InvalidArgumentException;
 use PDO;
+use Exception;
 use PDOStatement;
+use RuntimeException;
+use InvalidArgumentException;
+use RodrigoPedra\RecordProcessor\Traits\NoOutput;
+use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
-use RuntimeException;
-use function RodrigoPedra\RecordProcessor\is_associative_array;
 use function RodrigoPedra\RecordProcessor\value_or_null;
+use function RodrigoPedra\RecordProcessor\is_associative_array;
 
 class PDOWriter implements ConfigurableWriter
 {
@@ -45,24 +45,24 @@ class PDOWriter implements ConfigurableWriter
     /** @var bool|null */
     protected $isAssociative = null;
 
-    public function __construct( PDO $pdo, $tableName, array $columns )
+    public function __construct(PDO $pdo, $tableName, array $columns)
     {
-        $this->columnCount = count( $columns );
+        $this->columnCount = count($columns);
 
         if ($this->columnCount < 1) {
-            throw new InvalidArgumentException( 'Columns array should contain at least one column' );
+            throw new InvalidArgumentException('Columns array should contain at least one column');
         }
 
-        $this->pdo             = $pdo;
-        $this->tableName       = value_or_null( $tableName );
-        $this->columns         = is_associative_array( $columns ) ? array_keys( $columns ) : $columns;
-        $this->valuesStatement = $this->formatValuesString( $this->columnCount );
+        $this->pdo = $pdo;
+        $this->tableName = value_or_null($tableName);
+        $this->columns = is_associative_array($columns) ? array_keys($columns) : $columns;
+        $this->valuesStatement = $this->formatValuesString($this->columnCount);
     }
 
     /**
-     * @param bool $usesTransaction
+     * @param  bool  $usesTransaction
      */
-    public function setUsesTransaction( $usesTransaction )
+    public function setUsesTransaction($usesTransaction)
     {
         $this->usesTransaction = $usesTransaction;
     }
@@ -88,27 +88,26 @@ class PDOWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  array $content
-     *
+     * @param  array  $content
      * @return void
      * @throws Exception
      */
-    public function append( $content )
+    public function append($content)
     {
-        if (!is_array( $content )) {
-            throw new RuntimeException( 'content for PDOWriter should be an array' );
+        if (! is_array($content)) {
+            throw new RuntimeException('content for PDOWriter should be an array');
         }
 
         try {
-            $data   = $this->prepareValuesForInsert( $content );
-            $writer = $this->prepareWriter( 1 );
+            $data = $this->prepareValuesForInsert($content);
+            $writer = $this->prepareWriter(1);
 
-            if (!$writer->execute( $data )) {
-                throw new RuntimeException( 'Could not write PDO records' );
+            if (! $writer->execute($data)) {
+                throw new RuntimeException('Could not write PDO records');
             }
 
-            $this->incrementLineCount( $this->writer->rowCount() );
-        } catch ( Exception $exception ) {
+            $this->incrementLineCount($this->writer->rowCount());
+        } catch (Exception $exception) {
             if ($this->inTransaction) {
                 $this->pdo->rollBack();
                 $this->inTransaction = false;
@@ -118,65 +117,65 @@ class PDOWriter implements ConfigurableWriter
         }
     }
 
-    protected function prepareWriter( $count )
+    protected function prepareWriter($count)
     {
-        if (!is_null( $this->writer )) {
+        if (! is_null($this->writer)) {
             return $this->writer;
         }
 
-        $query = $this->formatQueryStatement( $count );
+        $query = $this->formatQueryStatement($count);
 
-        $this->writer = $this->pdo->prepare( $query );
+        $this->writer = $this->pdo->prepare($query);
 
         return $this->writer;
     }
 
-    protected function formatQueryStatement( $count )
+    protected function formatQueryStatement($count)
     {
         $tokens = [
             'INSERT INTO',
             $this->tableName,
-            $this->sanitizeColumns( $this->columns ),
+            $this->sanitizeColumns($this->columns),
             'VALUES',
-            implode( ',', array_fill( 0, $count, $this->valuesStatement ) ),
+            implode(',', array_fill(0, $count, $this->valuesStatement)),
         ];
 
-        return implode( ' ', $tokens );
+        return implode(' ', $tokens);
     }
 
-    protected function formatValuesString( $valuesQuantity )
+    protected function formatValuesString($valuesQuantity)
     {
-        return '(' . implode( ',', array_fill( 0, $valuesQuantity, '?' ) ) . ')';
+        return '(' . implode(',', array_fill(0, $valuesQuantity, '?')) . ')';
     }
 
-    protected function sanitizeColumns( array $columns )
+    protected function sanitizeColumns(array $columns)
     {
-        $columns = value_or_null( $columns );
-        $columns = array_map( function ( $column ) {
-            return value_or_null( $column );
-        }, $columns );
+        $columns = value_or_null($columns);
+        $columns = array_map(function ($column) {
+            return value_or_null($column);
+        }, $columns);
 
-        return '(' . implode( ',', $columns ) . ')';
+        return '(' . implode(',', $columns) . ')';
     }
 
-    protected function prepareValuesForInsert( array $values )
+    protected function prepareValuesForInsert(array $values)
     {
-        if (count( $values ) !== $this->columnCount) {
-            throw new RuntimeException( 'Record column count does not match PDOWriter column definition' );
+        if (count($values) !== $this->columnCount) {
+            throw new RuntimeException('Record column count does not match PDOWriter column definition');
         }
 
-        if (is_null( $this->isAssociative )) {
-            $this->isAssociative = is_associative_array( $values );
+        if (is_null($this->isAssociative)) {
+            $this->isAssociative = is_associative_array($values);
 
             if ($this->isAssociative) {
-                sort( $this->columns );
+                sort($this->columns);
             }
         }
 
         if ($this->isAssociative) {
-            ksort( $values );
+            ksort($values);
 
-            return array_values( $values );
+            return array_values($values);
         }
 
         return $values;
@@ -184,11 +183,11 @@ class PDOWriter implements ConfigurableWriter
 
     public function getConfigurableMethods()
     {
-        return [ 'setUsesTransaction' ];
+        return ['setUsesTransaction'];
     }
 
     public function createConfigurator()
     {
-        return new WriterConfigurator( $this, false, false );
+        return new WriterConfigurator($this, false, false);
     }
 }

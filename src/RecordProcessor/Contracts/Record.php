@@ -7,20 +7,18 @@ use Illuminate\Contracts\Support\Arrayable;
 interface Record extends Arrayable
 {
     /**
-     * @param  string      $field
-     * @param  string|null $default
-     *
+     * @param  string  $field
+     * @param  string|null  $default
      * @return mixed
      */
-    public function get( $field, $default = '' );
+    public function get($field, $default = '');
 
     /**
-     * @param  string      $field
-     * @param  string|null $value
-     *
+     * @param  string  $field
+     * @param  string|null  $value
      * @return mixed
      */
-    public function set( $field, $value );
+    public function set($field, $value);
 
     /**
      * @return string|null

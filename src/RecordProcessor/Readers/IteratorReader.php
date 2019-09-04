@@ -11,9 +11,9 @@ class IteratorReader implements Reader
 {
     use CountsLines, HasInnerIterator;
 
-    public function __construct( Iterator $iterator )
+    public function __construct(Iterator $iterator)
     {
-        $this->setInnerIterator( $iterator );
+        $this->setInnerIterator($iterator);
     }
 
     public function open()

@@ -2,12 +2,12 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
-use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFactory;
 use RodrigoPedra\RecordProcessor\Records\RecordKeyAggregate;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFactory;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 
 class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, RecordAggregateFactory
@@ -18,59 +18,57 @@ class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, 
     /** @var  RecordAggregateFactory */
     protected $recordAggregateFactory;
 
-    public function __construct( RecordAggregateFactory $recordAggregateFactory = null )
+    public function __construct(RecordAggregateFactory $recordAggregateFactory = null)
     {
         $this->recordAggregateFactory = $recordAggregateFactory ?: $this;
     }
 
     /**
-     * @param  Record $record
-     *
+     * @param  Record  $record
      * @return Record null
      */
-    public function handle( Record $record )
+    public function handle(Record $record)
     {
-        if (is_null( $this->aggregateRecord )) {
-            $this->setAggregateRecord( $record ); // first record
+        if (is_null($this->aggregateRecord)) {
+            $this->setAggregateRecord($record); // first record
 
             return null;
         }
 
-        if ($this->aggregateRecord->pushRecord( $record )) {
+        if ($this->aggregateRecord->pushRecord($record)) {
             return null;
         }
 
-        return $this->setAggregateRecord( $record );
+        return $this->setAggregateRecord($record);
     }
 
     /**
-     * @param  FlushPayload $payload
-     *
+     * @param  FlushPayload  $payload
      * @return FlushPayload
      */
-    public function flush( FlushPayload $payload )
+    public function flush(FlushPayload $payload)
     {
-        $payload->setRecord( $this->aggregateRecord );
+        $payload->setRecord($this->aggregateRecord);
 
         return $payload;
     }
 
-    protected function setAggregateRecord( Record $record )
+    protected function setAggregateRecord(Record $record)
     {
-        if (!$record->valid()) {
+        if (! $record->valid()) {
             return null;
         }
 
         $current = $this->aggregateRecord;
 
-        $this->aggregateRecord = $this->recordAggregateFactory->makeRecordAggregate( $record );
+        $this->aggregateRecord = $this->recordAggregateFactory->makeRecordAggregate($record);
 
         return $current;
     }
 
-    public function makeRecordAggregate( Record $record )
+    public function makeRecordAggregate(Record $record)
     {
         // default RecordAggregate
-        return new RecordKeyAggregate( $record );
+        return new RecordKeyAggregate($record);
     }
 }

@@ -34,10 +34,10 @@ class CellWriter
     /**
      * Constructor
      *
-     * @param string    $cells
-     * @param Worksheet $sheet
+     * @param  string  $cells
+     * @param  Worksheet  $sheet
      */
-    public function __construct( $cells, Worksheet $sheet )
+    public function __construct($cells, Worksheet $sheet)
     {
         $this->cells = $cells;
         $this->sheet = $sheet;
@@ -47,14 +47,13 @@ class CellWriter
      * Set cell value
      *
      * @param [type] $value
-     *
      * @return  CellWriter
      */
-    public function setValue( $value )
+    public function setValue($value)
     {
         // Only set cell value for single cells
-        if (!str_contains( $this->cells, ':' )) {
-            $this->sheet->setCellValue( $this->cells, $value );
+        if (! str_contains($this->cells, ':')) {
+            $this->sheet->setCellValue($this->cells, $value);
         }
 
         return $this;
@@ -64,15 +63,14 @@ class CellWriter
      * Set cell url
      *
      * @param [type] $url
-     *
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setUrl( $url )
+    public function setUrl($url)
     {
         // Only set cell value for single cells
-        if (!str_contains( $this->cells, ':' )) {
-            $this->sheet->getCell( $this->cells )->getHyperlink()->setUrl( $url );
+        if (! str_contains($this->cells, ':')) {
+            $this->sheet->getCell($this->cells)->getHyperlink()->setUrl($url);
         }
 
         return $this;
@@ -81,114 +79,107 @@ class CellWriter
     /**
      * Set the background
      *
-     * @param string $color
-     * @param string $type
-     * @param string $colorType
-     *
+     * @param  string  $color
+     * @param  string  $type
+     * @param  string  $colorType
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setBackground( $color, $type = 'solid', $colorType = 'rgb' )
+    public function setBackground($color, $type = 'solid', $colorType = 'rgb')
     {
-        return $this->setColorStyle( 'fill', $color, $type, $colorType );
+        return $this->setColorStyle('fill', $color, $type, $colorType);
     }
 
     /**
      * Set the font color
      *
-     * @param string $color
-     * @param string $colorType
-     *
+     * @param  string  $color
+     * @param  string  $colorType
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setFontColor( $color, $colorType = 'rgb' )
+    public function setFontColor($color, $colorType = 'rgb')
     {
-        return $this->setColorStyle( 'font', $color, false, $colorType );
+        return $this->setColorStyle('font', $color, false, $colorType);
     }
 
     /**
      * Set the font
      *
      * @param $styles
-     *
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setFont( $styles )
+    public function setFont($styles)
     {
-        return $this->setStyle( 'font', $styles );
+        return $this->setStyle('font', $styles);
     }
 
     /**
      * Set font family
      *
-     * @param string $family
-     *
+     * @param  string  $family
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setFontFamily( $family )
+    public function setFontFamily($family)
     {
-        return $this->setStyle( 'font', [
+        return $this->setStyle('font', [
             'name' => $family,
-        ] );
+        ]);
     }
 
     /**
      * Set font size
      *
-     * @param  string $size
-     *
+     * @param  string  $size
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setFontSize( $size )
+    public function setFontSize($size)
     {
-        return $this->setStyle( 'font', [
+        return $this->setStyle('font', [
             'size' => $size,
-        ] );
+        ]);
     }
 
     /**
      * Set font weight
      *
-     * @param  boolean|string $bold
-     *
+     * @param  boolean|string  $bold
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setFontWeight( $bold = true )
+    public function setFontWeight($bold = true)
     {
-        return $this->setStyle( 'font', [
-            'bold' => ( $bold === 'bold' || $bold === true ),
-        ] );
+        return $this->setStyle('font', [
+            'bold' => ($bold === 'bold' || $bold === true),
+        ]);
     }
 
     /**
      * Set border
      *
-     * @param string      $top
-     * @param bool|string $right
-     * @param bool|string $bottom
-     * @param bool|string $left
-     *
+     * @param  string  $top
+     * @param  bool|string  $right
+     * @param  bool|string  $bottom
+     * @param  bool|string  $left
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setBorder( $top = 'none', $right = 'none', $bottom = 'none', $left = 'none' )
+    public function setBorder($top = 'none', $right = 'none', $bottom = 'none', $left = 'none')
     {
         // Set the border styles
-        $styles = is_array( $top )
+        $styles = is_array($top)
             ? $top
             : [
-                'top'    => [
+                'top' => [
                     'style' => $top,
                 ],
-                'left'   => [
+                'left' => [
                     'style' => $left,
                 ],
-                'right'  => [
+                'right' => [
                     'style' => $right,
                 ],
                 'bottom' => [
@@ -196,20 +187,19 @@ class CellWriter
                 ],
             ];
 
-        return $this->setStyle( 'borders', $styles );
+        return $this->setStyle('borders', $styles);
     }
 
     /**
      * Set the text rotation
      *
      * @param $degrees
-     *
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setTextRotation( $degrees )
+    public function setTextRotation($degrees)
     {
-        $this->getCellStyle()->getAlignment()->setTextRotation( $degrees );
+        $this->getCellStyle()->getAlignment()->setTextRotation($degrees);
 
         return $this;
     }
@@ -217,44 +207,41 @@ class CellWriter
     /**
      * Set the alignment
      *
-     * @param string $alignment
-     *
+     * @param  string  $alignment
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setAlignment( $alignment )
+    public function setAlignment($alignment)
     {
-        return $this->setStyle( 'alignment', [
+        return $this->setStyle('alignment', [
             'horizontal' => $alignment,
-        ] );
+        ]);
     }
 
     /**
      * Set vertical alignment
      *
-     * @param string $alignment
-     *
+     * @param  string  $alignment
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setValignment( $alignment )
+    public function setValignment($alignment)
     {
-        return $this->setStyle( 'alignment', [
+        return $this->setStyle('alignment', [
             'vertical' => $alignment,
-        ] );
+        ]);
     }
 
     /**
      * Set the text indent
      *
-     * @param integer $indent
-     *
+     * @param  integer  $indent
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setTextIndent( $indent )
+    public function setTextIndent($indent)
     {
-        $this->getCellStyle()->getAlignment()->setIndent( (int)$indent );
+        $this->getCellStyle()->getAlignment()->setIndent((int)$indent);
 
         return $this;
     }
@@ -263,44 +250,42 @@ class CellWriter
      * Set the color style
      *
      * @param         $styleType
-     * @param string  $color
-     * @param boolean $type
-     * @param string  $colorType
-     *
+     * @param  string  $color
+     * @param  boolean  $type
+     * @param  string  $colorType
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function setColorStyle( $styleType, $color, $type = false, $colorType = 'rgb' )
+    protected function setColorStyle($styleType, $color, $type = false, $colorType = 'rgb')
     {
         // Set the styles
-        $styles = is_array( $color )
+        $styles = is_array($color)
             ? $color
             : [
-                'type'  => $type,
-                'color' => [ $colorType => str_replace( '#', '', $color ) ],
+                'type' => $type,
+                'color' => [$colorType => str_replace('#', '', $color)],
             ];
 
-        return $this->setStyle( $styleType, $styles );
+        return $this->setStyle($styleType, $styles);
     }
 
     /**
      * Set style
      *
      * @param              $styleType
-     * @param array|string $styles
-     *
+     * @param  array|string  $styles
      * @return  CellWriter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function setStyle( $styleType, $styles )
+    protected function setStyle($styleType, $styles)
     {
         // Get the cell style
         $style = $this->getCellStyle();
 
         // Apply style from array
-        $style->applyFromArray( [
+        $style->applyFromArray([
             $styleType => $styles,
-        ] );
+        ]);
 
         return $this;
     }
@@ -313,6 +298,6 @@ class CellWriter
      */
     protected function getCellStyle()
     {
-        return $this->sheet->getStyle( $this->cells );
+        return $this->sheet->getStyle($this->cells);
     }
 }

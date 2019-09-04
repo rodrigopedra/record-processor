@@ -9,8 +9,8 @@ class CollectionReader extends IteratorReader
 {
     use CountsLines;
 
-    public function __construct( Collection $collection )
+    public function __construct(Collection $collection)
     {
-        parent::__construct( $collection->getIterator() );
+        parent::__construct($collection->getIterator());
     }
 }

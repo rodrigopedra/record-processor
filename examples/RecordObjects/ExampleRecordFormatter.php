@@ -3,21 +3,20 @@
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 
 class ExampleRecordFormatter implements RecordFormatter
 {
     /**
-     * @param  Writer               $writer
-     * @param  ExampleRecord|Record $record
-     *
+     * @param  Writer  $writer
+     * @param  ExampleRecord|Record  $record
      * @return bool
      */
-    public function formatRecord( Writer $writer, Record $record )
+    public function formatRecord(Writer $writer, Record $record)
     {
-        if (!$record->valid()) {
+        if (! $record->valid()) {
             return false;
         }
 
@@ -25,7 +24,7 @@ class ExampleRecordFormatter implements RecordFormatter
             ? $record->toText()
             : $record->toArray();
 
-        $writer->append( $content );
+        $writer->append($content);
 
         return true;
     }

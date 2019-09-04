@@ -17,19 +17,19 @@ trait ConfiguresExcelWriter
      */
     public function getWorkbookConfigurator()
     {
-        if (is_null( $this->workbookConfigurator )) {
+        if (is_null($this->workbookConfigurator)) {
             return null;
         }
 
-        return function ( $excel ) {
-            call_user_func_array( $this->workbookConfigurator, [ $excel ] );
+        return function ($excel) {
+            call_user_func_array($this->workbookConfigurator, [$excel]);
         };
     }
 
     /**
-     * @param callable $workbookConfigurator
+     * @param  callable  $workbookConfigurator
      */
-    public function setWorkbookConfigurator( callable $workbookConfigurator )
+    public function setWorkbookConfigurator(callable $workbookConfigurator)
     {
         $this->workbookConfigurator = $workbookConfigurator;
     }
@@ -39,19 +39,19 @@ trait ConfiguresExcelWriter
      */
     public function getWorksheetConfigurator()
     {
-        if (is_null( $this->worksheetConfigurator )) {
+        if (is_null($this->worksheetConfigurator)) {
             return null;
         }
 
-        return function ( $sheet ) {
-            call_user_func_array( $this->worksheetConfigurator, [ $sheet ] );
+        return function ($sheet) {
+            call_user_func_array($this->worksheetConfigurator, [$sheet]);
         };
     }
 
     /**
-     * @param callable $worksheetConfigurator
+     * @param  callable  $worksheetConfigurator
      */
-    public function setWorksheetConfigurator( callable $worksheetConfigurator )
+    public function setWorksheetConfigurator(callable $worksheetConfigurator)
     {
         $this->worksheetConfigurator = $worksheetConfigurator;
     }
@@ -67,6 +67,6 @@ trait ConfiguresExcelWriter
     public function createConfigurator()
     {
         /** @var \RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter $this */
-        return new WriterConfigurator( $this, true, true );
+        return new WriterConfigurator($this, true, true);
     }
 }

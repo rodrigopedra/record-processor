@@ -9,8 +9,8 @@ class ArrayReader extends IteratorReader
 {
     use CountsLines;
 
-    public function __construct( array $items )
+    public function __construct(array $items)
     {
-        parent::__construct( new ArrayIterator( $items ) );
+        parent::__construct(new ArrayIterator($items));
     }
 }

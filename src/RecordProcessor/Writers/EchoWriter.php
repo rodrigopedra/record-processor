@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
+use RodrigoPedra\RecordProcessor\Traits\NoOutput;
+use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 
 class EchoWriter extends FileWriter implements ConfigurableWriter
 {
@@ -13,7 +13,7 @@ class EchoWriter extends FileWriter implements ConfigurableWriter
 
     public function __construct()
     {
-        parent::__construct( 'php://output' );
+        parent::__construct('php://output');
     }
 
     public function open()
@@ -22,36 +22,35 @@ class EchoWriter extends FileWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  string $content
-     *
+     * @param  string  $content
      * @return void
      */
-    public function append( $content )
+    public function append($content)
     {
         $prefix = $this->getPrefix();
 
-        if (is_string( $prefix )) {
-            $this->file->fwrite( $prefix . ': ' );
+        if (is_string($prefix)) {
+            $this->file->fwrite($prefix . ': ');
         }
 
-        if (!is_string( $content )) {
-            $content = var_export( $content, true );
+        if (! is_string($content)) {
+            $content = var_export($content, true);
         }
 
-        $this->file->fwrite( $content );
-        $this->file->fwrite( PHP_EOL );
-        $this->file->fwrite( PHP_EOL );
+        $this->file->fwrite($content);
+        $this->file->fwrite(PHP_EOL);
+        $this->file->fwrite(PHP_EOL);
 
         $this->incrementLineCount();
     }
 
     public function getConfigurableMethods()
     {
-        return [ 'setPrefix' ];
+        return ['setPrefix'];
     }
 
     public function createConfigurator()
     {
-        return new WriterConfigurator( $this, true, true );
+        return new WriterConfigurator($this, true, true);
     }
 }

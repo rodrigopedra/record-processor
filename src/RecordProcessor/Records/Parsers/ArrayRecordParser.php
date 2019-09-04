@@ -2,16 +2,16 @@
 
 namespace RodrigoPedra\RecordProcessor\Records\Parsers;
 
-use RodrigoPedra\RecordProcessor\Contracts\Reader;
-use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
-use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 use RuntimeException;
+use RodrigoPedra\RecordProcessor\Contracts\Reader;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
+use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 class ArrayRecordParser implements RecordParser
 {
-    public function parseRecord( Reader $reader, $rawContent )
+    public function parseRecord(Reader $reader, $rawContent)
     {
-        if (is_object( $rawContent ) && method_exists( $rawContent, 'toArray' )) {
+        if (is_object($rawContent) && method_exists($rawContent, 'toArray')) {
             $rawContent = $rawContent->toArray();
         }
 
@@ -19,10 +19,10 @@ class ArrayRecordParser implements RecordParser
             $rawContent = (array)$rawContent;
         }
 
-        if (!is_array( $rawContent )) {
-            throw new RuntimeException( 'content for ArrayRecordParser should be an array' );
+        if (! is_array($rawContent)) {
+            throw new RuntimeException('content for ArrayRecordParser should be an array');
         }
 
-        return new SimpleRecord( $rawContent );
+        return new SimpleRecord($rawContent);
     }
 }

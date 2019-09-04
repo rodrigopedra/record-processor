@@ -7,9 +7,7 @@ use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 
 /**
  *  A trait to configure and check CSV file and content
- *
  * Partially extracted from
- *
  * \League\Csv\Config\AbstractCsv
  *
  * @license http://opensource.org/licenses/MIT
@@ -57,16 +55,14 @@ trait CsvControls
     /**
      * Sets the field delimiter
      *
-     * @param string $delimiter
-     *
-     * @throws InvalidArgumentException If $delimiter is not a single character
-     *
+     * @param  string  $delimiter
      * @return void
+     * @throws InvalidArgumentException If $delimiter is not a single character
      */
-    public function setDelimiter( $delimiter )
+    public function setDelimiter($delimiter)
     {
-        if (!$this->isValidCsvControls( $delimiter )) {
-            throw new InvalidArgumentException( 'The delimiter must be a single character' );
+        if (! $this->isValidCsvControls($delimiter)) {
+            throw new InvalidArgumentException('The delimiter must be a single character');
         }
         $this->delimiter = $delimiter;
     }
@@ -84,16 +80,14 @@ trait CsvControls
     /**
      * Sets the field enclosure
      *
-     * @param string $enclosure
-     *
-     * @throws InvalidArgumentException If $enclosure is not a single character
-     *
+     * @param  string  $enclosure
      * @return void
+     * @throws InvalidArgumentException If $enclosure is not a single character
      */
-    public function setEnclosure( $enclosure )
+    public function setEnclosure($enclosure)
     {
-        if (!$this->isValidCsvControls( $enclosure )) {
-            throw new InvalidArgumentException( 'The enclosure must be a single character' );
+        if (! $this->isValidCsvControls($enclosure)) {
+            throw new InvalidArgumentException('The enclosure must be a single character');
         }
         $this->enclosure = $enclosure;
     }
@@ -111,16 +105,14 @@ trait CsvControls
     /**
      * Sets the field escape character
      *
-     * @param string $escape
-     *
-     * @throws InvalidArgumentException If $escape is not a single character
-     *
+     * @param  string  $escape
      * @return void
+     * @throws InvalidArgumentException If $escape is not a single character
      */
-    public function setEscape( $escape )
+    public function setEscape($escape)
     {
-        if (!$this->isValidCsvControls( $escape )) {
-            throw new InvalidArgumentException( 'The escape character must be a single character' );
+        if (! $this->isValidCsvControls($escape)) {
+            throw new InvalidArgumentException('The escape character must be a single character');
         }
         $this->escape = $escape;
     }
@@ -138,11 +130,10 @@ trait CsvControls
     /**
      * Sets the newline sequence characters
      *
-     * @param string $newline
-     *
+     * @param  string  $newline
      * @return void
      */
-    public function setNewline( $newline )
+    public function setNewline($newline)
     {
         $this->newline = (string)$newline;
     }
@@ -160,11 +151,10 @@ trait CsvControls
     /**
      * Sets the BOM sequence in use
      *
-     * @param string $str The BOM sequence
-     *
+     * @param  string  $str The BOM sequence
      * @return void
      */
-    public function setOutputBOM( $str )
+    public function setOutputBOM($str)
     {
         $this->outputBOM = (string)$str;
     }
@@ -182,12 +172,11 @@ trait CsvControls
     /**
      * Tell whether the submitted string is a valid CSV Control character
      *
-     * @param string $str The submitted string
-     *
+     * @param  string  $str The submitted string
      * @return bool
      */
-    protected function isValidCsvControls( $str )
+    protected function isValidCsvControls($str)
     {
-        return 1 == mb_strlen( $str );
+        return 1 == mb_strlen($str);
     }
 }

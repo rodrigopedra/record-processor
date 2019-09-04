@@ -2,12 +2,12 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
-use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
-use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 use RuntimeException;
+use RodrigoPedra\RecordProcessor\Contracts\Writer;
+use RodrigoPedra\RecordProcessor\Contracts\Record;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 
 class ExampleRecordAggregateFormatter implements RecordFormatter
 {
@@ -20,32 +20,33 @@ class ExampleRecordAggregateFormatter implements RecordFormatter
     }
 
     /**
-     * @param  Writer                 $writer
-     * @param  RecordAggregate|Record $master
-     *
+     * @param  Writer  $writer
+     * @param  RecordAggregate|Record  $master
      * @return bool
      */
-    public function formatRecord( Writer $writer, Record $master )
+    public function formatRecord(Writer $writer, Record $master)
     {
-        if (!$master instanceof RecordAggregate) {
-            throw new RuntimeException( 'Record for ExampleRecordAggregateFormatter should implement RecordAggregate interface' );
+        if (! $master instanceof RecordAggregate) {
+            throw new RuntimeException('Record for ExampleRecordAggregateFormatter should implement RecordAggregate interface');
         }
 
-        if (!$master->valid()) {
+        if (! $master->valid()) {
             return false;
         }
 
-        $children = $this->formatChildren( $master->getRecords() );
-        $content  = [
-            'name'  => $master->getKey(),
+        $children = $this->formatChildren($master->getRecords());
+        $content = [
+            'name' => $master->getKey(),
             'email' => $children,
         ];
 
-        return $this->recordFormatter->formatRecord( $writer, new SimpleRecord( $content ) );
+        return $this->recordFormatter->formatRecord($writer, new SimpleRecord($content));
     }
 
-    public function formatChildren( array $children )
+    public function formatChildren(array $children)
     {
-        return implode( ', ', array_map( function ( Record $record ) { return $record->get( 'email' ); }, $children ) );
+        return implode(', ', array_map(function (Record $record) {
+            return $record->get('email');
+        }, $children));
     }
 }

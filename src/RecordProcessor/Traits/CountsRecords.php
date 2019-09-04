@@ -12,7 +12,7 @@ trait CountsRecords
         return $this->recordCount;
     }
 
-    protected function incrementRecordCount( $amount = 1 )
+    protected function incrementRecordCount($amount = 1)
     {
         $this->recordCount += $amount;
     }

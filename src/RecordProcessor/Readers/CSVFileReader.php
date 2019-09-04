@@ -3,9 +3,9 @@
 namespace RodrigoPedra\RecordProcessor\Readers;
 
 use League\Csv\Reader as RawCsvReader;
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
-use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 
 class CSVFileReader extends FileReader implements ConfigurableReader
 {
@@ -14,21 +14,21 @@ class CSVFileReader extends FileReader implements ConfigurableReader
     /** @var bool */
     protected $useFirstRowAsHeader = true;
 
-    public function __construct( $file )
+    public function __construct($file)
     {
-        parent::__construct( $file );
+        parent::__construct($file);
 
         // default values
-        $this->setDelimiter( ';' );
-        $this->setEnclosure( '"' );
-        $this->setEscape( '\\' );
-        $this->useFirstRowAsHeader( true );
+        $this->setDelimiter(';');
+        $this->setEnclosure('"');
+        $this->setEscape('\\');
+        $this->useFirstRowAsHeader(true);
     }
 
     /**
-     * @param bool $firstRowAsHeader
+     * @param  bool  $firstRowAsHeader
      */
-    public function useFirstRowAsHeader( $firstRowAsHeader = true )
+    public function useFirstRowAsHeader($firstRowAsHeader = true)
     {
         $this->useFirstRowAsHeader = $firstRowAsHeader;
     }
@@ -38,17 +38,17 @@ class CSVFileReader extends FileReader implements ConfigurableReader
         parent::open();
 
         /** @var RawCsvReader $csvReader */
-        $csvReader = RawCsvReader::createFromFileObject( $this->file );
+        $csvReader = RawCsvReader::createFromFileObject($this->file);
 
-        $csvReader->setDelimiter( $this->getDelimiter() );
-        $csvReader->setEnclosure( $this->getEnclosure() );
-        $csvReader->setEscape( $this->getEscape() );
+        $csvReader->setDelimiter($this->getDelimiter());
+        $csvReader->setEnclosure($this->getEnclosure());
+        $csvReader->setEscape($this->getEscape());
 
         if ($this->useFirstRowAsHeader) {
-            $csvReader->setHeaderOffset( 0 );
+            $csvReader->setHeaderOffset(0);
         }
 
-        $this->setInnerIterator( $csvReader->getRecords() );
+        $this->setInnerIterator($csvReader->getRecords());
     }
 
     /**
@@ -69,6 +69,6 @@ class CSVFileReader extends FileReader implements ConfigurableReader
      */
     public function createConfigurator()
     {
-        return new Configurator( $this );
+        return new Configurator($this);
     }
 }

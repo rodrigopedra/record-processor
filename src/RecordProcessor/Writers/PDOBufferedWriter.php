@@ -20,23 +20,22 @@ class PDOBufferedWriter extends PDOWriter
     }
 
     /**
-     * @param  array $content
-     *
+     * @param  array  $content
      * @return void
      * @throws Exception
      */
-    public function append( $content )
+    public function append($content)
     {
-        if (!is_array( $content )) {
-            throw new RuntimeException( 'content for PDOBufferedWriter should be an array' );
+        if (! is_array($content)) {
+            throw new RuntimeException('content for PDOBufferedWriter should be an array');
         }
 
-        $this->pushValues( $content );
+        $this->pushValues($content);
     }
 
-    public function pushValues( array $values )
+    public function pushValues(array $values)
     {
-        $count = array_push( $this->buffer, $values );
+        $count = array_push($this->buffer, $values);
 
         if ($count === static::BUFFER_LIMIT) {
             $this->flush();
@@ -45,22 +44,22 @@ class PDOBufferedWriter extends PDOWriter
 
     public function flush()
     {
-        $count = count( $this->buffer );
+        $count = count($this->buffer);
 
         if ($count === 0) {
             return;
         }
 
         try {
-            $data   = $this->flushData();
-            $writer = $this->prepareWriter( $count );
+            $data = $this->flushData();
+            $writer = $this->prepareWriter($count);
 
-            if (!$writer->execute( $data )) {
-                throw new RuntimeException( 'Could not write PDO records' );
+            if (! $writer->execute($data)) {
+                throw new RuntimeException('Could not write PDO records');
             }
 
-            $this->incrementLineCount( $writer->rowCount() );
-        } catch ( Exception $exception ) {
+            $this->incrementLineCount($writer->rowCount());
+        } catch (Exception $exception) {
             if ($this->inTransaction) {
                 $this->pdo->rollBack();
                 $this->inTransaction = false;
@@ -72,13 +71,13 @@ class PDOBufferedWriter extends PDOWriter
         }
     }
 
-    protected function prepareWriter( $count )
+    protected function prepareWriter($count)
     {
         if ($count !== static::BUFFER_LIMIT) {
             $this->writer = null;
         }
 
-        return parent::prepareWriter( $count );
+        return parent::prepareWriter($count);
     }
 
     protected function flushData()
@@ -86,9 +85,9 @@ class PDOBufferedWriter extends PDOWriter
         $result = [];
 
         foreach ($this->buffer as $values) {
-            $values = $this->prepareValuesForInsert( $values );
+            $values = $this->prepareValuesForInsert($values);
 
-            array_push( $result, ...$values );
+            array_push($result, ...$values);
         }
 
         $this->buffer = [];

@@ -26,7 +26,7 @@ trait HasInnerIterator
 
     public function valid()
     {
-        $valid = !is_null( $this->iterator ) && $this->iterator->valid();
+        $valid = ! is_null($this->iterator) && $this->iterator->valid();
 
         if ($valid) {
             $this->incrementLineCount();
@@ -47,7 +47,7 @@ trait HasInnerIterator
         return $this->iterator;
     }
 
-    protected function setInnerIterator( Iterator $iterator = null )
+    protected function setInnerIterator(Iterator $iterator = null)
     {
         $this->iterator = $iterator;
     }

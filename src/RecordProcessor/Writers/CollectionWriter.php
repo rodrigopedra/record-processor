@@ -20,9 +20,9 @@ class CollectionWriter implements Writer
         //
     }
 
-    public function append( $row )
+    public function append($row)
     {
-        $this->collection->push( $row );
+        $this->collection->push($row);
     }
 
     /**

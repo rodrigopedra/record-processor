@@ -3,13 +3,13 @@
 namespace RodrigoPedra\RecordProcessor\Helpers\Writers;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Helpers\Configurator;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
-use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
-use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
 
 /**
  * Class WriterConfigurator
@@ -29,17 +29,17 @@ class WriterConfigurator extends Configurator
     /** @var  RecordFormatter|null */
     protected $recordFormatter = null;
 
-    public function __construct( ConfigurableWriter $writer, $hasHeader = false, $hasTrailler = false )
+    public function __construct(ConfigurableWriter $writer, $hasHeader = false, $hasTrailler = false)
     {
-        parent::__construct( $writer );
+        parent::__construct($writer);
 
-        $this->hasHeader   = $hasHeader;
+        $this->hasHeader = $hasHeader;
         $this->hasTrailler = $hasTrailler;
     }
 
-    public function getRecordFormatter( RecordFormatter $defaultRecordFormatter = null )
+    public function getRecordFormatter(RecordFormatter $defaultRecordFormatter = null)
     {
-        if (is_null( $this->recordFormatter )) {
+        if (is_null($this->recordFormatter)) {
             return $defaultRecordFormatter ?: new ArrayRecordFormatter;
         }
 
@@ -47,40 +47,40 @@ class WriterConfigurator extends Configurator
     }
 
     /**
-     * @param  RecordFormatter|callable $recordFormatter
+     * @param  RecordFormatter|callable  $recordFormatter
      */
-    public function setRecordFormatter( $recordFormatter )
+    public function setRecordFormatter($recordFormatter)
     {
-        if (is_callable( $recordFormatter )) {
-            $this->recordFormatter = new CallbackRecordFormatter( $recordFormatter );
+        if (is_callable($recordFormatter)) {
+            $this->recordFormatter = new CallbackRecordFormatter($recordFormatter);
 
             return;
         }
 
-        if (!$recordFormatter instanceof RecordFormatter) {
-            throw new InvalidArgumentException( 'Formatter should implement RecordFormatter interface' );
+        if (! $recordFormatter instanceof RecordFormatter) {
+            throw new InvalidArgumentException('Formatter should implement RecordFormatter interface');
         }
 
         $this->recordFormatter = $recordFormatter;
     }
 
-    public function setHeader( $header )
+    public function setHeader($header)
     {
-        if (!$this->hasHeader) {
-            $className = get_class( $this->configurable );
+        if (! $this->hasHeader) {
+            $className = get_class($this->configurable);
 
-            throw new InvalidArgumentException( "The writer '{$className}' does not accept a header" );
+            throw new InvalidArgumentException("The writer '{$className}' does not accept a header");
         }
 
         $this->header = $header;
     }
 
-    public function setTrailler( $trailler )
+    public function setTrailler($trailler)
     {
-        if (!$this->hasTrailler) {
-            $className = get_class( $this->configurable );
+        if (! $this->hasTrailler) {
+            $className = get_class($this->configurable);
 
-            throw new InvalidArgumentException( "The writer '{$className}' does not accept a trailler" );
+            throw new InvalidArgumentException("The writer '{$className}' does not accept a trailler");
         }
 
         $this->trailler = $trailler;

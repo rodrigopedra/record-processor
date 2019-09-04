@@ -16,16 +16,16 @@ class WriterCallbackProxy
     /** @var Record */
     protected $firstRecord;
 
-    public function __construct( Writer $writer, $recordCount, Record $firstRecord = null )
+    public function __construct(Writer $writer, $recordCount, Record $firstRecord = null)
     {
-        $this->writer      = $writer;
+        $this->writer = $writer;
         $this->recordCount = $recordCount;
         $this->firstRecord = $firstRecord;
     }
 
-    public function append( $content )
+    public function append($content)
     {
-        $this->writer->append( $content );
+        $this->writer->append($content);
     }
 
     public function getLineCount()

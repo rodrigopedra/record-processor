@@ -2,8 +2,8 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages\TransferObjects;
 
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use SplFileInfo;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 
 class ProcessorOutput
 {
@@ -25,19 +25,19 @@ class ProcessorOutput
     /**
      * ProcessOutput constructor.
      *
-     * @param  int   $inputLineCount
-     * @param  int   $inputRecordCount
-     * @param  int   $outputLineCount
-     * @param  int   $outputRecordCount
-     * @param  mixed $output
+     * @param  int  $inputLineCount
+     * @param  int  $inputRecordCount
+     * @param  int  $outputLineCount
+     * @param  int  $outputRecordCount
+     * @param  mixed  $output
      */
-    public function __construct( $inputLineCount, $inputRecordCount, $outputLineCount, $outputRecordCount, $output )
+    public function __construct($inputLineCount, $inputRecordCount, $outputLineCount, $outputRecordCount, $output)
     {
-        $this->inputLineCount    = $inputLineCount;
-        $this->inputRecordCount  = $inputRecordCount;
-        $this->outputLineCount   = $outputLineCount;
+        $this->inputLineCount = $inputLineCount;
+        $this->inputRecordCount = $inputRecordCount;
+        $this->outputLineCount = $outputLineCount;
         $this->outputRecordCount = $outputRecordCount;
-        $this->output            = $output;
+        $this->output = $output;
 
         $this->parseOutput();
     }
@@ -79,7 +79,7 @@ class ProcessorOutput
      */
     public function hasOutput()
     {
-        return !is_null( $this->output );
+        return ! is_null($this->output);
     }
 
     /**
@@ -93,7 +93,7 @@ class ProcessorOutput
     protected function parseOutput()
     {
         if ($this->output instanceof SplFileInfo) {
-            $this->output = $this->output->getFileInfo( FileInfo::class );
+            $this->output = $this->output->getFileInfo(FileInfo::class);
         }
     }
 }

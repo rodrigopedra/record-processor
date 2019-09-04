@@ -5,11 +5,10 @@ namespace RodrigoPedra\RecordProcessor\Contracts;
 interface RecordAggregate extends Record
 {
     /**
-     * @param  Record $record
-     *
+     * @param  Record  $record
      * @return bool
      */
-    public function pushRecord( Record $record );
+    public function pushRecord(Record $record);
 
     /**
      * @return  array

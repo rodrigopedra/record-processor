@@ -26,7 +26,7 @@ class FlushPayload
      */
     public function hasRecord()
     {
-        return !is_null( $this->record );
+        return ! is_null($this->record);
     }
 
     /**
@@ -38,9 +38,9 @@ class FlushPayload
     }
 
     /**
-     * @param Record|null $record
+     * @param  Record|null  $record
      */
-    public function setRecord( $record )
+    public function setRecord($record)
     {
         $this->record = $record;
     }
@@ -54,9 +54,9 @@ class FlushPayload
     }
 
     /**
-     * @param int $lineCount
+     * @param  int  $lineCount
      */
-    public function setLineCount( $lineCount )
+    public function setLineCount($lineCount)
     {
         $this->lineCount = $lineCount;
     }
@@ -70,9 +70,9 @@ class FlushPayload
     }
 
     /**
-     * @param int $recordCount
+     * @param  int  $recordCount
      */
-    public function setRecordCount( $recordCount )
+    public function setRecordCount($recordCount)
     {
         $this->recordCount = $recordCount;
     }
@@ -86,9 +86,9 @@ class FlushPayload
     }
 
     /**
-     * @param mixed $output
+     * @param  mixed  $output
      */
-    public function setOutput( $output )
+    public function setOutput($output)
     {
         $this->output = $output;
     }
@@ -102,9 +102,9 @@ class FlushPayload
     }
 
     /**
-     * @param string $writerClassName
+     * @param  string  $writerClassName
      */
-    public function setWriterClassName( $writerClassName )
+    public function setWriterClassName($writerClassName)
     {
         $this->writerClassName = $writerClassName;
     }

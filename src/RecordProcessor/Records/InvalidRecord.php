@@ -6,12 +6,12 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 
 class InvalidRecord implements Record
 {
-    public function get( $field, $default = null )
+    public function get($field, $default = null)
     {
         return '';
     }
 
-    public function set( $field, $value )
+    public function set($field, $value)
     {
         //
     }

@@ -2,24 +2,24 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
-use League\Csv\Reader as RawCSVReader;
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
-use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
-use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\HTMLTableWriter;
-use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
-use RuntimeException;
 use SplFileInfo;
 use SplFileObject;
+use RuntimeException;
+use League\Csv\Reader as RawCSVReader;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
+use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
+use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
+use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
+use RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter;
+use RodrigoPedra\RecordProcessor\Writers\HTMLTableWriter;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class DownloadFileOutput implements ProcessorStageFlusher
 {
     const DELETE_FILE_AFTER_DOWNLOAD = true;
-    const KEEP_AFTER_DOWNLOAD        = false;
+    const KEEP_AFTER_DOWNLOAD = false;
 
     /** @var SplFileObject */
     protected $inputFile;
@@ -33,32 +33,32 @@ class DownloadFileOutput implements ProcessorStageFlusher
     /** @var bool */
     protected $deleteAfterDownload;
 
-    public function __construct( $outputFileName = '', $deleteFileAfterDownload = false )
+    public function __construct($outputFileName = '', $deleteFileAfterDownload = false)
     {
-        $this->outputFileInfo      = value_or_null( $outputFileName );
+        $this->outputFileInfo = value_or_null($outputFileName);
         $this->deleteAfterDownload = $deleteFileAfterDownload === true;
     }
 
-    public function flush( FlushPayload $payload )
+    public function flush(FlushPayload $payload)
     {
-        $this->inputFile     = $this->getInputFile( $payload );
-        $this->inputFileInfo = $this->inputFile->getFileInfo( FileInfo::class );
+        $this->inputFile = $this->getInputFile($payload);
+        $this->inputFileInfo = $this->inputFile->getFileInfo(FileInfo::class);
 
-        $this->buildOutputFileInfo( $payload->getWriterClassName() );
+        $this->buildOutputFileInfo($payload->getWriterClassName());
 
         $output = $this->downloadFile();
 
-        $payload->setOutput( $output );
+        $payload->setOutput($output);
 
         return $payload;
     }
 
-    protected function getInputFile( FlushPayload $payload )
+    protected function getInputFile(FlushPayload $payload)
     {
         $inputFile = $payload->getOutput();
 
-        if (!$inputFile instanceof SplFileObject) {
-            throw new RuntimeException( 'Process output should be a file to be downloadable' );
+        if (! $inputFile instanceof SplFileObject) {
+            throw new RuntimeException('Process output should be a file to be downloadable');
         }
 
         return $inputFile;
@@ -67,7 +67,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
     protected function downloadFile()
     {
         if ($this->inputFileInfo->isCSV()) {
-            $this->outputFileWithLeagueCSV( $this->inputFile );
+            $this->outputFileWithLeagueCSV($this->inputFile);
         } else {
             $this->sendHeaders();
 
@@ -86,31 +86,31 @@ class DownloadFileOutput implements ProcessorStageFlusher
             ? $this->outputFileInfo->guessMimeType()
             : $this->inputFileInfo->guessMimeType();
 
-        header( 'Content-Type: ' . $mimeType . '; charset=utf-8' );
-        header( 'Content-Transfer-Encoding: binary' );
-        header( 'Content-Description: File Transfer' );
+        header('Content-Type: ' . $mimeType . '; charset=utf-8');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Description: File Transfer');
 
-        $filename = rawurlencode( $this->outputFileInfo->getBasename() );
-        header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+        $filename = rawurlencode($this->outputFileInfo->getBasename());
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
     }
 
-    protected function outputFileWithLeagueCSV( SplFileObject $file )
+    protected function outputFileWithLeagueCSV(SplFileObject $file)
     {
         // League\CSV handles CSV BOM properly
-        $reader = RawCSVReader::createFromFileObject( $file );
-        $reader->output( $this->outputFileInfo->getBasename() );
+        $reader = RawCSVReader::createFromFileObject($file);
+        $reader->output($this->outputFileInfo->getBasename());
     }
 
-    protected function buildOutputFileInfo( $writerClassName )
+    protected function buildOutputFileInfo($writerClassName)
     {
-        if (is_string( $this->outputFileInfo )) {
-            $this->outputFileInfo = new FileInfo( $this->outputFileInfo );
+        if (is_string($this->outputFileInfo)) {
+            $this->outputFileInfo = new FileInfo($this->outputFileInfo);
 
             return;
         }
 
         if ($this->outputFileInfo instanceof SplFileInfo) {
-            $this->outputFileInfo = $this->outputFileInfo->getFileInfo( FileInfo::class );
+            $this->outputFileInfo = $this->outputFileInfo->getFileInfo(FileInfo::class);
 
             return;
         }
@@ -118,7 +118,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         // invalid outputFileInfo, tries to guess from inputFile
 
         if ($this->inputFileInfo->isTempFile()) {
-            $this->outputFileInfo = $this->buildTempOutputFileInfo( $writerClassName );
+            $this->outputFileInfo = $this->buildTempOutputFileInfo($writerClassName);
 
             return;
         }
@@ -128,7 +128,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     protected function unlinkInputFile()
     {
-        if (!$this->deleteAfterDownload) {
+        if (! $this->deleteAfterDownload) {
             return;
         }
 
@@ -141,12 +141,12 @@ class DownloadFileOutput implements ProcessorStageFlusher
             return;
         }
 
-        unlink( $realPath );
+        unlink($realPath);
     }
 
-    protected function buildTempOutputFileInfo( $writerClassName )
+    protected function buildTempOutputFileInfo($writerClassName)
     {
-        $fileName = implode( '_', [ 'temp', date( 'YmdHis' ), str_random( 8 ) ] );
+        $fileName = implode('_', ['temp', date('YmdHis'), str_random(8)]);
 
         $extension = null;
 
@@ -168,8 +168,8 @@ class DownloadFileOutput implements ProcessorStageFlusher
                 break;
         }
 
-        $fileName = implode( '.', array_filter( [ $fileName, $extension ] ) );
+        $fileName = implode('.', array_filter([$fileName, $extension]));
 
-        return new FileInfo( $fileName );
+        return new FileInfo($fileName);
     }
 }

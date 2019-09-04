@@ -2,12 +2,13 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
+use Illuminate\Support\Arr;
 use League\Csv\ByteSequence;
 use League\Csv\Writer as RawCsvWriter;
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 
 class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequence, NewLines
 {
@@ -18,27 +19,27 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
     /** @var RawCsvWriter|null */
     protected $writer = null;
 
-    public function __construct( $file = null )
+    public function __construct($file = null)
     {
-        parent::__construct( $file );
+        parent::__construct($file);
 
         // defaults
-        $this->setDelimiter( ';' );
-        $this->setNewline( static::WINDOWS_NEWLINE );
-        $this->setOutputBOM( static::BOM_UTF8 );
+        $this->setDelimiter(';');
+        $this->setNewline(static::WINDOWS_NEWLINE);
+        $this->setOutputBOM(static::BOM_UTF8);
     }
 
     public function open()
     {
         parent::open();
 
-        $this->writer = RawCsvWriter::createFromFileObject( $this->file );
+        $this->writer = RawCsvWriter::createFromFileObject($this->file);
 
-        $this->writer->setOutputBOM( $this->getOutputBOM() );
-        $this->writer->setDelimiter( $this->getDelimiter() );
-        $this->writer->setEnclosure( $this->getEnclosure() );
-        $this->writer->setNewline( $this->getNewline() );
-        $this->writer->setEscape( $this->getEscape() );
+        $this->writer->setOutputBOM($this->getOutputBOM());
+        $this->writer->setDelimiter($this->getDelimiter());
+        $this->writer->setEnclosure($this->getEnclosure());
+        $this->writer->setNewline($this->getNewline());
+        $this->writer->setEscape($this->getEscape());
     }
 
     public function close()
@@ -47,13 +48,12 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
     }
 
     /**
-     * @param  array $content
-     *
+     * @param  array  $content
      * @return void
      */
-    public function append( $content )
+    public function append($content)
     {
-        $this->writer->insertOne( array_wrap( $content ) );
+        $this->writer->insertOne(Arr::wrap($content));
 
         $this->incrementLineCount();
     }
@@ -71,6 +71,6 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
 
     public function createConfigurator()
     {
-        return new WriterConfigurator( $this, true, true );
+        return new WriterConfigurator($this, true, true);
     }
 }

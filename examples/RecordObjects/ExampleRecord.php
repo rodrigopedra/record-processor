@@ -9,12 +9,12 @@ class ExampleRecord extends SimpleRecord implements TextRecord
 {
     public function getKey()
     {
-        return $this->get( 'name' );
+        return $this->get('name');
     }
 
     public function valid()
     {
-        return filter_var( $this->get( 'email' ), FILTER_VALIDATE_EMAIL ) !== false;
+        return filter_var($this->get('email'), FILTER_VALIDATE_EMAIL) !== false;
     }
 
     /**
@@ -22,6 +22,6 @@ class ExampleRecord extends SimpleRecord implements TextRecord
      */
     public function toText()
     {
-        return implode( '|', $this->toArray() );
+        return implode('|', $this->toArray());
     }
 }

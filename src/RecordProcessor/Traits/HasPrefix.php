@@ -18,12 +18,11 @@ trait HasPrefix
     }
 
     /**
-     * @param  string $prefix
-     *
+     * @param  string  $prefix
      * @return void
      */
-    public function setPrefix( $prefix )
+    public function setPrefix($prefix)
     {
-        $this->prefix = value_or_null( $prefix );
+        $this->prefix = value_or_null($prefix);
     }
 }

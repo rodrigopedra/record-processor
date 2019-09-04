@@ -12,7 +12,7 @@ trait CountsLines
         return $this->lineCount;
     }
 
-    protected function incrementLineCount( $amount = 1 )
+    protected function incrementLineCount($amount = 1)
     {
         $this->lineCount += $amount;
     }

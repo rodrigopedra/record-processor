@@ -19,9 +19,9 @@ class ArrayWriter implements Writer
         //
     }
 
-    public function append( $row )
+    public function append($row)
     {
-        array_push( $this->items, $row );
+        array_push($this->items, $row);
     }
 
     /**
@@ -29,7 +29,7 @@ class ArrayWriter implements Writer
      */
     public function getLineCount()
     {
-        return count( $this->items );
+        return count($this->items);
     }
 
     /**
