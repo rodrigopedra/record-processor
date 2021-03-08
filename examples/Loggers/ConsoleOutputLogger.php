@@ -7,8 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleOutputLogger implements LoggerInterface
 {
-    /** @var OutputInterface */
-    private $output;
+    private OutputInterface $output;
 
     public function __construct(OutputInterface $output)
     {
@@ -57,10 +56,10 @@ class ConsoleOutputLogger implements LoggerInterface
 
     public function log($level, $message, array $context = [])
     {
-        $this->output->writeln(strtoupper($level));
+        $this->output->writeln(\strtoupper($level));
 
-        if (count($context)) {
-            $this->output->writeln($message . ': ' . var_export($context, true));
+        if (\count($context)) {
+            $this->output->writeln($message . ': ' . \var_export($context, true));
         } else {
             $this->output->writeln($message);
         }

@@ -8,14 +8,14 @@ Process record-based sources using a pipeline approach
 
     use RodrigoPedra\RecordProcessor\ProcessorBuilder;
     
-    $processor = ( new ProcessorBuilder )
-        ->readFromCSVFile( __DIR__ . '/storage/input.xlsx' )
-        ->writeToHTMLTable()
+    $processor = (new ProcessorBuilder)
+        ->readFromCSVFile(__DIR__ . '/storage/input.xlsx')
+        ->serializeToHTMLTable()
         ->build();
     
     $output = $processor->process();
     
-    echo $output->getOutput(), PHP_EOL;
+    echo $output->output(), \PHP_EOL;
     
     exit;
 ```

@@ -2,25 +2,30 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples;
 
-use PDO;
-use ArrayIterator;
 use Illuminate\Support\Arr;
-use InvalidArgumentException;
 use Illuminate\Support\Collection;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use RodrigoPedra\RecordProcessor\ProcessorBuilder;
-use Symfony\Component\Console\Input\InputArgument;
-use RodrigoPedra\RecordProcessor\Writers\PDOWriter;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use RodrigoPedra\RecordProcessor\Helpers\Excel\Formats;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\EchoSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\JSONFileSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\LogSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddonCallback;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateSerializer;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordSerializer;
+use RodrigoPedra\RecordProcessor\ProcessorBuilder;
+use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
+use RodrigoPedra\RecordProcessor\Serializers\PDOSerializer;
+use RodrigoPedra\RecordProcessor\Support\Excel\Formats;
+use RodrigoPedra\RecordProcessor\Support\Excel\WorkbookConfigurator;
+use RodrigoPedra\RecordProcessor\Support\Excel\WorksheetConfigurator;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ExamplesCommand extends Command
 {
@@ -30,28 +35,28 @@ class ExamplesCommand extends Command
 
         $this->setDescription('Showcases converters usage');
 
-        $this->addArgument('reader', InputArgument::REQUIRED, $this->getAvailableReaders());
-        $this->addArgument('writer', InputArgument::REQUIRED, $this->getAvailableWriters());
+        $this->addArgument('parser', InputArgument::REQUIRED, $this->availableParsers());
+        $this->addArgument('serializer', InputArgument::REQUIRED, $this->availableSerializers());
 
         $this->addOption('log', 'l', InputOption::VALUE_NONE, 'logs record flow');
         $this->addOption('aggregate', 'a', InputOption::VALUE_NONE, 'aggregates output');
         $this->addOption('invalid', 'i', InputOption::VALUE_NONE, 'log invalid records');
     }
 
-    protected function getAvailableReaders()
+    protected function availableParsers(): string
     {
         return 'array|collection|csv|excel|iterator|pdo|text';
     }
 
-    protected function getAvailableWriters()
+    protected function availableSerializers(): string
     {
         return 'array|collection|csv|echo|excel|html|json|log|pdo|pdo-buffered|text';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Script start
-        $time_start = microtime(true);
+        $time_start = \microtime(true);
         $logger = new ConsoleOutputLogger($output);
 
         try {
@@ -67,10 +72,10 @@ class ExamplesCommand extends Command
             }
 
             if ($input->getOption('aggregate')) {
-                $builder->usingFormatter(new ExampleRecordAggregateFormatter);
+                $builder->withRecordSerializer(new ExampleRecordAggregateSerializer());
                 $builder->aggregateRecordsByKey();
             } else {
-                $builder->usingFormatter(new ExampleRecordFormatter);
+                $builder->withRecordSerializer(new ExampleRecordSerializer());
             }
 
             if ($input->getOption('log')) {
@@ -81,46 +86,43 @@ class ExamplesCommand extends Command
                 $builder->logInvalidRecords('INVALID OUTPUT');
             }
 
-            $builder->usingParser(new ExampleRecordParser);
-            $this->readFrom($builder, $input->getArgument('reader'));
+            $builder->withRecordParser(new ExampleRecordParser());
+            $this->readFrom($builder, $input->getArgument('parser'));
 
-            $builder->filterValidRecords();
+            $builder->onlyValidRecords();
 
-            $this->writeTo($builder, $input->getArgument('writer'));
+            $this->serializeTo($builder, $input->getArgument('serializer'));
 
             $processor = $builder->build();
 
             $output = $processor->process();
 
-            $logger->info('input lines: ' . $output->getInputLineCount());
-            $logger->info('input records: ' . $output->getInputRecordCount());
-            $logger->info('output lines: ' . $output->getOutputRecordCount());
-            $logger->info('output records: ' . $output->getOutputRecordCount());
+            $logger->info('input lines: ' . $output->inputLineCount());
+            $logger->info('input records: ' . $output->inputRecordCount());
+            $logger->info('output lines: ' . $output->outputRecordCount());
+            $logger->info('output records: ' . $output->outputRecordCount());
 
             if ($output->hasOutput()) {
-                $logger->info('output: ', Arr::wrap($output->getOutput()));
+                $logger->info('output: ', Arr::wrap($output->output()));
             }
-        } finally {
-            $logger->info(sprintf('memory: %.2fMB', floatval(memory_get_peak_usage(true)) / 1024.0 / 1024.0));
 
-            $time_end = microtime(true);
+            return 0;
+        } finally {
+            $logger->info(\sprintf('memory: %.2fMB', \floatval(\memory_get_peak_usage(true)) / 1024.0 / 1024.0));
+
+            $time_end = \microtime(true);
             $execution_time = ($time_end - $time_start);
 
             $logger->info('Total Execution Time: ' . $execution_time . ' seconds');
         }
     }
 
-    protected function makeBuilder()
+    protected function makeBuilder(): ProcessorBuilder
     {
-        return new ProcessorBuilder;
+        return new ProcessorBuilder();
     }
 
-    /**
-     * @param  ProcessorBuilder  $builder
-     * @param  string  $reader
-     * @return mixed
-     */
-    protected function readFrom($builder, $reader)
+    protected function readFrom(ProcessorBuilder $builder, string $reader): ProcessorBuilder
     {
         $inputPath = $this->storagePath('input');
 
@@ -134,7 +136,7 @@ class ExamplesCommand extends Command
             case 'excel':
                 return $builder->readFromExcelFile($inputPath . '.xlsx');
             case 'iterator':
-                return $builder->readFromIterator(new ArrayIterator($this->sampleData()));
+                return $builder->readFromIterator(new \ArrayIterator($this->sampleData()));
             case 'pdo':
                 $pdo = $this->makeConnection();
                 $query = 'SELECT name, email FROM users ORDER BY rowid LIMIT 25';
@@ -143,59 +145,55 @@ class ExamplesCommand extends Command
             case 'text':
                 return $builder->readFromTextFile($inputPath . '.txt');
             default:
-                throw new InvalidArgumentException('Invalid reader');
+                throw new \InvalidArgumentException('Invalid parser');
         }
     }
 
-    /**
-     * @param  ProcessorBuilder  $builder
-     * @param  string  $writer
-     * @return mixed
-     */
-    protected function writeTo($builder, $writer)
+    protected function serializeTo(ProcessorBuilder $builder, string $serializer): ProcessorBuilder
     {
         $outputPath = $this->storagePath('output');
 
-        switch ($writer) {
+        switch ($serializer) {
             case 'array':
-                return $builder->writeToArray();
+                return $builder->serializeToArray();
             case 'collection':
-                return $builder->writeToCollection();
+                return $builder->serializeToCollection();
             case 'csv':
-                return $builder->writeToCSVFile($outputPath . '.csv', function (WriterConfigurator $configurator) {
-                    $configurator->setHeader(['name', 'email']);
-                });
+                return $builder->serializeToCSVFile($outputPath . '.csv',
+                    function (SerializerConfigurator $configurator) {
+                        $configurator->withHeader(['name', 'email']);
+                    });
             case 'echo':
-                return $builder->writeToEcho(function (WriterConfigurator $configurator) {
-                    $configurator->setPrefix('PERSIST');
+                return $builder->serializeToEcho(function (EchoSerializerConfigurator $configurator) {
+                    $configurator->withPrefix('PERSIST');
                 });
             case 'excel':
-                return $builder->writeToExcelFile($outputPath . '.xlsx',
-                    function (WriterConfigurator $configurator) {
-                        $configurator->setHeader(['name', 'email']);
+                return $builder->serializeToExcelFile($outputPath . '.xlsx',
+                    function (ExcelFileSerializerConfigurator $configurator) {
+                        $configurator->withHeader(['name', 'email']);
 
-                        $configurator->setTrailler(function (WriterCallbackProxy $proxy) {
-                            $proxy->append([$proxy->getRecordCount() . ' records']);
-                            $proxy->append([($proxy->getLineCount() + 1) . ' lines']);
+                        $configurator->withTrailler(function (SerializerAddonCallback $proxy) {
+                            $proxy->append([$proxy->recordCount() . ' records']);
+                            $proxy->append([($proxy->lineCount() + 1) . ' lines']);
                         });
 
-                        $configurator->setWorkbookConfigurator(function ($workbook) {
+                        $configurator->withWorkbookConfigurator(function (WorkbookConfigurator $workbook) {
                             $workbook->setTitle('Workbook title');
                             $workbook->setCreator('Creator');
                             $workbook->setCompany('Company');
                         });
 
-                        $configurator->setWorksheetConfigurator(function ($worksheet) {
+                        $configurator->withWorksheetConfigurator(function (WorksheetConfigurator $worksheet) {
                             $worksheet->setTitle('results', false);
 
-                            $worksheet->setColumnFormat([
+                            $worksheet->withColumnFormat([
                                 'A' => Formats::text(),
                                 'B' => Formats::general(),
                             ]);
 
                             // header
                             $worksheet->freezeFirstRow();
-                            $worksheet->cells('A1:B1', function ($cells) {
+                            $worksheet->configureCells('A1:B1', function ($cells) {
                                 $cells->setFontWeight('bold');
                                 $cells->setBorder('node', 'none', 'solid', 'none');
                             });
@@ -203,52 +201,55 @@ class ExamplesCommand extends Command
                         });
                     });
             case 'html':
-                return $builder->writeToHTMLTable(function (WriterConfigurator $configurator) {
-                    $configurator->setHeader(['name', 'email']);
-                    $configurator->setTableClassAttribute('table table-condensed');
-                    $configurator->setTableIdAttribute('my-table');
+                return $builder->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator) {
+                    $configurator->withHeader(['name', 'email']);
+                    $configurator->withTableClassAttribute('table table-condensed');
+                    $configurator->withTableIdAttribute('my-table');
                 });
             case 'json':
-                return $builder->writeToJSONFile($outputPath . '.json');
+                return $builder->serializeToJSONFile($outputPath . '.json',
+                    function (JSONFileSerializerConfigurator $configurator) {
+                        $configurator->withEncodeOptions(JSONFileSerializer::JSON_ENCODE_OPTIONS | \JSON_PRETTY_PRINT);
+                    });
             case 'log':
-                return $builder->writeToLog(function (WriterConfigurator $configurator) {
-                    $configurator->setPrefix('PERSIST');
+                return $builder->serializeToLog(function (LogSerializerConfigurator $configurator) {
+                    $configurator->withPrefix('PERSIST');
                 });
             case 'pdo':
             case 'pdo-buffered':
                 $pdo = $this->makeConnection();
 
-                return $builder->writeToPDO($pdo, 'users', ['name', 'email'], $writer === 'pdo-buffered');
+                return $builder->serializeToPDO($pdo, 'users', ['name', 'email'], $serializer === 'pdo-buffered');
             case 'text':
-                return $builder->writeToTextFile($outputPath . '.txt');
+                return $builder->serializeToTextFile($outputPath . '.txt');
             default:
-                throw new InvalidArgumentException('Invalid writer');
+                throw new \InvalidArgumentException('Invalid serializer');
         }
     }
 
-    protected function storagePath($file)
+    protected function storagePath(string $file): string
     {
         return __DIR__ . '/../storage/' . $file;
     }
 
-    protected function makeConnection()
+    protected function makeConnection(): \PDO
     {
         $filePath = $this->storagePath('database.sqlite');
 
-        $path = realpath($filePath);
+        $path = \realpath($filePath);
         $fileExists = $path !== false;
 
         if (! $fileExists) {
-            touch($filePath);
-            $path = realpath($filePath);
+            \touch($filePath);
+            $path = \realpath($filePath);
         }
 
-        $connection = new PDO("sqlite:{$path}", '', '', [
-            PDO::ATTR_CASE => PDO::CASE_NATURAL,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
-            PDO::ATTR_STRINGIFY_FETCHES => false,
-            PDO::ATTR_EMULATE_PREPARES => false,
+        $connection = new \PDO("sqlite:{$path}", '', '', [
+            \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_NATURAL,
+            \PDO::ATTR_STRINGIFY_FETCHES => false,
+            \PDO::ATTR_EMULATE_PREPARES => false,
         ]);
 
         $this->populateTable($connection, ! $fileExists);
@@ -256,29 +257,29 @@ class ExamplesCommand extends Command
         return $connection;
     }
 
-    protected function populateTable(PDO $connection, $seed)
+    protected function populateTable(\PDO $connection, $seed)
     {
-        $connection->exec('CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT)');
+        $connection->exec('CREATE TABLE IF NOT EXISTS users (NAME TEXT, email TEXT)');
 
         if (! $seed) {
             return;
         }
 
-        $writer = new PDOWriter($connection, 'users', ['name', 'email']);
-        $writer->setUsesTransaction(true);
+        $serializer = new PDOSerializer($connection, 'users', ['name', 'email']);
+        $serializer->withUsesTransaction(true);
 
-        $writer->open();
+        $serializer->open();
 
         $sampleData = $this->sampleData();
 
         foreach ($sampleData as $values) {
-            $writer->append($values);
+            $serializer->append($values);
         }
 
-        $writer->close();
+        $serializer->close();
     }
 
-    protected function sampleData()
+    protected function sampleData(): array
     {
         return [
             ['Rodrigo', 'rodrigo@example.com'],

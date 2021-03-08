@@ -7,21 +7,13 @@ use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ExampleRecord extends SimpleRecord implements TextRecord
 {
-    public function getKey()
+    public function isValid(): bool
     {
-        return $this->get('name');
+        return \filter_var($this->get('email'), FILTER_VALIDATE_EMAIL) !== false;
     }
 
-    public function valid()
+    public function toText(): string
     {
-        return filter_var($this->get('email'), FILTER_VALIDATE_EMAIL) !== false;
-    }
-
-    /**
-     * @return string
-     */
-    public function toText()
-    {
-        return implode('|', $this->toArray());
+        return \implode('|', $this->toArray());
     }
 }

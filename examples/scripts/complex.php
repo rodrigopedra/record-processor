@@ -3,39 +3,39 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddonCallback;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordSerializer;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
 
 $storagePath = __DIR__ . '/../../storage/';
 
-$processor = (new ProcessorBuilder)
+$processor = (new ProcessorBuilder())
     ->readFromExcelFile($storagePath . 'input.xlsx')
-    ->writeToExcelFile($storagePath . 'output.xlsx')
-    ->writeToHTMLTable(function (WriterConfigurator $configurator) use ($storagePath) {
-        $configurator->setHeader(['name', 'email']);
+    ->serializeToExcelFile($storagePath . 'output.xlsx')
+    ->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator) use ($storagePath) {
+        $configurator->withRecordSerializer(new ExampleRecordSerializer());
 
-        $configurator->setTrailler(function (WriterCallbackProxy $writer) {
-            $recordCount = $writer->getRecordCount();
-            $writer->append($recordCount . ' records');
+        $configurator->withHeader(['name', 'email']);
+
+        $configurator->withTrailler(function (SerializerAddonCallback $serializer) {
+            $recordCount = $serializer->recordCount();
+            $serializer->append($recordCount . ' records');
         });
 
-        $configurator->setTableClassAttribute('table table-condensed');
-        $configurator->setTableIdAttribute('my-table');
+        $configurator->withTableClassAttribute('table table-condensed');
+        $configurator->withTableIdAttribute('my-table');
 
         $configurator->writeOutputToFile($storagePath . 'output.html');
     })
-    ->usingFormatter(new ExampleRecordFormatter)
-    ->aggregateRecordsByKey(new ExampleRecordAggregateFormatter)
-    ->writeToCSVFile($storagePath . 'output.csv')
+    ->aggregateRecordsByKey()
+    ->serializeToCSVFile($storagePath . 'output.csv')
     ->build();
 
 $output = $processor->process();
 
-echo 'input lines: ', $output->getInputLineCount(), PHP_EOL;
-echo 'input records: ', $output->getInputRecordCount(), PHP_EOL;
-echo 'output lines: ', $output->getOutputLineCount(), PHP_EOL;
-echo 'output records: ', $output->getOutputRecordCount(), PHP_EOL;
-echo $output->getOutput(), PHP_EOL;
+echo 'input lines: ', $output->inputLineCount(), \PHP_EOL;
+echo 'input records: ', $output->inputRecordCount(), \PHP_EOL;
+echo 'output lines: ', $output->outputLineCount(), \PHP_EOL;
+echo 'output records: ', $output->outputRecordCount(), \PHP_EOL;
+echo $output->output(), \PHP_EOL;

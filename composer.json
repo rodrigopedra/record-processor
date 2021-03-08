@@ -5,6 +5,7 @@
     "record processor",
     "php"
   ],
+  "type": "library",
   "license": "MIT",
   "authors": [
     {
@@ -13,27 +14,31 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
+    "php": "^7.4|^8.0",
     "psr/log": "^1.0",
-    "illuminate/support": "^5.4|^6.0",
-    "illuminate/contracts": "^5.4|^6.0",
-    "illuminate/filesystem": "^5.4|^6.0",
-    "league/csv": "^9.1",
-    "league/pipeline": "^0.3.0",
+    "illuminate/contracts": "^7.0|^8.0",
+    "illuminate/support": "^7.0|^8.0",
+    "illuminate/pipeline": "^7.0|^8.0",
+    "league/csv": "^9.6",
     "phpoffice/phpspreadsheet": "^1.1"
   },
   "require-dev": {
-    "symfony/var-dumper": "^3.3|~4.0|~4.1|~4.2|~4.3",
-    "symfony/console": "^3.3|~4.0|~4.1|~4.2|~4.3",
-    "symfony/process": "^3.3|~4.0|~4.1|~4.2|~4.3"
+    "symfony/console": "^5.1",
+    "symfony/process": "^5.1",
+    "symfony/var-dumper": "^5.1"
   },
   "autoload": {
-    "files": [
-      "src/RecordProcessor/helpers.php"
-    ],
     "psr-4": {
-      "RodrigoPedra\\RecordProcessor\\": "src/RecordProcessor/",
+      "RodrigoPedra\\RecordProcessor\\": "src/",
       "RodrigoPedra\\RecordProcessor\\Examples\\": "examples/"
     }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "suggest": {
+    "ext-fileinfo": "to use file based readers/writers",
+    "ext-json": "to use JSON writer",
+    "ext-pdo": "to use database reader/writer"
   }
 }
