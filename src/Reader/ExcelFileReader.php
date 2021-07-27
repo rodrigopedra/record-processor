@@ -43,7 +43,7 @@ class ExcelFileReader extends FileReader implements Reader
         $cells = Collection::make();
 
         $cellsIterator = $row->getCellIterator();
-        $cellsIterator->setIterateOnlyExistingCells(true);
+        $cellsIterator->setIterateOnlyExistingCells(false);
 
         /** @var  \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
         foreach ($cellsIterator as $cell) {
