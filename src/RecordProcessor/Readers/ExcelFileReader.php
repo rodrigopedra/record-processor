@@ -35,7 +35,7 @@ class ExcelFileReader extends FileReader implements ConfigurableReader
         $cells = new Collection([]);
 
         $cellsIterator = $row->getCellIterator();
-        $cellsIterator->setIterateOnlyExistingCells(true);
+        $cellsIterator->setIterateOnlyExistingCells(false);
 
         foreach ($cellsIterator as $cell) {
             /** @var  \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
