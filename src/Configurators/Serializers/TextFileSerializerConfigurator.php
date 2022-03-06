@@ -14,7 +14,7 @@ class TextFileSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withNewLine(string $newLine): self
+    public function withNewLine(string $newLine): static
     {
         $this->serializer->withNewLine($newLine);
 

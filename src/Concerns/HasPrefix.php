@@ -4,14 +4,14 @@ namespace RodrigoPedra\RecordProcessor\Concerns;
 
 trait HasPrefix
 {
-    protected ?string $prefix;
+    protected ?string $prefix = null;
 
-    public function prefix(): string
+    public function prefix(): ?string
     {
         return $this->prefix;
     }
 
-    public function withPrefix(?string $prefix = null): self
+    public function withPrefix(?string $prefix = null): static
     {
         $this->prefix = \blank($prefix) ? null : $prefix;
 

@@ -20,9 +20,7 @@ class HTMLTableSerializer implements Serializer
     protected string $tableClassAttribute = '';
     protected string $tableIdAttribute = '';
     protected ?\SplFileObject $file = null;
-
-    /** @var string|\SplFileObject */
-    protected $output = '';
+    protected \SplFileObject|string $output = '';
     protected HTMLTableSerializerConfigurator $configurator;
 
     public function __construct()
@@ -30,21 +28,21 @@ class HTMLTableSerializer implements Serializer
         $this->configurator = new HTMLTableSerializerConfigurator($this, true, true);
     }
 
-    public function writeOutputToFile(string $fileName): self
+    public function writeOutputToFile(string $fileName): static
     {
         $this->file = FileInfo::createWritableFileObject($fileName);
 
         return $this;
     }
 
-    public function withTableClassAttribute(string $tableClassAttribute): self
+    public function withTableClassAttribute(string $tableClassAttribute): static
     {
         $this->tableClassAttribute = $tableClassAttribute;
 
         return $this;
     }
 
-    public function withTableIdAttribute(string $tableIdAttribute): self
+    public function withTableIdAttribute(string $tableIdAttribute): static
     {
         $this->tableIdAttribute = $tableIdAttribute;
 
@@ -79,15 +77,12 @@ class HTMLTableSerializer implements Serializer
 
     public function append($content)
     {
-        \array_push($this->records, Arr::wrap($content));
+        $this->records[] = Arr::wrap($content);
 
         $this->incrementLineCount();
     }
 
-    /**
-     * @return \SplFileObject|string
-     */
-    public function output()
+    public function output(): \SplFileObject|string
     {
         return $this->output;
     }

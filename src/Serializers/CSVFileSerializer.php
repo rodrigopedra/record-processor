@@ -15,7 +15,7 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
 
     protected ?Writer $writer = null;
 
-    public function __construct($file = null)
+    public function __construct(\SplFileObject|string|null $file = null)
     {
         parent::__construct($file);
 

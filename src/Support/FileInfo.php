@@ -62,7 +62,7 @@ class FileInfo extends \SplFileInfo
         return $this->getBasename($extension);
     }
 
-    public function getBasenameWithExtension(string $extension = null): string
+    public function getBasenameWithExtension(?string $extension = null): string
     {
         return \implode('.', \array_filter([
             $this->getBasenameWithoutExtension(),
@@ -75,7 +75,7 @@ class FileInfo extends \SplFileInfo
         return new \SplTempFileObject(self::TEMP_FILE_MEMORY_SIZE);
     }
 
-    public static function createFileObject($file, string $mode = 'r'): \SplFileObject
+    public static function createFileObject(\SplFileObject|string $file, string $mode = 'r'): \SplFileObject
     {
         if ($file === static::TEMP_FILE) {
             return static::createTempFileObject();
@@ -89,7 +89,7 @@ class FileInfo extends \SplFileInfo
                 : $fileInfo->openFile($mode);
         }
 
-        if (! (\is_object($file) && $file instanceof \SplFileObject)) {
+        if (! ($file instanceof \SplFileObject)) {
             throw new \InvalidArgumentException('File should be a path to a file or a \SplFileObject');
         }
 
@@ -100,12 +100,10 @@ class FileInfo extends \SplFileInfo
             return $file;
         }
 
-        $file = null;
-
         return $fileInfo->openFile($mode);
     }
 
-    public static function createWritableFileObject($file, $mode = 'wb'): \SplFileObject
+    public static function createWritableFileObject(\SplFileObject|string $file, string $mode = 'wb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 
@@ -131,7 +129,7 @@ class FileInfo extends \SplFileInfo
         return $file;
     }
 
-    public static function createReadableFileObject($file, $mode = 'rb'): \SplFileObject
+    public static function createReadableFileObject(\SplFileObject|string $file, string $mode = 'rb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 

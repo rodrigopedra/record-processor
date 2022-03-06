@@ -16,7 +16,7 @@ class CSVFileReader extends FileReader implements Reader
     protected CSVFileReaderConfigurator $configurator;
     protected bool $useFirstRowAsHeader = true;
 
-    public function __construct($file)
+    public function __construct(\SplFileObject|string $file)
     {
         parent::__construct($file);
 

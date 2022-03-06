@@ -15,9 +15,9 @@ class ProcessorBuilder implements LoggerAwareInterface
     use Builder\BuildsSerializers;
 
     protected ?Container $container = null;
-    protected LoggerInterface $logger;
+    protected ?LoggerInterface $logger = null;
 
-    /** @var \RodrigoPedra\RecordProcessor\Contracts\ProcessorStage|string[] */
+    /** @var \RodrigoPedra\RecordProcessor\Contracts\ProcessorStage[]|string[] */
     protected array $stages = [];
 
     public function build(): Processor
@@ -37,33 +37,23 @@ class ProcessorBuilder implements LoggerAwareInterface
         return $processor;
     }
 
-    /**
-     * @param  \RodrigoPedra\RecordProcessor\Contracts\ProcessorStage|string  $stage
-     * @return $this
-     */
-    public function addStage($stage): ProcessorBuilder
+    public function addStage(ProcessorStage|string $stage): static
     {
         $this->stages[] = $stage;
 
         return $this;
     }
 
-    public function withContainer(Container $container): self
+    public function withContainer(Container $container): static
     {
         $this->container = $container;
 
         return $this;
     }
 
-    public function setLogger(LoggerInterface $logger = null): ProcessorBuilder
+    public function setLogger(LoggerInterface $logger): void
     {
-        if (\is_null($logger)) {
-            return $this;
-        }
-
         $this->logger = $logger;
-
-        return $this;
     }
 
     protected function logger(): LoggerInterface

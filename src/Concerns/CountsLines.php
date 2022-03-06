@@ -11,7 +11,7 @@ trait CountsLines
         return $this->lineCount;
     }
 
-    protected function incrementLineCount(int $amount = 1): self
+    protected function incrementLineCount(int $amount = 1): static
     {
         $this->lineCount += $amount;
 

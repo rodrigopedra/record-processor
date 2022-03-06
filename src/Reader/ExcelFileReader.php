@@ -14,7 +14,7 @@ class ExcelFileReader extends FileReader implements Reader
     protected int $selectedSheetIndex = 0;
     protected ExcelFileReaderConfigurator $configurator;
 
-    public function __construct($file)
+    public function __construct(\SplFileObject|string $file)
     {
         parent::__construct($file);
 
@@ -66,21 +66,21 @@ class ExcelFileReader extends FileReader implements Reader
         return $this->selectedSheetIndex;
     }
 
-    public function withSkipRows(int $rows): self
+    public function withSkipRows(int $rows): static
     {
         $this->skipRows = $rows;
 
         return $this;
     }
 
-    public function withSelectedSheetIndex(int $index): self
+    public function withSelectedSheetIndex(int $index): static
     {
         $this->selectedSheetIndex = $index;
 
         return $this;
     }
 
-    public function noHeading(bool $skipHeading = true): self
+    public function noHeading(bool $skipHeading = true): static
     {
         $this->withSkipRows($skipHeading ? 1 : 0);
 

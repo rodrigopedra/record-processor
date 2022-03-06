@@ -14,7 +14,7 @@ class JSONFileSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withEncodeOptions(int $encodeOptions): self
+    public function withEncodeOptions(int $encodeOptions): static
     {
         $this->serializer->withEncodeOptions($encodeOptions);
 

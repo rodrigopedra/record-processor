@@ -19,7 +19,6 @@ class LogSerializer implements Serializer, LoggerAwareInterface
     use CountsLines;
     use HasLogger;
     use HasPrefix;
-    use NoOutput;
 
     protected string $level;
     protected LogSerializerConfigurator $configurator;
@@ -31,7 +30,7 @@ class LogSerializer implements Serializer, LoggerAwareInterface
         $this->configurator = new LogSerializerConfigurator($this, true, true);
     }
 
-    public function withLevel(string $level): self
+    public function withLevel(string $level): static
     {
         if (! \in_array($level, [
             LogLevel::EMERGENCY,
@@ -65,6 +64,11 @@ class LogSerializer implements Serializer, LoggerAwareInterface
         $this->logger->log($this->level, $this->prefix(), Arr::wrap($content));
 
         $this->incrementLineCount();
+    }
+
+    public function output()
+    {
+        return null;
     }
 
     public function configurator(): LogSerializerConfigurator

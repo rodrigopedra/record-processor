@@ -14,7 +14,7 @@ class TextFileParser extends FileReader
 {
     protected ReaderConfigurator $configurator;
 
-    public function __construct($file)
+    public function __construct(\SplFileObject|string $file)
     {
         parent::__construct($file);
 

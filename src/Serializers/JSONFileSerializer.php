@@ -10,16 +10,16 @@ class JSONFileSerializer extends FileSerializer
 {
     public const JSON_ENCODE_OPTIONS = \JSON_NUMERIC_CHECK | \JSON_HEX_TAG | \JSON_HEX_AMP | \JSON_HEX_APOS | \JSON_HEX_QUOT;
 
-    protected $jsonEncodeOptions = self::JSON_ENCODE_OPTIONS;
+    protected int $jsonEncodeOptions = self::JSON_ENCODE_OPTIONS;
 
-    public function __construct($file = null)
+    public function __construct(\SplFileObject|string|null $file = null)
     {
         parent::__construct($file);
 
         $this->configurator = new JSONFileSerializerConfigurator($this, false, false);
     }
 
-    public function withEncodeOptions(int $encodeOptions): self
+    public function withEncodeOptions(int $encodeOptions): static
     {
         $this->jsonEncodeOptions = $encodeOptions;
 
@@ -33,7 +33,7 @@ class JSONFileSerializer extends FileSerializer
 
     public function append($content)
     {
-        if (\is_object($content) && $content instanceof \JsonSerializable) {
+        if ($content instanceof \JsonSerializable) {
             $content = \json_encode($content->jsonSerialize(), $this->jsonEncodeOptions);
 
             $this->write($content);
@@ -41,7 +41,7 @@ class JSONFileSerializer extends FileSerializer
             return;
         }
 
-        if (\is_object($content) && $content instanceof Jsonable) {
+        if ($content instanceof Jsonable) {
             $content = $content->toJson($this->jsonEncodeOptions);
 
             $this->write($content);
@@ -49,7 +49,7 @@ class JSONFileSerializer extends FileSerializer
             return;
         }
 
-        if (\is_object($content) && $content instanceof Arrayable) {
+        if ($content instanceof Arrayable) {
             $content = $content->toArray();
         }
 

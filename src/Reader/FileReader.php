@@ -15,10 +15,10 @@ abstract class FileReader implements Reader
         valid as iteratorValid;
     }
 
-    protected ?\SplFileObject $file = null;
+    protected \SplFileObject $file;
     protected FileInfo $fileInfo;
 
-    public function __construct($file)
+    public function __construct(\SplFileObject|string $file)
     {
         $this->file = FileInfo::createReadableFileObject($file);
         $this->fileInfo = $this->file->getFileInfo(FileInfo::class);

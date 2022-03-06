@@ -6,7 +6,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 
 trait WritesHeader
 {
-    protected function writeHeader(Record $firstRecord = null): self
+    protected function writeHeader(?Record $firstRecord = null): static
     {
         $header = $this->header();
 

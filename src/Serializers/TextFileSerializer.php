@@ -10,7 +10,7 @@ class TextFileSerializer extends FileSerializer
 {
     protected string $newLine = NewLines::WINDOWS_NEWLINE;
 
-    public function __construct($file = null)
+    public function __construct(\SplFileObject|string|null $file = null)
     {
         parent::__construct($file);
 
@@ -22,7 +22,7 @@ class TextFileSerializer extends FileSerializer
         return $this->newLine;
     }
 
-    public function withNewLine(string $newLine): self
+    public function withNewLine(string $newLine): static
     {
         $this->newLine = $newLine;
 

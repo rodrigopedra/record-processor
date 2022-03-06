@@ -30,7 +30,7 @@ class PDOReader implements Reader
         }
     }
 
-    public function withBindings(array $bindings): self
+    public function withBindings(array $bindings): static
     {
         $this->bindings = $bindings;
 
@@ -102,7 +102,7 @@ class PDOReader implements Reader
         $this->currentRecord = $this->statement->fetch() ?: null;
     }
 
-    public function getInnerIterator(): self
+    public function getInnerIterator(): static
     {
         return $this;
     }

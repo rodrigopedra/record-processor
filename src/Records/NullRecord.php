@@ -15,12 +15,12 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
     {
     }
 
-    public function key()
+    public function key(): mixed
     {
         return null;
     }
 
-    public function field(string $field)
+    public function field(string $field): mixed
     {
         return null;
     }

@@ -11,14 +11,14 @@ class SerializerAddonCallback
     protected int $recordCount;
     protected ?Record $firstRecord;
 
-    public function __construct(Serializer $serializer, int $recordCount, Record $firstRecord = null)
+    public function __construct(Serializer $serializer, int $recordCount, ?Record $firstRecord = null)
     {
         $this->serializer = $serializer;
         $this->recordCount = $recordCount;
         $this->firstRecord = $firstRecord;
     }
 
-    public function append($content): self
+    public function append($content): static
     {
         $this->serializer->append($content);
 

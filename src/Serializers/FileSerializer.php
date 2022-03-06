@@ -13,13 +13,13 @@ abstract class FileSerializer implements Serializer
 {
     use CountsLines;
 
-    protected ?\SplFileObject $file = null;
+    protected ?\SplFileObject $file;
     protected FileInfo $fileInfo;
     protected SerializerConfigurator $configurator;
 
-    public function __construct($file = null)
+    public function __construct(\SplFileObject|string|null $file)
     {
-        $file = \is_null($file) ? FileInfo::TEMP_FILE : $file;
+        $file ??= FileInfo::TEMP_FILE;
 
         $this->file = FileInfo::createWritableFileObject($file);
         $this->fileInfo = $this->file->getFileInfo(FileInfo::class);
@@ -35,7 +35,7 @@ abstract class FileSerializer implements Serializer
     {
     }
 
-    public function output()
+    public function output(): ?\SplFileObject
     {
         return FileInfo::createReadableFileObject($this->file);
     }

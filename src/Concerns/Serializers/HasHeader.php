@@ -14,11 +14,7 @@ trait HasHeader
         return $this->header;
     }
 
-    /**
-     * @param  SerializerAddon|array|callable|null  $header
-     * @return $this
-     */
-    public function withHeader($header): self
+    public function withHeader(SerializerAddon|callable|array|null $header): static
     {
         if (\is_null($header)) {
             $this->header = null;
@@ -26,7 +22,7 @@ trait HasHeader
             return $this;
         }
 
-        if (\is_object($header) && $header instanceof SerializerAddon) {
+        if ($header instanceof SerializerAddon) {
             $this->header = $header;
 
             return $this;
@@ -34,7 +30,7 @@ trait HasHeader
 
         try {
             $this->header = new SerializerAddon($header);
-        } catch (InvalidAddonException $exception) {
+        } catch (InvalidAddonException) {
             throw new \InvalidArgumentException('Serializer header should be an array or a callable');
         }
 

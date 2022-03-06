@@ -26,7 +26,7 @@ class ReaderConfigurator
         return $this->recordParser ?? $this->reader->defaultRecordParser();
     }
 
-    public function withRecordParser($recordParser): self
+    public function withRecordParser($recordParser): static
     {
         if (\is_callable($recordParser)) {
             $this->recordParser = new CallbackRecordParser($recordParser);
@@ -34,7 +34,7 @@ class ReaderConfigurator
             return $this;
         }
 
-        if (! (\is_object($recordParser) && $recordParser instanceof RecordParser)) {
+        if (! ($recordParser instanceof RecordParser)) {
             throw new \InvalidArgumentException('Parser should implement ' . RecordParser::class);
         }
 

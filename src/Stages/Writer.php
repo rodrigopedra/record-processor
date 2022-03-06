@@ -56,7 +56,7 @@ class Writer implements ProcessorStageHandler, ProcessorStageFlusher
 
         $this->close();
 
-        $payload->withSerializerClassName(\get_class($this->serializer));
+        $payload->withSerializerClassName($this->serializer::class);
         $payload->withLineCount($this->serializer->lineCount());
         $payload->withRecordCount($this->recordCount());
         $payload->withOutput($this->serializer->output());

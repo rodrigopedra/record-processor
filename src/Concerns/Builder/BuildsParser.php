@@ -21,7 +21,7 @@ trait BuildsParser
     protected Reader $reader;
     protected ?RecordParser $recordParser = null;
 
-    public function withRecordParser($recordParser): self
+    public function withRecordParser(RecordParser|callable $recordParser): static
     {
         if (\is_callable($recordParser)) {
             $recordParser = new CallbackRecordParser($recordParser);
@@ -32,7 +32,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromArray(array $items, callable $configurator = null): self
+    public function readFromArray(array $items, ?callable $configurator = null): static
     {
         $this->reader = new ArrayReader($items);
 
@@ -41,7 +41,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromCollection(Collection $collection, callable $configurator = null): self
+    public function readFromCollection(Collection $collection, ?callable $configurator = null): static
     {
         $this->reader = new CollectionReader($collection);
 
@@ -50,7 +50,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromCSVFile($fileName, callable $configurator = null): self
+    public function readFromCSVFile(\SplFileObject|string $fileName, ?callable $configurator = null): static
     {
         $this->reader = new CSVFileReader($fileName);
 
@@ -59,7 +59,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromExcelFile($fileName, callable $configurator = null): self
+    public function readFromExcelFile(\SplFileObject|string $fileName, ?callable $configurator = null): static
     {
         $this->reader = new ExcelFileReader($fileName);
 
@@ -68,7 +68,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromIterator(\Iterator $iterator, callable $configurator = null): self
+    public function readFromIterator(\Iterator $iterator, ?callable $configurator = null): static
     {
         $this->reader = new IteratorReader($iterator);
 
@@ -77,7 +77,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromPDO(\PDO $pdo, $query, array $parameters = [], callable $configurator = null): self
+    public function readFromPDO(\PDO $pdo, $query, array $parameters = [], ?callable $configurator = null): static
     {
         $this->reader = new PDOReader($pdo, $query);
         $this->reader->withBindings($parameters);
@@ -87,7 +87,7 @@ trait BuildsParser
         return $this;
     }
 
-    public function readFromTextFile($fileName, callable $configurator = null): self
+    public function readFromTextFile(\SplFileObject|string $fileName, ?callable $configurator = null): static
     {
         $this->reader = new TextFileParser($fileName);
 
@@ -96,7 +96,7 @@ trait BuildsParser
         return $this;
     }
 
-    protected function configureReader(Reader $reader, callable $callback = null): ReaderConfigurator
+    protected function configureReader(Reader $reader, ?callable $callback = null): ReaderConfigurator
     {
         $configurator = $reader->configurator();
 

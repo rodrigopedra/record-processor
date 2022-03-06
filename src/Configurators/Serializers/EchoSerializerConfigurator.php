@@ -14,7 +14,7 @@ class EchoSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withPrefix(?string $prefix = null): self
+    public function withPrefix(?string $prefix = null): static
     {
         $this->serializer->withPrefix($prefix);
 

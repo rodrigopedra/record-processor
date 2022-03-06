@@ -16,7 +16,7 @@ trait HasInnerIterator
         $this->iterator->next();
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->lineCount;
     }
@@ -44,7 +44,7 @@ trait HasInnerIterator
         return $this->iterator;
     }
 
-    protected function withInnerIterator(?\Iterator $iterator): self
+    protected function withInnerIterator(?\Iterator $iterator): static
     {
         $this->iterator = $iterator;
 

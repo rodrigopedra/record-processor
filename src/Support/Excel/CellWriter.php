@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * @author     Maatwebsite <info@maatwebsite.nl>
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  */
-class CellWriter
+final class CellWriter
 {
     public Worksheet $sheet;
     public string $cells;
@@ -72,26 +72,19 @@ class CellWriter
         return $this->setStyle('font', ['size' => $size]);
     }
 
-    /**
-     * @param  string|boolean  $bold
-     * @return  CellWriter
-     */
-    public function setFontWeight($bold = true): self
+    public function setFontWeight(bool|string $bold = true): self
     {
         return $this->setStyle('font', [
             'bold' => ($bold === 'bold' || $bold === true),
         ]);
     }
 
-    /**
-     * @param  bool|array  $top
-     * @param  bool  $right
-     * @param  bool  $bottom
-     * @param  bool  $left
-     * @return  CellWriter
-     */
-    public function setBorder($top = 'none', $right = 'none', $bottom = 'none', $left = 'none'): self
-    {
+    public function setBorder(
+        string|array $top = 'none',
+        string $right = 'none',
+        string $bottom = 'none',
+        string $left = 'none'
+    ): self {
         if (\is_array($top)) {
             $borders = $top;
         } else {
@@ -134,8 +127,12 @@ class CellWriter
         return $this;
     }
 
-    protected function setColorStyle($styleType, string $color, bool $type = false, string $colorType = 'rgb'): self
-    {
+    protected function setColorStyle(
+        string $styleType,
+        array|string $color,
+        bool $type = false,
+        string $colorType = 'rgb'
+    ): self {
         if (! \is_array($color)) {
             $color = [
                 'type' => $type,
@@ -146,7 +143,7 @@ class CellWriter
         return $this->setStyle($styleType, $color);
     }
 
-    protected function setStyle($styleType, $styles): self
+    protected function setStyle(string $styleType, array $styles): self
     {
         $style = $this->getCellStyle();
 

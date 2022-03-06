@@ -19,7 +19,7 @@ class WorksheetConfigurator
         $this->worksheet = $worksheet;
     }
 
-    public function withColumnFormat(array $formats): self
+    public function withColumnFormat(array $formats): static
     {
         foreach ($formats as $column => $format) {
             $this->worksheet
@@ -31,14 +31,14 @@ class WorksheetConfigurator
         return $this;
     }
 
-    public function freezeFirstRow(): self
+    public function freezeFirstRow(): static
     {
         $this->worksheet->freezePane('A2');
 
         return $this;
     }
 
-    public function configureCells($range, callable $callback): self
+    public function configureCells($range, callable $callback): static
     {
         $callback(new CellWriter($range, $this->worksheet));
 

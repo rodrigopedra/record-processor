@@ -14,14 +14,14 @@ class ExcelFileReaderConfigurator extends ReaderConfigurator
         parent::__construct($reader);
     }
 
-    public function noHeading(bool $skipHeading = true): self
+    public function noHeading(bool $skipHeading = true): static
     {
         $this->reader->noHeading($skipHeading);
 
         return $this;
     }
 
-    public function withSelectedSheetIndex(int $index): self
+    public function withSelectedSheetIndex(int $index): static
     {
         $this->reader->withSelectedSheetIndex($index);
 

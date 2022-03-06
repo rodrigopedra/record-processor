@@ -17,13 +17,13 @@ class DownloadFileOutput implements ProcessorStageFlusher
     public const DELETE_FILE_AFTER_DOWNLOAD = true;
     public const KEEP_AFTER_DOWNLOAD = false;
 
-    protected ?\SplFileObject $inputFile;
+    protected ?\SplFileObject $inputFile = null;
     protected FileInfo $inputFileInfo;
     protected ?FileInfo $outputFileInfo = null;
     protected bool $deleteAfterDownload;
-    protected $outputFile;
+    protected \SplFileInfo|string|null $outputFile;
 
-    public function __construct($outputFile = '', bool $deleteFileAfterDownload = false)
+    public function __construct(string $outputFile = '', bool $deleteFileAfterDownload = false)
     {
         $this->outputFile = \blank($outputFile)
             ? null
@@ -48,7 +48,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
     {
         $inputFile = $payload->output();
 
-        if (! (\is_object($inputFile) && $inputFile instanceof \SplFileObject)) {
+        if (! ($inputFile instanceof \SplFileObject)) {
             throw new \RuntimeException('Process output should be a file to be downloadable');
         }
 
@@ -100,7 +100,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
             return;
         }
 
-        if (\is_object($this->outputFile) && $this->outputFile instanceof \SplFileInfo) {
+        if ($this->outputFile instanceof \SplFileInfo) {
             $this->outputFileInfo = $this->outputFile->getFileInfo(FileInfo::class);
 
             return;

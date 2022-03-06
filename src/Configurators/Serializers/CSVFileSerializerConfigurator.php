@@ -14,35 +14,35 @@ class CSVFileSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withOutputBOM(string $outputBOM): self
+    public function withOutputBOM(string $outputBOM): static
     {
         $this->serializer->withOutputBOM($outputBOM);
 
         return $this;
     }
 
-    public function withDelimiter(string $delimiter): self
+    public function withDelimiter(string $delimiter): static
     {
         $this->serializer->withDelimiter($delimiter);
 
         return $this;
     }
 
-    public function withEnclosure(string $enclosure): self
+    public function withEnclosure(string $enclosure): static
     {
         $this->serializer->withEnclosure($enclosure);
 
         return $this;
     }
 
-    public function withEscape(string $escape): self
+    public function withEscape(string $escape): static
     {
         $this->serializer->withEscape($escape);
 
         return $this;
     }
 
-    public function withNewLine(string $newline): self
+    public function withNewLine(string $newline): static
     {
         $this->serializer->withNewline($newline);
 

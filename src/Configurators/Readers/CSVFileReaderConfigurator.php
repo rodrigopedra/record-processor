@@ -14,28 +14,28 @@ class CSVFileReaderConfigurator extends ReaderConfigurator
         parent::__construct($reader);
     }
 
-    public function withDelimiter(string $delimiter): self
+    public function withDelimiter(string $delimiter): static
     {
         $this->reader->withDelimiter($delimiter);
 
         return $this;
     }
 
-    public function withEnclosure(string $enclosure): self
+    public function withEnclosure(string $enclosure): static
     {
         $this->reader->withEnclosure($enclosure);
 
         return $this;
     }
 
-    public function withEscape(string $escape): self
+    public function withEscape(string $escape): static
     {
         $this->reader->withEscape($escape);
 
         return $this;
     }
 
-    public function useFirstRowAsHeader(bool $firstRowAsHeader = true): self
+    public function useFirstRowAsHeader(bool $firstRowAsHeader = true): static
     {
         $this->reader->useFirstRowAsHeader($firstRowAsHeader);
 

@@ -39,7 +39,7 @@ class SerializerConfigurator
         return $this->recordSerializer ?? $this->serializer->defaultRecordSerializer();
     }
 
-    public function withRecordSerializer($recordSerializer): self
+    public function withRecordSerializer($recordSerializer): static
     {
         if (\is_callable($recordSerializer)) {
             $this->recordSerializer = new CallbackRecordSerializer($recordSerializer);
@@ -47,7 +47,7 @@ class SerializerConfigurator
             return $this;
         }
 
-        if (! (\is_object($recordSerializer) && $recordSerializer instanceof RecordSerializer)) {
+        if (! ($recordSerializer instanceof RecordSerializer)) {
             throw new \InvalidArgumentException('Serializer should implement ' . RecordSerializer::class);
         }
 
@@ -56,10 +56,10 @@ class SerializerConfigurator
         return $this;
     }
 
-    public function withHeader($header): self
+    public function withHeader(SerializerAddon|callable|array|null $header): static
     {
         if (! $this->hasHeader) {
-            $className = \get_class($this->serializer);
+            $className = $this->serializer::class;
 
             throw new \RuntimeException($className . ' does not accept a header');
         }
@@ -69,10 +69,10 @@ class SerializerConfigurator
         return $this;
     }
 
-    public function withTrailler($trailler): self
+    public function withTrailler(SerializerAddon|callable|array|null $trailler): static
     {
         if (! $this->hasTrailler) {
-            $className = \get_class($this->serializer);
+            $className = $this->serializer::class;
 
             throw new \RuntimeException($className . ' does not accept a trailler');
         }

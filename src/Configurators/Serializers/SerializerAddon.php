@@ -11,11 +11,7 @@ class SerializerAddon
     /** @var  array|callable */
     protected $addon;
 
-    /**
-     * @param  array|callable  $addon
-     * @throws \RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException
-     */
-    public function __construct($addon)
+    public function __construct(array|callable $addon)
     {
         if (! \is_array($addon) && ! \is_callable($addon)) {
             throw new InvalidAddonException();
@@ -24,7 +20,7 @@ class SerializerAddon
         $this->addon = $addon;
     }
 
-    public function handle(Serializer $serializer, $recordCount, Record $record = null)
+    public function handle(Serializer $serializer, $recordCount, ?Record $record = null)
     {
         if (\is_array($this->addon)) {
             $serializer->append($this->addon);

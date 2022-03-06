@@ -11,7 +11,6 @@ use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
 class PDOSerializer implements Serializer
 {
     use CountsLines;
-    use NoOutput;
 
     protected ?\PDO $pdo = null;
     protected ?\PDOStatement $statement = null;
@@ -39,7 +38,7 @@ class PDOSerializer implements Serializer
         $this->configurator = new PDOSerializerConfigurator($this, false, false);
     }
 
-    public function withUsesTransaction(bool $usesTransaction): self
+    public function withUsesTransaction(bool $usesTransaction): static
     {
         $this->usesTransaction = $usesTransaction;
 
@@ -89,6 +88,11 @@ class PDOSerializer implements Serializer
 
             throw $exception;
         }
+    }
+
+    public function output()
+    {
+        return null;
     }
 
     protected function prepareStatement(int $count): ?\PDOStatement

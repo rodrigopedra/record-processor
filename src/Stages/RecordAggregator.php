@@ -13,7 +13,7 @@ use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, RecordAggregateFactory
 {
     protected ?RecordAggregate $aggregateRecord = null;
-    protected $recordAggregateFactory;
+    protected RecordAggregateFactory $recordAggregateFactory;
 
     public function __construct(?RecordAggregateFactory $recordAggregateFactory = null)
     {

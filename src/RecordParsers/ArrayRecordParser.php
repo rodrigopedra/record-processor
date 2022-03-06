@@ -12,11 +12,11 @@ class ArrayRecordParser implements RecordParser
 {
     public function parseRecord(Reader $reader, $rawContent): SimpleRecord
     {
-        if (\is_object($rawContent) && $rawContent instanceof Arrayable) {
+        if ($rawContent instanceof Arrayable) {
             $rawContent = $rawContent->toArray();
         }
 
-        if (\is_object($rawContent) && $rawContent instanceof \stdClass) {
+        if ($rawContent instanceof \stdClass) {
             $rawContent = (array) $rawContent;
         }
 

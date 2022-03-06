@@ -37,7 +37,7 @@ trait HasCSVControls
         return $this->outputBOM;
     }
 
-    public function withDelimiter(string $delimiter): self
+    public function withDelimiter(string $delimiter): static
     {
         if (! $this->isValidCsvControl($delimiter)) {
             throw new \InvalidArgumentException('The delimiter must be a single character');
@@ -48,7 +48,7 @@ trait HasCSVControls
         return $this;
     }
 
-    public function withEnclosure(string $enclosure): self
+    public function withEnclosure(string $enclosure): static
     {
         if (! $this->isValidCsvControl($enclosure)) {
             throw new \InvalidArgumentException('The enclosure must be a single character');
@@ -59,7 +59,7 @@ trait HasCSVControls
         return $this;
     }
 
-    public function withEscape(string $escape): self
+    public function withEscape(string $escape): static
     {
         if (! $this->isValidCsvControl($escape)) {
             throw new \InvalidArgumentException('The escape character must be a single character');
@@ -70,14 +70,14 @@ trait HasCSVControls
         return $this;
     }
 
-    public function withNewline(string $newline): self
+    public function withNewline(string $newline): static
     {
         $this->newline = $newline;
 
         return $this;
     }
 
-    public function withOutputBOM(string $outputBOM): self
+    public function withOutputBOM(string $outputBOM): static
     {
         $this->outputBOM = $outputBOM;
 

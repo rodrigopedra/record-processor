@@ -14,14 +14,14 @@ class LogSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withPrefix(?string $prefix = null): self
+    public function withPrefix(?string $prefix = null): static
     {
         $this->serializer->withPrefix($prefix);
 
         return $this;
     }
 
-    public function withLevel(string $level): self
+    public function withLevel(string $level): static
     {
         $this->serializer->withLevel($level);
 

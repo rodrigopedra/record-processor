@@ -12,7 +12,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 {
     protected ?string $key;
 
-    public function __construct(?string $key, $attributes = [])
+    public function __construct(?string $key, array $attributes = [])
     {
         parent::__construct($attributes);
 
@@ -24,7 +24,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
         return $this->key;
     }
 
-    public function field(string $field)
+    public function field(string $field): mixed
     {
         return $this->get($field);
     }

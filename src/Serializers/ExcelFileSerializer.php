@@ -20,7 +20,7 @@ class ExcelFileSerializer extends FileSerializer
     protected ?IWriter $writer = null;
     protected ?Spreadsheet $workbook = null;
 
-    public function __construct($file)
+    public function __construct(\SplFileObject|string $file)
     {
         parent::__construct($file);
 

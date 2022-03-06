@@ -4,7 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Concerns\Serializers;
 
 trait WritesTrailler
 {
-    protected function writeTrailler(): self
+    protected function writeTrailler(): static
     {
         $trailler = $this->trailler();
 

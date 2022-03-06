@@ -22,12 +22,12 @@ class RecordKeyAggregate implements RecordAggregate
         $this->addRecord($record);
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->master->key();
     }
 
-    public function field(string $field)
+    public function field(string $field): mixed
     {
         return $this->master->field($field);
     }
@@ -49,7 +49,7 @@ class RecordKeyAggregate implements RecordAggregate
         }
 
         if ($record->isValid()) {
-            \array_push($this->records, $record);
+            $this->records[] = $record;
         }
 
         return true;

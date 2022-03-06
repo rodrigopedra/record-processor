@@ -24,7 +24,7 @@ trait BuildsSerializers
 {
     protected ?RecordSerializer $recordSerializer = null;
 
-    public function withRecordSerializer($recordSerializer): self
+    public function withRecordSerializer(RecordSerializer|callable $recordSerializer): static
     {
         if (\is_callable($recordSerializer)) {
             $recordSerializer = new CallbackRecordSerializer($recordSerializer);
@@ -35,7 +35,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToArray(callable $configurator = null): self
+    public function serializeToArray(?callable $configurator = null): static
     {
         $serializer = new ArraySerializer();
 
@@ -45,7 +45,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToCollection(callable $configurator = null): self
+    public function serializeToCollection(?callable $configurator = null): static
     {
         $serializer = new CollectionSerializer();
 
@@ -55,8 +55,10 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToCSVFile($fileName = null, callable $configurator = null): self
-    {
+    public function serializeToCSVFile(
+        \SplFileObject|string|callable|null $fileName = null,
+        ?callable $configurator = null
+    ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;
             $fileName = null;
@@ -70,7 +72,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToEcho(callable $configurator = null): self
+    public function serializeToEcho(?callable $configurator = null): static
     {
         $serializer = new EchoSerializer();
 
@@ -80,7 +82,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToExcelFile($fileName, callable $configurator = null): self
+    public function serializeToExcelFile(\SplFileObject|string $fileName, ?callable $configurator = null): static
     {
         $serializer = new ExcelFileSerializer($fileName);
 
@@ -90,7 +92,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToHTMLTable(callable $configurator = null): self
+    public function serializeToHTMLTable(?callable $configurator = null): static
     {
         $serializer = new HTMLTableSerializer();
 
@@ -100,8 +102,10 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToJSONFile($fileName = null, callable $configurator = null): self
-    {
+    public function serializeToJSONFile(
+        \SplFileObject|string|callable|null $fileName = null,
+        ?callable $configurator = null
+    ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;
             $fileName = null;
@@ -115,7 +119,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToLog(callable $configurator = null): self
+    public function serializeToLog(?callable $configurator = null): static
     {
         $serializer = new LogSerializer($this->logger());
 
@@ -130,8 +134,8 @@ trait BuildsSerializers
         string $tableName,
         array $columns,
         bool $buffered = true,
-        callable $configurator = null
-    ): self {
+        ?callable $configurator = null
+    ): static {
         $serializer = $buffered
             ? new PDOBufferedSeriealizer($pdo, $tableName, $columns)
             : new PDOSerializer($pdo, $tableName, $columns);
@@ -142,8 +146,10 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToTextFile($fileName = null, callable $configurator = null): self
-    {
+    public function serializeToTextFile(
+        \SplFileObject|string|callable|null $fileName = null,
+        ?callable $configurator = null
+    ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;
             $fileName = null;
@@ -157,7 +163,7 @@ trait BuildsSerializers
         return $this;
     }
 
-    protected function configureSerializer(Serializer $serializer, callable $callback = null): SerializerConfigurator
+    protected function configureSerializer(Serializer $serializer, ?callable $callback = null): SerializerConfigurator
     {
         $configurator = $serializer->configurator();
 
@@ -168,7 +174,7 @@ trait BuildsSerializers
         return $configurator;
     }
 
-    protected function addSerializer(SerializerContract $instance): self
+    protected function addSerializer(SerializerContract $instance): static
     {
         $configurator = $instance->configurator();
 

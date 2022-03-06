@@ -14,11 +14,7 @@ trait HasTrailler
         return $this->trailler;
     }
 
-    /**
-     * @param  SerializerAddon|array|callable|null  $trailler
-     * @return $this
-     */
-    public function withTrailler($trailler): self
+    public function withTrailler(SerializerAddon|callable|array|null $trailler): static
     {
         if (\is_null($trailler)) {
             $this->trailler = null;
@@ -26,7 +22,7 @@ trait HasTrailler
             return $this;
         }
 
-        if (\is_object($trailler) && $trailler instanceof SerializerAddon) {
+        if ($trailler instanceof SerializerAddon) {
             $this->trailler = $trailler;
 
             return $this;
@@ -34,7 +30,7 @@ trait HasTrailler
 
         try {
             $this->trailler = new SerializerAddon($trailler);
-        } catch (InvalidAddonException $exception) {
+        } catch (InvalidAddonException) {
             throw new \InvalidArgumentException('Trailler should be an array or a callable');
         }
 

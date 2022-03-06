@@ -11,7 +11,7 @@ trait CountsRecords
         return $this->recordCount;
     }
 
-    protected function incrementRecordCount(int $amount = 1): self
+    protected function incrementRecordCount(int $amount = 1): static
     {
         $this->recordCount += $amount;
 

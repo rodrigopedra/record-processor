@@ -14,7 +14,7 @@ class PDOSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withUsesTransaction(bool $usesTransaction): self
+    public function withUsesTransaction(bool $usesTransaction): static
     {
         $this->serializer->withUsesTransaction($usesTransaction);
 

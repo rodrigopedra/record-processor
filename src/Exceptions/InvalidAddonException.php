@@ -2,6 +2,6 @@
 
 namespace RodrigoPedra\RecordProcessor\Exceptions;
 
-class InvalidAddonException extends \Exception
+class InvalidAddonException extends \RuntimeException
 {
 }

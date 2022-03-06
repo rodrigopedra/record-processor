@@ -3,18 +3,17 @@
 namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use RodrigoPedra\RecordProcessor\Concerns\HasPrefix;
-use RodrigoPedra\RecordProcessor\Concerns\NoOutput;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\EchoSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\RecordSerializers\TextRecordSerializer;
+use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
 class EchoSerializer extends FileSerializer
 {
     use HasPrefix;
-    use NoOutput;
 
     public function __construct()
     {
-        parent::__construct('php://output');
+        parent::__construct(FileInfo::OUTPUT_STREAM);
 
         $this->configurator = new EchoSerializerConfigurator($this, true, true);
     }
@@ -41,6 +40,11 @@ class EchoSerializer extends FileSerializer
         $this->file->fwrite(\PHP_EOL);
 
         $this->incrementLineCount();
+    }
+
+    public function output(): ?\SplFileObject
+    {
+        return null;
     }
 
     public function defaultRecordSerializer(): TextRecordSerializer

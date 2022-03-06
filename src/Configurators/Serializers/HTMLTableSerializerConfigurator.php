@@ -14,21 +14,21 @@ class HTMLTableSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function writeOutputToFile(string $fileName): self
+    public function writeOutputToFile(string $fileName): static
     {
         $this->serializer->writeOutputToFile($fileName);
 
         return $this;
     }
 
-    public function withTableClassAttribute(string $tableClassAttribute): self
+    public function withTableClassAttribute(string $tableClassAttribute): static
     {
         $this->serializer->withTableClassAttribute($tableClassAttribute);
 
         return $this;
     }
 
-    public function withTableIdAttribute(string $tableIdAttribute): self
+    public function withTableIdAttribute(string $tableIdAttribute): static
     {
         $this->serializer->withTableIdAttribute($tableIdAttribute);
 

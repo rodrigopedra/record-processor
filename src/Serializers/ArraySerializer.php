@@ -27,7 +27,7 @@ class ArraySerializer implements Serializer
 
     public function append($content)
     {
-        \array_push($this->items, $content);
+        $this->items[] = $content;
     }
 
     public function lineCount(): int

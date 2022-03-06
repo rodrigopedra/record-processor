@@ -6,18 +6,9 @@ use Illuminate\Contracts\Support\Arrayable;
 
 interface Record extends Arrayable
 {
-    /**
-     * @return mixed
-     */
-    public function key();
+    public function key(): mixed;
 
-    /**
-     * Gets and atribute from the record
-     *
-     * @param  string  $field
-     * @return mixed
-     */
-    public function field(string $field);
+    public function field(string $field): mixed;
 
     public function isValid(): bool;
 }
