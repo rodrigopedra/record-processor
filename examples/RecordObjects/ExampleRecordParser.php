@@ -16,14 +16,14 @@ class ExampleRecordParser implements RecordParser
             $rawContent = \explode('|', $rawContent);
         }
 
-        $values = Arr::wrap($rawContent);
+        $values = \array_values(Arr::wrap($rawContent));
 
         if (\count($values) < 2) {
             return NullRecord::get();
         }
 
-        $name = Arr::first($values);
-        $email = Arr::last($values);
+        $name = $values[0];
+        $email = $values[1];
 
         return new ExampleRecord($name, [
             'name' => $name,
