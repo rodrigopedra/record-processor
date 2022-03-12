@@ -14,7 +14,7 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordSerializer;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer as SerializerContract;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
-class Writer implements ProcessorStageHandler, ProcessorStageFlusher
+final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
 {
     use CountsRecords;
     use HasHeader;
@@ -22,9 +22,9 @@ class Writer implements ProcessorStageHandler, ProcessorStageFlusher
     use HasTrailler;
     use WritesTrailler;
 
-    protected SerializerContract $serializer;
-    protected RecordSerializer $recordSerializer;
-    protected bool $isOpen = false;
+    private SerializerContract $serializer;
+    private RecordSerializer $recordSerializer;
+    private bool $isOpen = false;
 
     public function __construct(SerializerContract $serializer)
     {
@@ -64,7 +64,7 @@ class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         return $next($payload);
     }
 
-    protected function open(?Record $record = null)
+    private function open(?Record $record = null)
     {
         if ($this->isOpen) {
             return;
@@ -77,7 +77,7 @@ class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         $this->writeHeader($record);
     }
 
-    protected function close()
+    private function close()
     {
         if (! $this->isOpen) {
             return;

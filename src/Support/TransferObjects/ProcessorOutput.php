@@ -10,7 +10,7 @@ final class ProcessorOutput
     private int $inputRecordCount;
     private int $outputLineCount;
     private int $outputRecordCount;
-    protected mixed $output = null;
+    private mixed $output = null;
 
     public function __construct(
         int $inputLineCount,
@@ -58,7 +58,7 @@ final class ProcessorOutput
         return $this->output;
     }
 
-    protected function parseOutput()
+    private function parseOutput()
     {
         if ($this->output instanceof \SplFileInfo) {
             $this->output = $this->output->getFileInfo(FileInfo::class);

@@ -3,7 +3,6 @@
 namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use RodrigoPedra\RecordProcessor\Concerns\CountsLines;
-use RodrigoPedra\RecordProcessor\Concerns\NoOutput;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\PDOSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
@@ -102,7 +101,6 @@ class PDOSerializer implements Serializer
         }
 
         $query = $this->formatQueryStatement($count);
-
         $this->statement = $this->pdo->prepare($query);
 
         return $this->statement;

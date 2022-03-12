@@ -2,17 +2,15 @@
 
 namespace RodrigoPedra\RecordProcessor\Concerns\Serializers;
 
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddon;
+
 trait WritesTrailler
 {
+    abstract public function trailler(): ?SerializerAddon;
+
     protected function writeTrailler(): static
     {
-        $trailler = $this->trailler();
-
-        if (\is_null($trailler)) {
-            return $this;
-        }
-
-        $trailler->handle($this->serializer, $this->recordCount());
+        $this->trailler()?->handle($this->serializer, $this->recordCount());
 
         return $this;
     }

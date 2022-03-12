@@ -5,7 +5,6 @@ namespace RodrigoPedra\RecordProcessor\Stages;
 use League\Csv\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer;
-use RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\HTMLTableSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer;
@@ -127,7 +126,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $realPath = $this->inputFileInfo->getRealPath();
 
         if ($realPath === false) {
-            // file does not exists
+            // file does not exist
             return;
         }
 
@@ -138,27 +137,14 @@ class DownloadFileOutput implements ProcessorStageFlusher
     {
         $fileName = \implode('_', ['temp', \uniqid(\date('YmdHis'))]);
 
-        $extension = null;
-
-        switch ($className) {
-            case CSVFileSerializer::class:
-                $extension = 'csv';
-                break;
-            case ExcelFileSerializer::class:
-                // Cannot write excel to temporary file
-                break;
-            case HTMLTableSerializer::class:
-                $extension = 'html';
-                break;
-            case JSONFileSerializer::class:
-                $extension = 'json';
-                break;
-            case TextFileSerializer::class:
-                $extension = 'txt';
-                break;
-        }
-
-        $fileName = \implode('.', \array_filter([$fileName, $extension]));
+        $fileName = match ($className) {
+            CSVFileSerializer::class => $fileName . '.csv',
+            HTMLTableSerializer::class => $fileName . '.html',
+            JSONFileSerializer::class => $fileName . '.json',
+            TextFileSerializer::class => $fileName . '.txt',
+            // Cannot write excel to temporary file
+            default => $fileName,
+        };
 
         return new FileInfo($fileName);
     }

@@ -2,14 +2,16 @@
 
 namespace RodrigoPedra\RecordProcessor;
 
+use RodrigoPedra\RecordProcessor\Contracts\HaltsOnInvalid;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
-class Parser extends \IteratorIterator
+final class Parser extends \IteratorIterator
 {
-    protected Reader $reader;
-    protected RecordParser $recordParser;
+    private Reader $reader;
+    private RecordParser $recordParser;
+    private ?Record $current = null;
 
     public function __construct(Reader $reader)
     {
@@ -21,7 +23,20 @@ class Parser extends \IteratorIterator
 
     public function current(): Record
     {
-        return $this->recordParser->parseRecord($this->reader, parent::current());
+        return $this->current = $this->recordParser->parseRecord($this->reader, parent::current());
+    }
+
+    public function valid(): bool
+    {
+        if (! parent::valid()) {
+            return false;
+        }
+
+        if ($this->recordParser instanceof HaltsOnInvalid) {
+            return $this->current?->isValid() ?? true;
+        }
+
+        return true;
     }
 
     public function open()

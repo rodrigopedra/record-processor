@@ -12,14 +12,14 @@ use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\ProcessorOutput;
 
-class Processor implements ProcessorContract
+final class Processor implements ProcessorContract
 {
     use CountsRecords;
 
-    protected ?Container $container;
-    protected Parser $parser;
-    protected array $stages;
-    protected array $flushers;
+    private ?Container $container;
+    private Parser $parser;
+    private array $stages;
+    private array $flushers;
 
     public function __construct(?Container $container, Parser $parser)
     {
@@ -49,7 +49,7 @@ class Processor implements ProcessorContract
                 /** @var \RodrigoPedra\RecordProcessor\Contracts\Record|null $record */
                 $record = $stages->send($record)->thenReturn();
 
-                if ($record && $record->isValid()) {
+                if ($record?->isValid()) {
                     $this->incrementRecordCount();
                 }
             }

@@ -9,7 +9,6 @@ use Psr\Log\LogLevel;
 use RodrigoPedra\RecordProcessor\Concerns\CountsLines;
 use RodrigoPedra\RecordProcessor\Concerns\HasLogger;
 use RodrigoPedra\RecordProcessor\Concerns\HasPrefix;
-use RodrigoPedra\RecordProcessor\Concerns\NoOutput;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\LogSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;

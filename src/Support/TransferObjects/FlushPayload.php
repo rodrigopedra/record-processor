@@ -10,7 +10,7 @@ final class FlushPayload
     private int $lineCount = 0;
     private int $recordCount = 0;
     private ?string $serializerClassName = null;
-    protected mixed $output = null;
+    private mixed $output = null;
 
     public function hasRecord(): bool
     {

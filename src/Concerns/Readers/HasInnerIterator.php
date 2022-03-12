@@ -23,7 +23,7 @@ trait HasInnerIterator
 
     public function valid(): bool
     {
-        $valid = ! \is_null($this->iterator) && $this->iterator->valid();
+        $valid = $this->iterator?->valid() ?? false;
 
         if ($valid) {
             $this->incrementLineCount();
