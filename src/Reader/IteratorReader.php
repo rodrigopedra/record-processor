@@ -32,6 +32,7 @@ class IteratorReader implements Reader
 
     public function close()
     {
+        // iterator cannot be closed
     }
 
     public function configurator(): ReaderConfigurator

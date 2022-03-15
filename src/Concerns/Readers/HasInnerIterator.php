@@ -6,12 +6,12 @@ trait HasInnerIterator
 {
     protected ?\Iterator $iterator = null;
 
-    public function current()
+    public function current(): mixed
     {
         return $this->iterator->current();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->iterator->next();
     }
@@ -32,7 +32,7 @@ trait HasInnerIterator
         return $valid;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->lineCount = 0;
 

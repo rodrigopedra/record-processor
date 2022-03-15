@@ -67,7 +67,7 @@ class PDOReader implements Reader
         return $this->currentRecord;
     }
 
-    public function next()
+    public function next(): void
     {
         $this->currentRecord = $this->statement->fetch() ?: null;
     }
@@ -88,7 +88,7 @@ class PDOReader implements Reader
         return $valid;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         if (! \is_null($this->currentRecord)) {
             $this->statement->closeCursor();
