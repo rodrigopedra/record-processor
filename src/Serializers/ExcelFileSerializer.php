@@ -32,6 +32,10 @@ class ExcelFileSerializer extends FileSerializer
         $this->configurator = new ExcelFileSerializerConfigurator($this, true, true);
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function open()
     {
         $this->lineCount = 0;
@@ -40,6 +44,9 @@ class ExcelFileSerializer extends FileSerializer
         $this->writer = $this->createWriter();
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function close()
     {
         $this->writer->save($this->fileInfo->getRealPath());
@@ -48,12 +55,17 @@ class ExcelFileSerializer extends FileSerializer
         $this->file = FileInfo::createReadableFileObject($this->fileInfo->getRealPath());
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function append($content)
     {
         if ($this->lineCount() === static::ROW_LIMIT) {
-            throw new \RuntimeException(\vsprintf('Excel worksheet cannot contain more than %d rows', [
-                \number_format(static::ROW_LIMIT, '0'),
-            ]));
+            throw new \RuntimeException(
+                \vsprintf('Excel worksheet cannot contain more than %d rows', [
+                    \number_format(static::ROW_LIMIT, '0'),
+                ])
+            );
         }
 
         $worksheet = $this->workbook->getActiveSheet();
@@ -63,6 +75,10 @@ class ExcelFileSerializer extends FileSerializer
         $this->incrementLineCount();
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     protected function createWriter(): IWriter
     {
         $extension = $this->fileInfo->getExtension();
@@ -82,6 +98,9 @@ class ExcelFileSerializer extends FileSerializer
         throw new \RuntimeException('The file must have a valid Excel extension');
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     protected function createWorkbook(): Spreadsheet
     {
         $workbook = new Spreadsheet();
@@ -123,6 +142,9 @@ class ExcelFileSerializer extends FileSerializer
         $worksheet->setSelectedCell('A1');
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     protected function appendRowToWorksheet(Worksheet $worksheet, array $values)
     {
         $currentCell = $worksheet->getActiveCell();

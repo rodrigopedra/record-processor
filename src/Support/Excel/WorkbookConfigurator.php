@@ -13,12 +13,11 @@ class WorkbookConfigurator
 {
     use ForwardsCalls;
 
-    protected Spreadsheet $workbook;
     protected Properties $properties;
 
-    public function __construct(Spreadsheet $workbook)
-    {
-        $this->workbook = $workbook;
+    public function __construct(
+        protected Spreadsheet $workbook,
+    ) {
         $this->properties = $workbook->getProperties();
     }
 

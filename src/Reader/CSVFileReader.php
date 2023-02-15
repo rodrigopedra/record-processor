@@ -33,6 +33,10 @@ class CSVFileReader extends FileReader implements Reader
         $this->useFirstRowAsHeader = $firstRowAsHeader;
     }
 
+    /**
+     * @throws \League\Csv\InvalidArgument
+     * @throws \League\Csv\Exception
+     */
     public function open()
     {
         parent::open();

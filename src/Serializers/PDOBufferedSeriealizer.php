@@ -8,6 +8,9 @@ class PDOBufferedSeriealizer extends PDOSerializer
 
     protected array $buffer = [];
 
+    /**
+     * @throws \Throwable
+     */
     public function close()
     {
         $this->flush();
@@ -24,6 +27,9 @@ class PDOBufferedSeriealizer extends PDOSerializer
         $this->pushValues($content);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function pushValues(array $values)
     {
         $count = \array_push($this->buffer, $values);
@@ -33,6 +39,9 @@ class PDOBufferedSeriealizer extends PDOSerializer
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function flush()
     {
         $count = \count($this->buffer);

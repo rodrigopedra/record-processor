@@ -57,7 +57,7 @@ trait BuildsSerializers
 
     public function serializeToCSVFile(
         \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null
+        ?callable $configurator = null,
     ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;
@@ -104,7 +104,7 @@ trait BuildsSerializers
 
     public function serializeToJSONFile(
         \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null
+        ?callable $configurator = null,
     ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;
@@ -134,7 +134,7 @@ trait BuildsSerializers
         string $tableName,
         array $columns,
         bool $buffered = true,
-        ?callable $configurator = null
+        ?callable $configurator = null,
     ): static {
         $serializer = $buffered
             ? new PDOBufferedSeriealizer($pdo, $tableName, $columns)
@@ -148,7 +148,7 @@ trait BuildsSerializers
 
     public function serializeToTextFile(
         \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null
+        ?callable $configurator = null,
     ): static {
         if (\is_callable($fileName)) {
             $configurator = $fileName;

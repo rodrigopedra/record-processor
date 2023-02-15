@@ -16,17 +16,13 @@ final class Processor implements ProcessorContract
 {
     use CountsRecords;
 
-    private ?Container $container;
-    private Parser $parser;
-    private array $stages;
-    private array $flushers;
+    private array $stages = [];
+    private array $flushers = [];
 
-    public function __construct(?Container $container, Parser $parser)
-    {
-        $this->container = $container;
-        $this->parser = $parser;
-        $this->stages = [];
-        $this->flushers = [];
+    public function __construct(
+        private readonly ?Container $container,
+        private readonly Parser $parser,
+    ) {
     }
 
     public function process(): ProcessorOutput

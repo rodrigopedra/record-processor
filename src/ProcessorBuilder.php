@@ -20,6 +20,9 @@ class ProcessorBuilder implements LoggerAwareInterface
     /** @var \RodrigoPedra\RecordProcessor\Contracts\ProcessorStage[]|string[] */
     protected array $stages = [];
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function build(): Processor
     {
         $parser = $this->makeParser();
@@ -65,6 +68,9 @@ class ProcessorBuilder implements LoggerAwareInterface
         return $this->logger;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     protected function buildStage(string $stage): ProcessorStage
     {
         if (! \class_exists($stage)) {

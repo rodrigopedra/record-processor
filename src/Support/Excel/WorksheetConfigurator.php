@@ -12,11 +12,9 @@ class WorksheetConfigurator
 {
     use ForwardsCalls;
 
-    protected Worksheet $worksheet;
-
-    public function __construct(Worksheet $worksheet)
-    {
-        $this->worksheet = $worksheet;
+    public function __construct(
+        protected Worksheet $worksheet,
+    ) {
     }
 
     public function withColumnFormat(array $formats): static
@@ -31,6 +29,9 @@ class WorksheetConfigurator
         return $this;
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function freezeFirstRow(): static
     {
         $this->worksheet->freezePane('A2');

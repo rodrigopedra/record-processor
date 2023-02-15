@@ -12,7 +12,7 @@ trait FillsArrayWithRecords
 {
     abstract protected function fillArrayWithSingleRecord(array &$results, Record $record, int $offset): int;
 
-    protected function fillArrayWithRecords(array &$results, array $records, int $limit, int $offset)
+    protected function fillArrayWithRecords(array &$results, array $records, int $limit, int $offset): void
     {
         $length = \min(\count($records), $limit);
 

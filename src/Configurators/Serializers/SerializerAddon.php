@@ -20,7 +20,7 @@ class SerializerAddon
         $this->addon = $addon;
     }
 
-    public function handle(Serializer $serializer, $recordCount, ?Record $record = null)
+    public function handle(Serializer $serializer, $recordCount, ?Record $record = null): void
     {
         if (\is_array($this->addon)) {
             $serializer->append($this->addon);

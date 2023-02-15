@@ -10,13 +10,12 @@ use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
 class JsonRecordSerializer implements RecordSerializer
 {
-    protected bool $writesValidRecords = true;
     protected int $jsonEncodeOptions = 0;
 
-    public function __construct(bool $writesValidRecords = true, int $jsonEncodeOptions = 0)
-    {
-        $this->writesValidRecords = $writesValidRecords;
-
+    public function __construct(
+        protected bool $writesValidRecords = true,
+        int $jsonEncodeOptions = 0,
+    ) {
         $this->jsonEncodeOptions = $jsonEncodeOptions > 0
             ? $jsonEncodeOptions
             : JSONFileSerializer::JSON_ENCODE_OPTIONS;

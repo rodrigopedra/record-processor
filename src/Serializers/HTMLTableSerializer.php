@@ -49,6 +49,9 @@ class HTMLTableSerializer implements Serializer
         return $this;
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function open()
     {
         $this->lineCount = 0;

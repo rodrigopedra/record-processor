@@ -64,6 +64,9 @@ class PDOSerializer implements Serializer
         $this->statement = null;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function append($content)
     {
         if (! \is_array($content)) {

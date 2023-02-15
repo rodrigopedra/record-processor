@@ -21,6 +21,9 @@ class ExcelFileReader extends FileReader implements Reader
         $this->configurator = new ExcelFileReaderConfigurator($this);
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function open()
     {
         parent::open();
@@ -35,6 +38,10 @@ class ExcelFileReader extends FileReader implements Reader
         $this->withInnerIterator($iterator);
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Calculation\Exception
+     */
     public function current(): array
     {
         /** @var  \PhpOffice\PhpSpreadsheet\Worksheet\Row $row */

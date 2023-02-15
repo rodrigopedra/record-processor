@@ -17,16 +17,13 @@ class SerializerConfigurator
         withTrailler as baseWithTrailler;
     }
 
-    protected Serializer $serializer;
-    protected bool $hasHeader;
-    protected bool $hasTrailler;
     protected ?RecordSerializer $recordSerializer = null;
 
-    public function __construct(Serializer $serializer, bool $hasHeader = false, bool $hasTrailler = false)
-    {
-        $this->serializer = $serializer;
-        $this->hasHeader = $hasHeader;
-        $this->hasTrailler = $hasTrailler;
+    public function __construct(
+        protected Serializer $serializer,
+        protected bool $hasHeader = false,
+        protected bool $hasTrailler = false,
+    ) {
     }
 
     public function hasRecordSerializer(): bool

@@ -64,10 +64,13 @@ class FileInfo extends \SplFileInfo
 
     public function getBasenameWithExtension(?string $extension = null): string
     {
-        return \implode('.', \array_filter([
-            $this->getBasenameWithoutExtension(),
-            $extension,
-        ]));
+        return \implode(
+            '.',
+            \array_filter([
+                $this->getBasenameWithoutExtension(),
+                $extension,
+            ]),
+        );
     }
 
     public static function createTempFileObject(): \SplTempFileObject

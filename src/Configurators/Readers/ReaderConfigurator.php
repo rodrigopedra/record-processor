@@ -8,12 +8,11 @@ use RodrigoPedra\RecordProcessor\RecordParsers\CallbackRecordParser;
 
 class ReaderConfigurator
 {
-    protected Reader $reader;
     protected ?RecordParser $recordParser = null;
 
-    public function __construct(Reader $reader)
-    {
-        $this->reader = $reader;
+    public function __construct(
+        protected Reader $reader,
+    ) {
     }
 
     public function hasRecordParser(): bool

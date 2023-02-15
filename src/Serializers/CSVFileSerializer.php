@@ -26,6 +26,9 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
         $this->configurator = new CSVFileSerializerConfigurator($this, true, true);
     }
 
+    /**
+     * @throws \League\Csv\InvalidArgument
+     */
     public function open()
     {
         parent::open();
@@ -43,6 +46,9 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
         $this->writer = null;
     }
 
+    /**
+     * @throws \League\Csv\CannotInsertRecord
+     */
     public function append($content)
     {
         $this->writer->insertOne(Arr::wrap($content));

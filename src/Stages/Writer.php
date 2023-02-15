@@ -22,13 +22,12 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
     use HasTrailler;
     use WritesTrailler;
 
-    private SerializerContract $serializer;
     private RecordSerializer $recordSerializer;
     private bool $isOpen = false;
 
-    public function __construct(SerializerContract $serializer)
-    {
-        $this->serializer = $serializer;
+    public function __construct(
+        private readonly SerializerContract $serializer,
+    ) {
         $this->recordSerializer = $serializer->configurator()->recordSerializer();
     }
 

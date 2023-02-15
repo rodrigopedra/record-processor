@@ -9,15 +9,14 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 final class Parser extends \IteratorIterator
 {
-    private Reader $reader;
     private RecordParser $recordParser;
     private ?Record $current = null;
 
-    public function __construct(Reader $reader)
-    {
+    public function __construct(
+        private readonly Reader $reader,
+    ) {
         parent::__construct($reader);
 
-        $this->reader = $reader;
         $this->recordParser = $reader->configurator()->recordParser();
     }
 

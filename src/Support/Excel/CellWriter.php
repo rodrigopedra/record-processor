@@ -18,13 +18,10 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  */
 final class CellWriter
 {
-    public Worksheet $sheet;
-    public string $cells;
-
-    public function __construct(string $cells, Worksheet $sheet)
-    {
-        $this->cells = $cells;
-        $this->sheet = $sheet;
+    public function __construct(
+        public string $cells,
+        public Worksheet $sheet,
+    ) {
     }
 
     public function setValue($value): self
@@ -37,6 +34,9 @@ final class CellWriter
         return $this;
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function setUrl(string $url): self
     {
         // Only set cell value for single cells
@@ -83,7 +83,7 @@ final class CellWriter
         string|array $top = 'none',
         string $right = 'none',
         string $bottom = 'none',
-        string $left = 'none'
+        string $left = 'none',
     ): self {
         if (\is_array($top)) {
             $borders = $top;
@@ -99,6 +99,9 @@ final class CellWriter
         return $this->setStyle('borders', $borders);
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function setTextRotation(int $degrees): self
     {
         $this->getCellStyle()->getAlignment()->setTextRotation($degrees);
@@ -131,7 +134,7 @@ final class CellWriter
         string $styleType,
         array|string $color,
         bool $type = false,
-        string $colorType = 'rgb'
+        string $colorType = 'rgb',
     ): self {
         if (! \is_array($color)) {
             $color = [

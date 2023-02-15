@@ -7,15 +7,11 @@ use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 
 class SerializerAddonCallback
 {
-    protected Serializer $serializer;
-    protected int $recordCount;
-    protected ?Record $firstRecord;
-
-    public function __construct(Serializer $serializer, int $recordCount, ?Record $firstRecord = null)
-    {
-        $this->serializer = $serializer;
-        $this->recordCount = $recordCount;
-        $this->firstRecord = $firstRecord;
+    public function __construct(
+        protected Serializer $serializer,
+        protected int $recordCount,
+        protected ?Record $firstRecord = null,
+    ) {
     }
 
     public function append($content): static

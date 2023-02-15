@@ -10,13 +10,11 @@ use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
 class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 {
-    protected ?string $key;
-
-    public function __construct(?string $key, array $attributes = [])
-    {
+    public function __construct(
+        protected ?string $key,
+        array $attributes = [],
+    ) {
         parent::__construct($attributes);
-
-        $this->key = $key;
     }
 
     public function key(): ?string

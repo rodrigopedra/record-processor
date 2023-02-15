@@ -6,25 +6,13 @@ use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
 final class ProcessorOutput
 {
-    private int $inputLineCount;
-    private int $inputRecordCount;
-    private int $outputLineCount;
-    private int $outputRecordCount;
-    private mixed $output = null;
-
     public function __construct(
-        int $inputLineCount,
-        int $inputRecordCount,
-        int $outputLineCount,
-        int $outputRecordCount,
-        mixed $output
+        private readonly int $inputLineCount,
+        private readonly int $inputRecordCount,
+        private readonly int $outputLineCount,
+        private readonly int $outputRecordCount,
+        private mixed $output = null,
     ) {
-        $this->inputLineCount = $inputLineCount;
-        $this->inputRecordCount = $inputRecordCount;
-        $this->outputLineCount = $outputLineCount;
-        $this->outputRecordCount = $outputRecordCount;
-        $this->output = $output;
-
         $this->parseOutput();
     }
 
@@ -58,7 +46,7 @@ final class ProcessorOutput
         return $this->output;
     }
 
-    private function parseOutput()
+    private function parseOutput(): void
     {
         if ($this->output instanceof \SplFileInfo) {
             $this->output = $this->output->getFileInfo(FileInfo::class);
