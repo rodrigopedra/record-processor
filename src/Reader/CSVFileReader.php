@@ -5,7 +5,6 @@ namespace RodrigoPedra\RecordProcessor\Reader;
 use League\Csv\Reader as CsvReader;
 use RodrigoPedra\RecordProcessor\Concerns\HasCSVControls;
 use RodrigoPedra\RecordProcessor\Configurators\Readers\CSVFileReaderConfigurator;
-use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
