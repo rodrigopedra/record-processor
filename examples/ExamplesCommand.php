@@ -160,30 +160,30 @@ class ExamplesCommand extends Command
                 return $builder->serializeToCollection();
             case 'csv':
                 return $builder->serializeToCSVFile($outputPath . '.csv',
-                    function (SerializerConfigurator $configurator) {
+                    function (SerializerConfigurator $configurator): void {
                         $configurator->withHeader(['name', 'email']);
                     });
             case 'echo':
-                return $builder->serializeToEcho(function (EchoSerializerConfigurator $configurator) {
+                return $builder->serializeToEcho(function (EchoSerializerConfigurator $configurator): void {
                     $configurator->withPrefix('PERSIST');
                 });
             case 'excel':
                 return $builder->serializeToExcelFile($outputPath . '.xlsx',
-                    function (ExcelFileSerializerConfigurator $configurator) {
+                    function (ExcelFileSerializerConfigurator $configurator): void {
                         $configurator->withHeader(['name', 'email']);
 
-                        $configurator->withTrailler(function (SerializerAddonCallback $proxy) {
+                        $configurator->withTrailler(function (SerializerAddonCallback $proxy): void {
                             $proxy->append([$proxy->recordCount() . ' records']);
                             $proxy->append([($proxy->lineCount() + 1) . ' lines']);
                         });
 
-                        $configurator->withWorkbookConfigurator(function (WorkbookConfigurator $workbook) {
+                        $configurator->withWorkbookConfigurator(function (WorkbookConfigurator $workbook): void {
                             $workbook->setTitle('Workbook title');
                             $workbook->setCreator('Creator');
                             $workbook->setCompany('Company');
                         });
 
-                        $configurator->withWorksheetConfigurator(function (WorksheetConfigurator $worksheet) {
+                        $configurator->withWorksheetConfigurator(function (WorksheetConfigurator $worksheet): void {
                             $worksheet->setTitle('results', false);
 
                             $worksheet->withColumnFormat([
@@ -193,7 +193,7 @@ class ExamplesCommand extends Command
 
                             // header
                             $worksheet->freezeFirstRow();
-                            $worksheet->configureCells('A1:B1', function ($cells) {
+                            $worksheet->configureCells('A1:B1', function ($cells): void {
                                 $cells->setFontWeight('bold');
                                 $cells->setBorder('node', 'none', 'solid', 'none');
                             });
@@ -201,18 +201,18 @@ class ExamplesCommand extends Command
                         });
                     });
             case 'html':
-                return $builder->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator) {
+                return $builder->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator): void {
                     $configurator->withHeader(['name', 'email']);
                     $configurator->withTableClassAttribute('table table-condensed');
                     $configurator->withTableIdAttribute('my-table');
                 });
             case 'json':
                 return $builder->serializeToJSONFile($outputPath . '.json',
-                    function (JSONFileSerializerConfigurator $configurator) {
+                    function (JSONFileSerializerConfigurator $configurator): void {
                         $configurator->withEncodeOptions(JSONFileSerializer::JSON_ENCODE_OPTIONS | \JSON_PRETTY_PRINT);
                     });
             case 'log':
-                return $builder->serializeToLog(function (LogSerializerConfigurator $configurator) {
+                return $builder->serializeToLog(function (LogSerializerConfigurator $configurator): void {
                     $configurator->withPrefix('PERSIST');
                 });
             case 'pdo':

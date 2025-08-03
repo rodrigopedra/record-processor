@@ -28,7 +28,7 @@ class DownloadCommand extends Command
         $logger->info('Navigate in your browser to http://localhost:8080');
         $logger->info('Type CTRL+C to exit');
 
-        $process->run(function ($type, $buffer) use ($logger) {
+        $process->run(function ($type, $buffer) use ($logger): void {
             $logger->info($buffer);
         });
 
