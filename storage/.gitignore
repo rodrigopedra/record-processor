@@ -1,2 +1,5 @@
-*.sqlite
-*output.*
+*
+!.gitignore
+!input.csv
+!input.txt
+!input.xlsx

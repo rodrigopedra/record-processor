@@ -3,6 +3,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use RodrigoPedra\RecordProcessor\Examples\AllExamplesCommand;
 use RodrigoPedra\RecordProcessor\Examples\DownloadCommand;
 use RodrigoPedra\RecordProcessor\Examples\ExamplesCommand;
 use Symfony\Component\Console\Application;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $application->add(new ExamplesCommand());
+$application->add(new AllExamplesCommand());
 $application->add(new DownloadCommand());
 
 $application->run();
