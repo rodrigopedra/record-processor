@@ -92,7 +92,7 @@ class PDOSerializer implements Serializer
         }
     }
 
-    public function output()
+    public function output(): null
     {
         return null;
     }

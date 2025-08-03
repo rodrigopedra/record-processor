@@ -65,7 +65,7 @@ class LogSerializer implements Serializer, LoggerAwareInterface
         $this->incrementLineCount();
     }
 
-    public function output()
+    public function output(): null
     {
         return null;
     }
