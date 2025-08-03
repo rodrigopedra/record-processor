@@ -49,7 +49,7 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
     /**
      * @throws \League\Csv\CannotInsertRecord
      */
-    public function append($content)
+    public function append($content): void
     {
         $this->writer->insertOne(Arr::wrap($content));
 
