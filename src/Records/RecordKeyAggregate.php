@@ -73,6 +73,21 @@ class RecordKeyAggregate implements RecordAggregate
         return $this->master->{$name};
     }
 
+    public function __set(string $name, mixed $value): void
+    {
+        throw new \BadMethodCallException('Cannot set properties on RecordKeyAggregate. Use the master record instead.');
+    }
+
+    public function __isset(string $name): bool
+    {
+        return isset($this->master->{$name});
+    }
+
+    public function __unset(string $name): void
+    {
+        throw new \BadMethodCallException('Cannot unset properties on RecordKeyAggregate. Use the master record instead.');
+    }
+
     public function __call(string $name, array $arguments)
     {
         return $this->forwardCallTo($this->master, $name, $arguments);
