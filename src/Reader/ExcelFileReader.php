@@ -8,7 +8,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Readers\ExcelFileReaderConfigurat
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
-class ExcelFileReader extends FileReader implements Reader
+class ExcelFileReader extends FileReader
 {
     protected int $skipRows = 0;
     protected int $selectedSheetIndex = 0;

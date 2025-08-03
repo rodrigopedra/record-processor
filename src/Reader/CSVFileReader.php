@@ -9,7 +9,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
-class CSVFileReader extends FileReader implements Reader
+class CSVFileReader extends FileReader
 {
     use HasCSVControls;
 
