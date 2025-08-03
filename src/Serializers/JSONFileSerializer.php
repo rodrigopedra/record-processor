@@ -35,7 +35,7 @@ class JSONFileSerializer extends FileSerializer
         $this->file->fwrite(']');
     }
 
-    public function append($content)
+    public function append($content): void
     {
         if ($content instanceof \JsonSerializable) {
             $content = \json_encode($content->jsonSerialize(), $this->jsonEncodeOptions);

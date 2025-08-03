@@ -23,7 +23,7 @@ class EchoSerializer extends FileSerializer
         $this->lineCount = 0;
     }
 
-    public function append($content)
+    public function append($content): void
     {
         $prefix = $this->prefix();
 
