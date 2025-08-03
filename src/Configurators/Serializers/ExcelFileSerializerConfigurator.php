@@ -7,10 +7,10 @@ use RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer;
 class ExcelFileSerializerConfigurator extends SerializerConfigurator
 {
     /** @var  callable|null */
-    protected $workbookConfigurator = null;
+    protected $workbookConfigurator;
 
     /** @var  callable|null */
-    protected $worksheetConfigurator = null;
+    protected $worksheetConfigurator;
 
     public function __construct(ExcelFileSerializer $serializer, bool $hasHeader = false, bool $hasTrailler = false)
     {
