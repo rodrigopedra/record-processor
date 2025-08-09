@@ -5,11 +5,10 @@ namespace RodrigoPedra\RecordProcessor\Reader;
 use League\Csv\Reader as CsvReader;
 use RodrigoPedra\RecordProcessor\Concerns\HasCSVControls;
 use RodrigoPedra\RecordProcessor\Configurators\Readers\CSVFileReaderConfigurator;
-use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
-class CSVFileReader extends FileReader implements Reader
+class CSVFileReader extends FileReader
 {
     use HasCSVControls;
 

@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Concerns;
 
+use League\Csv\Bom;
 use RodrigoPedra\RecordProcessor\Support\NewLines;
 
 trait HasCSVControls
@@ -10,7 +11,7 @@ trait HasCSVControls
     protected string $enclosure = '"';
     protected string $escape = '\\';
     protected string $newline = NewLines::UNIX_NEWLINE;
-    protected string $outputBOM = '';
+    protected Bom $outputBOM;
 
     public function delimiter(): string
     {
@@ -32,7 +33,7 @@ trait HasCSVControls
         return $this->newline;
     }
 
-    public function outputBOM(): string
+    public function outputBOM(): Bom
     {
         return $this->outputBOM;
     }
@@ -77,7 +78,7 @@ trait HasCSVControls
         return $this;
     }
 
-    public function withOutputBOM(string $outputBOM): static
+    public function withOutputBOM(Bom $outputBOM): static
     {
         $this->outputBOM = $outputBOM;
 

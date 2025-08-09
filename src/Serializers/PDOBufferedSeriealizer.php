@@ -18,7 +18,7 @@ class PDOBufferedSeriealizer extends PDOSerializer
         parent::close();
     }
 
-    public function append($content)
+    public function append($content): void
     {
         if (! \is_array($content)) {
             throw new \InvalidArgumentException('content for PDOBufferedSerializer should be an array');

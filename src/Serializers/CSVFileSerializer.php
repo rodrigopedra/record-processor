@@ -3,13 +3,13 @@
 namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use Illuminate\Support\Arr;
-use League\Csv\ByteSequence;
+use League\Csv\Bom;
 use League\Csv\Writer;
 use RodrigoPedra\RecordProcessor\Concerns\HasCSVControls;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\CSVFileSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Support\NewLines;
 
-class CSVFileSerializer extends FileSerializer implements ByteSequence
+class CSVFileSerializer extends FileSerializer
 {
     use HasCSVControls;
 
@@ -19,9 +19,10 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
     {
         parent::__construct($file);
 
+        $this->outputBOM = Bom::Utf8; // Initialize before using trait methods
         $this->withDelimiter(';');
         $this->withNewline(NewLines::WINDOWS_NEWLINE);
-        $this->withOutputBOM(static::BOM_UTF8);
+        $this->withOutputBOM(Bom::Utf8);
 
         $this->configurator = new CSVFileSerializerConfigurator($this, true, true);
     }
@@ -49,7 +50,7 @@ class CSVFileSerializer extends FileSerializer implements ByteSequence
     /**
      * @throws \League\Csv\CannotInsertRecord
      */
-    public function append($content)
+    public function append($content): void
     {
         $this->writer->insertOne(Arr::wrap($content));
 

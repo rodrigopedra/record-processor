@@ -67,7 +67,7 @@ class PDOSerializer implements Serializer
     /**
      * @throws \Throwable
      */
-    public function append($content)
+    public function append($content): void
     {
         if (! \is_array($content)) {
             throw new \InvalidArgumentException('Content for PDOSerializer should be an array');
@@ -92,7 +92,7 @@ class PDOSerializer implements Serializer
         }
     }
 
-    public function output()
+    public function output(): null
     {
         return null;
     }

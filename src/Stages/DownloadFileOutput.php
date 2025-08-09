@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
+use League\Csv\Exception;
 use League\Csv\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer;
@@ -54,7 +55,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         return $inputFile;
     }
 
-    protected function downloadFile()
+    protected function downloadFile(): void
     {
         if ($this->inputFileInfo->isCSV()) {
             $this->outputFileWithLeagueCSV($this->inputFile);
@@ -84,14 +85,17 @@ class DownloadFileOutput implements ProcessorStageFlusher
         \header('Content-Disposition: attachment; filename="' . $filename . '"');
     }
 
+    /**
+     * @throws Exception
+     */
     protected function outputFileWithLeagueCSV(\SplFileObject $file)
     {
         // league\csv handles CSV BOM properly
         $reader = Reader::createFromFileObject($file);
-        $reader->output($this->outputFileInfo->getBasename());
+        $reader->download($this->outputFileInfo->getBasename());
     }
 
-    protected function buildOutputFileInfo(?string $className)
+    protected function buildOutputFileInfo(?string $className): void
     {
         if (\is_string($this->outputFile)) {
             $this->outputFileInfo = new FileInfo($this->outputFile);
@@ -115,7 +119,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $this->outputFileInfo = $this->inputFileInfo;
     }
 
-    protected function unlinkInputFile()
+    protected function unlinkInputFile(): void
     {
         if (! $this->deleteAfterDownload) {
             return;
@@ -135,7 +139,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     protected function buildTempOutputFileInfo(?string $className): FileInfo
     {
-        $fileName = \implode('_', ['temp', \uniqid(\date('YmdHis'))]);
+        $fileName = \implode('_', ['temp', \uniqid(\date('YmdHis'), true)]);
 
         $fileName = match ($className) {
             CSVFileSerializer::class => $fileName . '.csv',

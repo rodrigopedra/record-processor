@@ -6,7 +6,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurato
 
 interface Serializer extends Resource
 {
-    public function append($content);
+    public function append($content): void;
 
     public function lineCount(): int;
 

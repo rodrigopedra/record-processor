@@ -58,14 +58,14 @@ class LogSerializer implements Serializer, LoggerAwareInterface
     {
     }
 
-    public function append($content)
+    public function append($content): void
     {
         $this->logger->log($this->level, $this->prefix(), Arr::wrap($content));
 
         $this->incrementLineCount();
     }
 
-    public function output()
+    public function output(): null
     {
         return null;
     }

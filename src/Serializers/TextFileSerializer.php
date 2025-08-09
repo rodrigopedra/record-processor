@@ -29,7 +29,7 @@ class TextFileSerializer extends FileSerializer
         return $this;
     }
 
-    public function append($content)
+    public function append($content): void
     {
         if (! \is_string($content)) {
             throw new \InvalidArgumentException('Content for TextFileSerializer should be a string');

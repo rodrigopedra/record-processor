@@ -50,7 +50,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         }
 
         if ($payload->hasRecord()) {
-            $this->handle($payload->record(), fn () => null);
+            $this->handle($payload->record(), fn (): null => null);
         }
 
         $this->close();

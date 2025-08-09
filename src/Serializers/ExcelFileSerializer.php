@@ -58,7 +58,7 @@ class ExcelFileSerializer extends FileSerializer
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function append($content)
+    public function append($content): void
     {
         if ($this->lineCount() === static::ROW_LIMIT) {
             throw new \RuntimeException(

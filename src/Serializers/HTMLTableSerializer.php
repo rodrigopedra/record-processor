@@ -78,7 +78,7 @@ class HTMLTableSerializer implements Serializer
         $this->records = [];
     }
 
-    public function append($content)
+    public function append($content): void
     {
         $this->records[] = Arr::wrap($content);
 

@@ -25,7 +25,7 @@ class ArraySerializer implements Serializer
     {
     }
 
-    public function append($content)
+    public function append($content): void
     {
         $this->items[] = $content;
     }

@@ -2,10 +2,9 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
-use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
-class ExampleRecord extends SimpleRecord implements TextRecord
+class ExampleRecord extends SimpleRecord
 {
     public function isValid(): bool
     {
