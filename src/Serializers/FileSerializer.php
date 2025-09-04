@@ -17,13 +17,9 @@ abstract class FileSerializer implements Serializer
 
     public function __construct(
         protected readonly SerializerConfigurator $configurator,
-        \SplFileInfo|string|null $file,
+        \SplFileInfo|string|null $file = null,
     ) {
-        $this->file = match (true) {
-            $file instanceof \SplFileInfo => $file->getFileInfo(FileInfo::class),
-            \is_string($file) => new FileInfo($file),
-            default => FileInfo::createTempFileObject(),
-        };
+        $this->file = FileInfo::createWritableFileObject($file ?? FileInfo::TEMP_FILE)->getFileInfo(FileInfo::class);
     }
 
     public function open(): void
@@ -35,6 +31,10 @@ abstract class FileSerializer implements Serializer
 
     public function output(): string
     {
+        if ($this->file->isTempFile()) {
+            return \file_get_contents($this->file->getRealPath());
+        }
+
         return $this->file->getRealPath();
     }
 

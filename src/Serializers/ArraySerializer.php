@@ -10,7 +10,7 @@ class ArraySerializer implements Serializer
 {
     protected readonly SerializerConfigurator $configurator;
 
-    protected ?array $items = null;
+    protected array $items = [];
 
     public function __construct()
     {
@@ -22,28 +22,21 @@ class ArraySerializer implements Serializer
         $this->items = [];
     }
 
-    public function close(): void
-    {
-        $this->items = null;
-    }
+    public function close(): void {}
 
     public function append($content): void
     {
-        if (\is_null($this->items)) {
-            $this->open();
-        }
-
         $this->items[] = $content;
     }
 
     public function lineCount(): int
     {
-        return \count($this->items ?? []);
+        return \count($this->items);
     }
 
     public function output(): array
     {
-        return $this->items ?? [];
+        return $this->items;
     }
 
     public function configurator(): SerializerConfigurator

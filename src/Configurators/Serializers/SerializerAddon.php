@@ -27,7 +27,7 @@ class SerializerAddon
             return;
         }
 
-        $content = \call_user_func($this->addon, new SerializerAddonCallback($serializer, $recordCount, $record));
+        $content = \call_user_func($this->addon, new SerializerAddonContext($serializer, $recordCount, $record));
 
         $content = \value($content);
 

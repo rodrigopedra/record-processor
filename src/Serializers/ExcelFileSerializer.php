@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Support\Excel\WorkbookConfigurator;
 use RodrigoPedra\RecordProcessor\Support\Excel\WorksheetConfigurator;
+use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
 /**
  * @property \RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerConfigurator $configurator
@@ -42,7 +43,7 @@ class ExcelFileSerializer extends FileSerializer
     public function open(): void
     {
         $this->lineCount = 0;
-
+        FileInfo::createWritableFileObject($this->file);
         $this->workbook = $this->createWorkbook();
         $this->writer = $this->createWriter($this->workbook);
     }

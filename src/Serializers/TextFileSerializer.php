@@ -20,7 +20,7 @@ class TextFileSerializer extends FileSerializer
     {
         parent::__construct(
             configurator: new TextFileSerializerConfigurator($this, true, true),
-            file: FileInfo::createWritableFileObject($file),
+            file: $file,
         );
     }
 

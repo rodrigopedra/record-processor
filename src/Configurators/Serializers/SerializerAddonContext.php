@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 
-class SerializerAddonCallback
+class SerializerAddonContext
 {
     public function __construct(
         protected readonly Serializer $serializer,

@@ -17,7 +17,7 @@ class EchoSerializer implements Serializer
 
     protected readonly EchoSerializerConfigurator $configurator;
 
-    protected ?\SplFileObject $output = null;
+    protected ?\SplFileObject $writer = null;
 
     public function __construct()
     {
@@ -27,33 +27,33 @@ class EchoSerializer implements Serializer
     public function open(): void
     {
         $this->lineCount = 0;
-        $this->output = FileInfo::createWritableFileObject(FileInfo::OUTPUT_STREAM);
+        $this->writer = FileInfo::createWritableFileObject(FileInfo::OUTPUT_STREAM);
     }
 
     public function close(): void
     {
-        $this->output = null;
+        $this->writer = null;
     }
 
     public function append($content): void
     {
-        if (\is_null($this->output)) {
+        if (\is_null($this->writer)) {
             $this->open();
         }
 
         $prefix = $this->prefix();
 
         if (\is_string($prefix)) {
-            $this->output->fwrite($prefix . ': ');
+            $this->writer->fwrite($prefix . ': ');
         }
 
         if (! \is_string($content)) {
             $content = \var_export($content, true);
         }
 
-        $this->output->fwrite($content);
-        $this->output->fwrite(\PHP_EOL);
-        $this->output->fwrite(\PHP_EOL);
+        $this->writer->fwrite($content);
+        $this->writer->fwrite(\PHP_EOL);
+        $this->writer->fwrite(\PHP_EOL);
 
         $this->incrementLineCount();
     }

@@ -18,7 +18,11 @@ class HTMLTableSerializer implements Serializer
 
     protected string $tableIdAttribute = '';
 
-    protected ?string $filename = null;
+    protected ?FileInfo $file = null;
+
+    protected ?\SplFileObject $writer = null;
+
+    protected \SplFileInfo|string|null $output = null;
 
     protected ?array $records = null;
 
@@ -29,7 +33,7 @@ class HTMLTableSerializer implements Serializer
 
     public function writeOutputToFile(string $fileName): static
     {
-        $this->filename = $fileName;
+        $this->file = new FileInfo($fileName);
 
         return $this;
     }
@@ -51,14 +55,23 @@ class HTMLTableSerializer implements Serializer
     public function open(): void
     {
         $this->records = [];
+        $this->output = null;
+
+        if ($this->file) {
+            $this->writer = FileInfo::createWritableFileObject($this->file);
+        }
     }
 
     public function close(): void
     {
-        if (! \is_null($this->filename)) {
-            $file = FileInfo::createWritableFileObject($this->filename);
-            $file->fwrite($this->output());
-            $file->fwrite(NewLines::UNIX_NEWLINE);
+        if ($this->writer) {
+            $this->output = $this->writer->getFileInfo(FileInfo::class);
+
+            $this->writer->fwrite($this->convert());
+            $this->writer->fwrite(NewLines::UNIX_NEWLINE);
+            $this->writer = null;
+        } else {
+            $this->output = $this->convert();
         }
 
         $this->records = null;
@@ -70,7 +83,7 @@ class HTMLTableSerializer implements Serializer
             $this->open();
         }
 
-        $this->records[] = Arr::wrap($content);
+        $this->records[] = \array_map(\strval(...), Arr::wrap($content));
     }
 
     public function lineCount(): int
@@ -78,12 +91,31 @@ class HTMLTableSerializer implements Serializer
         return \count($this->records ?? []);
     }
 
-    public function output(): string
+    public function convert(): string
     {
+        $records = $this->records ?? [];
+
+        $header = \is_null($this->configurator->header())
+            ? []
+            : \array_shift($records);
+
+        $footer = \is_null($this->configurator->trailler())
+            ? []
+            : \array_pop($records);
+
         // should be chained, ->table() returns a cloned HTMLConverter instance
         return (new HTMLConverter())
             ->table($this->tableClassAttribute, $this->tableIdAttribute)
-            ->convert($this->records ?? []);
+            ->convert($records, $header ?? [], $footer ?? []);
+    }
+
+    public function output(): ?string
+    {
+        if ($this->output instanceof \SplFileInfo) {
+            return $this->output->getRealPath();
+        }
+
+        return $this->output;
     }
 
     public function configurator(): HTMLTableSerializerConfigurator

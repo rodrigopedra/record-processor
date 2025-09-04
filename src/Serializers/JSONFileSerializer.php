@@ -27,7 +27,7 @@ class JSONFileSerializer extends FileSerializer
     {
         parent::__construct(
             configurator: new JSONFileSerializerConfigurator($this, false, false),
-            file: FileInfo::createWritableFileObject($file),
+            file: $file,
         );
     }
 

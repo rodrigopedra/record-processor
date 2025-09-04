@@ -10,7 +10,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerCo
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\JSONFileSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\LogSerializerConfigurator;
-use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddonCallback;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddonContext;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateSerializer;
@@ -137,6 +137,8 @@ class ExamplesCommand extends Command
      */
     protected function readFrom(ProcessorBuilder $builder, string $reader): ProcessorBuilder
     {
+        $builder->debug('Reader: ' . $reader);
+
         $inputPath = $this->storagePath('input');
 
         return match ($reader) {
@@ -154,7 +156,7 @@ class ExamplesCommand extends Command
 
             'pdo' => $this->readFromPDO($builder),
 
-            default => throw new \InvalidArgumentException('Invalid parser'),
+            default => throw new \InvalidArgumentException('Invalid reader: ' . $reader),
         };
     }
 
@@ -163,10 +165,10 @@ class ExamplesCommand extends Command
      */
     protected function readFromPDO(ProcessorBuilder $builder): ProcessorBuilder
     {
-        $pdo = $this->makeConnection(true);
-        $query = 'SELECT name, email FROM users ORDER BY rowid LIMIT 25';
+        $pdo = $this->makeConnection('input.sqlite');
+        $this->populateTable($pdo);
 
-        return $builder->readFromPDO($pdo, $query);
+        return $builder->readFromPDO($pdo, 'SELECT name, email FROM users ORDER BY rowid LIMIT 25');
     }
 
     /**
@@ -174,6 +176,8 @@ class ExamplesCommand extends Command
      */
     protected function serializeTo(ProcessorBuilder $builder, string $serializer): ProcessorBuilder
     {
+        $builder->debug('Serializer: ' . $serializer);
+
         $outputPath = $this->storagePath('output');
 
         return match ($serializer) {
@@ -193,7 +197,7 @@ class ExamplesCommand extends Command
                 function (ExcelFileSerializerConfigurator $configurator): void {
                     $configurator->withHeader(['name', 'email']);
 
-                    $configurator->withTrailler(function (SerializerAddonCallback $proxy): void {
+                    $configurator->withTrailler(function (SerializerAddonContext $proxy): void {
                         $proxy->append([$proxy->recordCount() . ' records']);
                         $proxy->append([($proxy->lineCount() + 1) . ' lines']);
                     });
@@ -224,6 +228,7 @@ class ExamplesCommand extends Command
 
             'html' => $builder->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator): void {
                 $configurator->withHeader(['name', 'email']);
+                $configurator->withTrailler(static fn (SerializerAddonContext $context) => ['Total', $context->recordCount()]);
                 $configurator->withTableClassAttribute('table table-condensed');
                 $configurator->withTableIdAttribute('my-table');
             }),
@@ -242,7 +247,7 @@ class ExamplesCommand extends Command
 
             'text' => $builder->serializeToTextFile($outputPath . '.txt'),
 
-            default => throw new \InvalidArgumentException('Invalid serializer'),
+            default => throw new \InvalidArgumentException('Invalid serializer: ' . $serializer),
         };
     }
 
@@ -251,7 +256,7 @@ class ExamplesCommand extends Command
      */
     protected function serializeToPDO(ProcessorBuilder $builder, bool $isBuffered): ProcessorBuilder
     {
-        $pdo = $this->makeConnection(false);
+        $pdo = $this->makeConnection('output.sqlite');
 
         return $builder->serializeToPDO($pdo, 'users', ['name', 'email'], $isBuffered);
     }
@@ -264,9 +269,9 @@ class ExamplesCommand extends Command
     /**
      * @throws \Throwable
      */
-    protected function makeConnection(bool $populateTable): \PDO
+    protected function makeConnection(string $filename): \PDO
     {
-        $filePath = $this->storagePath('database.sqlite');
+        $filePath = $this->storagePath($filename);
 
         $path = \realpath($filePath);
         $fileExists = $path !== false;
@@ -284,7 +289,7 @@ class ExamplesCommand extends Command
             \PDO::ATTR_EMULATE_PREPARES => false,
         ]);
 
-        $this->ensureTable($connection, $populateTable);
+        $connection->exec('CREATE TABLE IF NOT EXISTS users (NAME TEXT, email TEXT)');
 
         return $connection;
     }
@@ -292,11 +297,9 @@ class ExamplesCommand extends Command
     /**
      * @throws \Throwable
      */
-    protected function ensureTable(\PDO $connection, bool $populateTable): void
+    protected function populateTable(\PDO $connection): void
     {
-        $connection->exec('CREATE TABLE IF NOT EXISTS users (NAME TEXT, email TEXT)');
-
-        if (! $populateTable || $this->hasData($connection)) {
+        if ($this->hasData($connection)) {
             return;
         }
 
