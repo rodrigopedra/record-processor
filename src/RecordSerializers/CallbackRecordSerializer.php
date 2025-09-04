@@ -8,11 +8,11 @@ use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 
 class CallbackRecordSerializer implements RecordSerializer
 {
-    protected $callback;
+    protected readonly \Closure $callback;
 
     public function __construct(callable $callback)
     {
-        $this->callback = $callback;
+        $this->callback = $callback(...);
     }
 
     public function serializeRecord(Serializer $serializer, Record $record): bool

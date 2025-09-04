@@ -63,7 +63,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         return $next($payload);
     }
 
-    private function open(?Record $record = null)
+    private function open(?Record $record = null): void
     {
         if ($this->isOpen) {
             return;
@@ -76,7 +76,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         $this->writeHeader($record);
     }
 
-    private function close()
+    private function close(): void
     {
         if (! $this->isOpen) {
             return;

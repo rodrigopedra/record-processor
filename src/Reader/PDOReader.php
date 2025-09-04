@@ -12,20 +12,21 @@ class PDOReader implements Reader
 {
     use CountsLines;
 
-    protected ?\PDO $pdo = null;
-    protected ?\PDOStatement $statement = null;
-    protected string $query;
-    protected ?array $bindings = null;
-    protected ?array $currentRecord = null;
-    protected ReaderConfigurator $configurator;
+    protected readonly ReaderConfigurator $configurator;
 
-    public function __construct(\PDO $pdo, $query)
-    {
-        $this->pdo = $pdo;
-        $this->query = $query;
+    protected ?\PDOStatement $statement = null;
+
+    protected ?array $bindings = null;
+
+    protected ?array $currentRecord = null;
+
+    public function __construct(
+        protected readonly \PDO $pdo,
+        protected readonly string $query,
+    ) {
         $this->configurator = new ReaderConfigurator($this);
 
-        if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) == 'mysql') {
+        if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $this->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         }
     }
@@ -37,7 +38,7 @@ class PDOReader implements Reader
         return $this;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
 
@@ -54,10 +55,9 @@ class PDOReader implements Reader
         $this->currentRecord = null;
     }
 
-    public function close()
+    public function close(): void
     {
         $this->statement = null;
-        $this->pdo = null;
         $this->bindings = null;
         $this->currentRecord = null;
     }

@@ -22,8 +22,7 @@ final class Processor implements ProcessorContract
     public function __construct(
         private readonly ?Container $container,
         private readonly Parser $parser,
-    ) {
-    }
+    ) {}
 
     public function process(): ProcessorOutput
     {
@@ -60,14 +59,14 @@ final class Processor implements ProcessorContract
                 $this->recordCount(),
                 $payload->lineCount(),
                 $payload->recordCount(),
-                $payload->output()
+                $payload->output(),
             );
         } finally {
             $this->parser->close();
         }
     }
 
-    public function addStage(ProcessorStage $stage)
+    public function addStage(ProcessorStage $stage): void
     {
         if ($stage instanceof ProcessorStageHandler) {
             $this->stages[] = $stage;

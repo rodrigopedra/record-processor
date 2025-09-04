@@ -4,35 +4,36 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 
 use RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer;
 
+/**
+ * @property  \RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer $serializer
+ */
 class ExcelFileSerializerConfigurator extends SerializerConfigurator
 {
-    /** @var  callable|null */
-    protected $workbookConfigurator;
+    protected ?\Closure $workbookConfigurator = null;
 
-    /** @var  callable|null */
-    protected $worksheetConfigurator;
+    protected ?\Closure $worksheetConfigurator = null;
 
     public function __construct(ExcelFileSerializer $serializer, bool $hasHeader = false, bool $hasTrailler = false)
     {
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withWorkbookConfigurator(callable $workbookConfigurator)
+    public function withWorkbookConfigurator(callable $workbookConfigurator): void
     {
-        $this->workbookConfigurator = $workbookConfigurator;
+        $this->workbookConfigurator = $workbookConfigurator(...);
     }
 
-    public function withWorksheetConfigurator(callable $worksheetConfigurator)
+    public function withWorksheetConfigurator(callable $worksheetConfigurator): void
     {
-        $this->worksheetConfigurator = $worksheetConfigurator;
+        $this->worksheetConfigurator = $worksheetConfigurator(...);
     }
 
-    public function workbookConfigurator(): ?callable
+    public function workbookConfigurator(): ?\Closure
     {
         return $this->workbookConfigurator;
     }
 
-    public function worksheetConfigurator(): ?callable
+    public function worksheetConfigurator(): ?\Closure
     {
         return $this->worksheetConfigurator;
     }

@@ -11,7 +11,7 @@ class PDOBufferedSeriealizer extends PDOSerializer
     /**
      * @throws \Throwable
      */
-    public function close()
+    public function close(): void
     {
         $this->flush();
 
@@ -30,7 +30,7 @@ class PDOBufferedSeriealizer extends PDOSerializer
     /**
      * @throws \Throwable
      */
-    public function pushValues(array $values)
+    public function pushValues(array $values): void
     {
         $count = \array_push($this->buffer, $values);
 
@@ -42,7 +42,7 @@ class PDOBufferedSeriealizer extends PDOSerializer
     /**
      * @throws \Throwable
      */
-    public function flush()
+    public function flush(): void
     {
         $count = \count($this->buffer);
 
@@ -52,18 +52,15 @@ class PDOBufferedSeriealizer extends PDOSerializer
 
         try {
             $data = $this->flushData();
-            $statement = $this->prepareStatement($count);
+            $this->prepareStatement($count);
 
-            if (! $statement->execute($data)) {
+            if (! $this->statement->execute($data)) {
                 throw new \RuntimeException('Could not write PDO records');
             }
 
-            $this->incrementLineCount($statement->rowCount());
+            $this->incrementLineCount($this->statement->rowCount() ?? 0);
         } catch (\Throwable $exception) {
-            if ($this->inTransaction) {
-                $this->pdo->rollBack();
-                $this->inTransaction = false;
-            }
+            $this->rollback();
 
             throw $exception;
         } finally {
@@ -71,13 +68,13 @@ class PDOBufferedSeriealizer extends PDOSerializer
         }
     }
 
-    protected function prepareStatement(int $count): ?\PDOStatement
+    protected function prepareStatement(int $count): void
     {
         if ($count !== static::BUFFER_LIMIT) {
             $this->statement = null;
         }
 
-        return parent::prepareStatement($count);
+        parent::prepareStatement($count);
     }
 
     protected function flushData(): array

@@ -4,7 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Contracts;
 
 interface Resource
 {
-    public function open();
+    public function open(): void;
 
-    public function close();
+    public function close(): void;
 }

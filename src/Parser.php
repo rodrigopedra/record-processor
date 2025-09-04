@@ -38,12 +38,12 @@ final class Parser extends \IteratorIterator
         return true;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->reader->open();
     }
 
-    public function close()
+    public function close(): void
     {
         $this->reader->close();
     }

@@ -21,7 +21,7 @@ class ExampleRecordAggregateSerializer implements RecordSerializer
     {
         if (! $record instanceof RecordAggregate) {
             throw new \RuntimeException(
-                'Record for ExampleRecordAggregateSerializer should implement RecordAggregate interface'
+                'Record for ExampleRecordAggregateSerializer should implement RecordAggregate interface',
             );
         }
 
@@ -40,6 +40,6 @@ class ExampleRecordAggregateSerializer implements RecordSerializer
 
     public function formatChildren(array $children): string
     {
-        return \implode(', ', \array_map(fn (ExampleRecord $record) => $record->get('email'), $children));
+        return \implode(', ', \array_map(static fn (ExampleRecord $record) => $record->get('email'), $children));
     }
 }
