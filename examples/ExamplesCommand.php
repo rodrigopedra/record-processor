@@ -139,7 +139,7 @@ class ExamplesCommand extends Command
                 return $builder->readFromIterator(new \ArrayIterator($this->sampleData()));
             case 'pdo':
                 $pdo = $this->makeConnection();
-                $query = 'SELECT name, email FROM users ORDER BY rowid LIMIT 25';
+                $query = 'SELECT "name", "email" FROM "users" ORDER BY "rowid" LIMIT 25';
 
                 return $builder->readFromPDO($pdo, $query);
             case 'text':
@@ -259,7 +259,7 @@ class ExamplesCommand extends Command
 
     protected function populateTable(\PDO $connection, $seed)
     {
-        $connection->exec('CREATE TABLE IF NOT EXISTS users (NAME TEXT, email TEXT)');
+        $connection->exec('CREATE TABLE IF NOT EXISTS "users" ("name" TEXT, "email" TEXT)');
 
         if (! $seed) {
             return;
