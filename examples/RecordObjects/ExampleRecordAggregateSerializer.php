@@ -20,9 +20,10 @@ class ExampleRecordAggregateSerializer implements RecordSerializer
     public function serializeRecord(Serializer $serializer, Record $record): bool
     {
         if (! $record instanceof RecordAggregate) {
-            throw new \RuntimeException(
-                'Record for ExampleRecordAggregateSerializer should implement RecordAggregate interface',
-            );
+            throw new \RuntimeException(\vsprintf('Record for %s should implement %s interface', [
+                self::class,
+                RecordAggregate::class,
+            ]));
         }
 
         if (! $record->isValid()) {

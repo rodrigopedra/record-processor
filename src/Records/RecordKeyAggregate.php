@@ -65,6 +65,11 @@ class RecordKeyAggregate implements RecordAggregate
         ];
     }
 
+    public function count(): int
+    {
+        return \count($this->records);
+    }
+
     public function __get(string $name)
     {
         return $this->master->{$name};

@@ -126,6 +126,7 @@ class FileInfo extends \SplFileInfo
     public static function createReadableFileObject(\SplFileInfo|string $file, string $mode = 'rb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
+        $file->setFlags(\SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
         /** @var static $fileInfo */
         $fileInfo = $file->getFileInfo(static::class);

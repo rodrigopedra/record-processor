@@ -9,6 +9,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Processor as ProcessorContract;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
+use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\ProcessorOutput;
 
@@ -26,8 +27,6 @@ final class Processor implements ProcessorContract
 
     public function process(): ProcessorOutput
     {
-        $this->recordCount = 0;
-
         $stages = (new Pipeline($this->container))
             ->via('handle')
             ->through($this->stages);
@@ -38,21 +37,8 @@ final class Processor implements ProcessorContract
 
         try {
             $this->parser->open();
-            $this->recordCount = 0;
 
-            foreach ($this->parser as $record) {
-                /** @var \RodrigoPedra\RecordProcessor\Contracts\Record|null $record */
-                $record = $stages->send($record)->thenReturn();
-
-                if ($record?->isValid()) {
-                    $this->incrementRecordCount();
-                }
-            }
-
-            /** @var \RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload $payload */
-            $payload = $flushers
-                ->send(new FlushPayload())
-                ->thenReturn();
+            $payload = $this->run($this->parser, $stages, $flushers);
 
             return new ProcessorOutput(
                 $this->parser->lineCount(),
@@ -66,6 +52,29 @@ final class Processor implements ProcessorContract
         }
     }
 
+    private function run(\Traversable $records, Pipeline $stages, Pipeline $flushers): FlushPayload
+    {
+        $this->recordCount = 0;
+
+        foreach ($records as $record) {
+            /** @var \RodrigoPedra\RecordProcessor\Contracts\Record|null $record */
+            $record = $stages->send($record)->thenReturn();
+
+            if ($record?->isValid()) {
+                $this->incrementRecordCount($this->countRecord($record));
+            }
+        }
+
+        /** @var \RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload $payload */
+        $payload = $flushers
+            ->send(new FlushPayload())
+            ->thenReturn();
+
+        $this->incrementRecordCount($this->countRecord($payload->record()));
+
+        return $payload;
+    }
+
     public function addStage(ProcessorStage $stage): void
     {
         if ($stage instanceof ProcessorStageHandler) {
@@ -75,5 +84,14 @@ final class Processor implements ProcessorContract
         if ($stage instanceof ProcessorStageFlusher) {
             $this->flushers[] = $stage;
         }
+    }
+
+    private function countRecord(Record $record): int
+    {
+        if ($record instanceof \Countable) {
+            return $record->count();
+        }
+
+        return \intval($record->isValid());
     }
 }

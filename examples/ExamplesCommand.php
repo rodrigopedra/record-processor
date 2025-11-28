@@ -168,7 +168,7 @@ class ExamplesCommand extends Command
         $pdo = $this->makeConnection('input.sqlite');
         $this->populateTable($pdo);
 
-        return $builder->readFromPDO($pdo, 'SELECT name, email FROM users ORDER BY rowid LIMIT 25');
+        return $builder->readFromPDO($pdo, 'SELECT "name", "email" FROM "users" ORDER BY "rowid" LIMIT 25');
     }
 
     /**

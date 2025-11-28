@@ -58,6 +58,11 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
         return [];
     }
 
+    public function count(): int
+    {
+        return 0;
+    }
+
     public static function get(): NullRecord
     {
         if (\is_null(self::$instance)) {

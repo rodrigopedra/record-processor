@@ -3,28 +3,34 @@
 namespace RodrigoPedra\RecordProcessor\Support\TransferObjects;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
+use RodrigoPedra\RecordProcessor\Records\NullRecord;
 
 final class FlushPayload
 {
-    private ?Record $record = null;
+    private Record $record;
     private int $lineCount = 0;
     private int $recordCount = 0;
     private ?string $serializerClassName = null;
     private mixed $output = null;
 
-    public function hasRecord(): bool
+    public function __construct()
     {
-        return ! \is_null($this->record);
+        $this->record = NullRecord::get();
     }
 
-    public function record(): ?Record
+    public function hasRecord(): bool
+    {
+        return ! ($this->record instanceof NullRecord);
+    }
+
+    public function record(): Record
     {
         return $this->record;
     }
 
     public function withRecord(?Record $record): self
     {
-        $this->record = $record;
+        $this->record = $record ?? NullRecord::get();
 
         return $this;
     }

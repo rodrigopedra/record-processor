@@ -29,11 +29,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 
     public function isValid(): bool
     {
-        if (\is_null($this->key)) {
-            return false;
-        }
-
-        return $this->key !== '';
+        return \filled($this->key);
     }
 
     public function toText(): string
