@@ -289,7 +289,7 @@ class ExamplesCommand extends Command
             \PDO::ATTR_EMULATE_PREPARES => false,
         ]);
 
-        $connection->exec('CREATE TABLE IF NOT EXISTS users (NAME TEXT, email TEXT)');
+        $connection->exec('CREATE TABLE IF NOT EXISTS "users" ("name" TEXT, "email" TEXT)');
 
         return $connection;
     }
