@@ -94,7 +94,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
     protected function outputFileWithLeagueCSV(\SplFileObject $file): void
     {
         // league\csv handles CSV BOM properly
-        $reader = Reader::createFromFileObject($file);
+        $reader = Reader::from($file);
         $reader->download($this->outputFileInfo->getBasename());
     }
 

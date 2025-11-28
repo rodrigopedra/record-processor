@@ -62,6 +62,9 @@ class HTMLTableSerializer implements Serializer
         }
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function close(): void
     {
         if ($this->writer) {
@@ -91,6 +94,9 @@ class HTMLTableSerializer implements Serializer
         return \count($this->records ?? []);
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function convert(): string
     {
         $records = $this->records ?? [];

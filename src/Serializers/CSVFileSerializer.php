@@ -33,6 +33,7 @@ class CSVFileSerializer extends FileSerializer
 
     /**
      * @throws \League\Csv\InvalidArgument
+     * @throws \League\Csv\UnavailableStream
      */
     public function open(): void
     {
@@ -40,7 +41,7 @@ class CSVFileSerializer extends FileSerializer
 
         $file = FileInfo::createWritableFileObject($this->file);
 
-        $this->writer = Writer::createFromFileObject($file);
+        $this->writer = Writer::from($file);
         $this->writer->setOutputBOM($this->outputBOM());
         $this->writer->setDelimiter($this->delimiter());
         $this->writer->setEnclosure($this->enclosure());

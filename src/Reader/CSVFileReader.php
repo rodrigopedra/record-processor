@@ -41,7 +41,7 @@ class CSVFileReader extends FileReader
     {
         parent::open();
 
-        $csvReader = CsvReader::createFromFileObject($this->file);
+        $csvReader = CsvReader::from($this->file);
 
         $csvReader->setDelimiter($this->delimiter());
         $csvReader->setEnclosure($this->enclosure());
