@@ -121,7 +121,7 @@ trait BuildsSerializers
 
     public function serializeToLog(?callable $configurator = null): static
     {
-        $serializer = new LogSerializer($this->logger());
+        $serializer = new LogSerializer($this);
 
         $this->configureSerializer($serializer, $configurator);
         $this->addSerializer($serializer);

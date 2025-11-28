@@ -8,16 +8,15 @@ use RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException;
 
 class SerializerAddon
 {
-    /** @var  array|callable */
-    protected $addon;
+    protected readonly \Closure|array $addon;
 
     public function __construct(array|callable $addon)
     {
         if (! \is_array($addon) && ! \is_callable($addon)) {
-            throw new InvalidAddonException();
+            throw new InvalidAddonException('Invalid Addon');
         }
 
-        $this->addon = $addon;
+        $this->addon = \is_array($addon) ? $addon : $addon(...);
     }
 
     public function handle(Serializer $serializer, $recordCount, ?Record $record = null): void
@@ -28,7 +27,7 @@ class SerializerAddon
             return;
         }
 
-        $content = \call_user_func($this->addon, new SerializerAddonCallback($serializer, $recordCount, $record));
+        $content = \call_user_func($this->addon, new SerializerAddonContext($serializer, $recordCount, $record));
 
         $content = \value($content);
 

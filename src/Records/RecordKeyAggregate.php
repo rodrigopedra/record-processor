@@ -10,16 +10,13 @@ class RecordKeyAggregate implements RecordAggregate
 {
     use ForwardsCalls;
 
-    protected Record $master;
-
-    /** @var \RodrigoPedra\RecordProcessor\Contracts\Record[] */
+    /** @var array<int, \RodrigoPedra\RecordProcessor\Contracts\Record> */
     protected array $records = [];
 
-    public function __construct(Record $record)
-    {
-        $this->master = $record;
-
-        $this->addRecord($record);
+    public function __construct(
+        protected readonly Record $master,
+    ) {
+        $this->addRecord($master);
     }
 
     public function key(): mixed
@@ -64,8 +61,13 @@ class RecordKeyAggregate implements RecordAggregate
     {
         return [
             'master' => $this->master->toArray(),
-            'records' => \array_map(fn (Record $record) => $record->toArray(), $this->records),
+            'records' => \array_map(static fn (Record $record) => $record->toArray(), $this->records),
         ];
+    }
+
+    public function count(): int
+    {
+        return \count($this->records);
     }
 
     public function __get(string $name)

@@ -4,7 +4,10 @@ namespace RodrigoPedra\RecordProcessor\Reader;
 
 use RodrigoPedra\RecordProcessor\Concerns\CountsLines;
 use RodrigoPedra\RecordProcessor\Concerns\Readers\HasInnerIterator;
+use RodrigoPedra\RecordProcessor\Configurators\Readers\ReaderConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
+use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
+use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
 abstract class FileReader implements Reader
@@ -15,22 +18,32 @@ abstract class FileReader implements Reader
         valid as iteratorValid;
     }
 
-    protected \SplFileObject $file;
-    protected FileInfo $fileInfo;
+    protected readonly \SplFileObject $file;
 
-    public function __construct(\SplFileObject|string $file)
-    {
+    public function __construct(
+        protected readonly ReaderConfigurator $configurator,
+        \SplFileInfo|string $file,
+    ) {
         $this->file = FileInfo::createReadableFileObject($file);
-        $this->fileInfo = $this->file->getFileInfo(FileInfo::class);
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
     }
 
-    public function close()
+    public function close(): void
     {
         $this->withInnerIterator(null);
+    }
+
+    public function configurator(): ReaderConfigurator
+    {
+        return $this->configurator;
+    }
+
+    public function defaultRecordParser(): RecordParser
+    {
+        return new ArrayRecordParser();
     }
 }

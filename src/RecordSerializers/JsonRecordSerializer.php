@@ -13,7 +13,7 @@ class JsonRecordSerializer implements RecordSerializer
     protected int $jsonEncodeOptions = 0;
 
     public function __construct(
-        protected bool $writesValidRecords = true,
+        protected readonly bool $writesValidRecords = true,
         int $jsonEncodeOptions = 0,
     ) {
         $this->jsonEncodeOptions = $jsonEncodeOptions > 0

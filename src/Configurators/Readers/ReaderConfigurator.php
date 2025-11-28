@@ -12,8 +12,7 @@ class ReaderConfigurator
 
     public function __construct(
         protected Reader $reader,
-    ) {
-    }
+    ) {}
 
     public function hasRecordParser(): bool
     {

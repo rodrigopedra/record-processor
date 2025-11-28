@@ -6,9 +6,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class Formats
 {
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     public static function currency(): string
     {

@@ -9,22 +9,22 @@ use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
 
 class CollectionSerializer implements Serializer
 {
+    protected readonly SerializerConfigurator $configurator;
+
     protected Collection $collection;
-    protected SerializerConfigurator $configurator;
 
     public function __construct()
     {
         $this->configurator = new SerializerConfigurator($this, false, false);
+        $this->open();
     }
 
-    public function open()
+    public function open(): void
     {
         $this->collection = new Collection();
     }
 
-    public function close()
-    {
-    }
+    public function close(): void {}
 
     public function append($content): void
     {

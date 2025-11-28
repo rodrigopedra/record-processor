@@ -4,10 +4,10 @@ namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use Illuminate\Support\Arr;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use RodrigoPedra\RecordProcessor\Concerns\CountsLines;
-use RodrigoPedra\RecordProcessor\Concerns\HasLogger;
 use RodrigoPedra\RecordProcessor\Concerns\HasPrefix;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\LogSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
@@ -16,17 +16,18 @@ use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
 class LogSerializer implements Serializer, LoggerAwareInterface
 {
     use CountsLines;
-    use HasLogger;
     use HasPrefix;
+    use LoggerAwareTrait;
+
+    protected readonly LogSerializerConfigurator $configurator;
 
     protected string $level;
-    protected LogSerializerConfigurator $configurator;
 
     public function __construct(LoggerInterface $logger)
     {
+        $this->configurator = new LogSerializerConfigurator($this, true, true);
         $this->setLogger($logger);
         $this->withLevel(LogLevel::INFO);
-        $this->configurator = new LogSerializerConfigurator($this, true, true);
     }
 
     public function withLevel(string $level): static
@@ -40,7 +41,7 @@ class LogSerializer implements Serializer, LoggerAwareInterface
             LogLevel::NOTICE,
             LogLevel::INFO,
             LogLevel::DEBUG,
-        ])) {
+        ], true)) {
             throw new \InvalidArgumentException('Invalid log level. See Psr\\Log\\LogLevel class for available levels');
         }
 
@@ -49,14 +50,12 @@ class LogSerializer implements Serializer, LoggerAwareInterface
         return $this;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
     }
 
-    public function close()
-    {
-    }
+    public function close(): void {}
 
     public function append($content): void
     {

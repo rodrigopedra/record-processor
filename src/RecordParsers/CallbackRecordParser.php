@@ -8,12 +8,11 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 class CallbackRecordParser implements RecordParser
 {
-    /** @var callable */
-    protected $callback;
+    protected readonly \Closure $callback;
 
     public function __construct(callable $callback)
     {
-        $this->callback = $callback;
+        $this->callback = $callback(...);
     }
 
     public function parseRecord(Reader $reader, $rawContent): Record

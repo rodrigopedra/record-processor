@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 
+use League\Csv\Bom;
 use RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer;
 
 /**
@@ -16,7 +17,7 @@ class CSVFileSerializerConfigurator extends SerializerConfigurator
 
     public function withOutputBOM(string $outputBOM): static
     {
-        $this->serializer->withOutputBOM($outputBOM);
+        $this->serializer->withOutputBOM(Bom::tryFromSequence($outputBOM) ?? Bom::Utf8);
 
         return $this;
     }

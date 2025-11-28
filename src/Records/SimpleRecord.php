@@ -11,7 +11,7 @@ use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 {
     public function __construct(
-        protected ?string $key,
+        protected readonly ?string $key,
         array $attributes = [],
     ) {
         parent::__construct($attributes);
@@ -29,11 +29,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 
     public function isValid(): bool
     {
-        if (\is_null($this->key)) {
-            return false;
-        }
-
-        return \mb_strlen($this->key) > 0;
+        return \filled($this->key);
     }
 
     public function toText(): string
