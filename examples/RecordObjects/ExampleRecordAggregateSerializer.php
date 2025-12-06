@@ -6,6 +6,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 use RodrigoPedra\RecordProcessor\Contracts\RecordSerializer;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
+use RodrigoPedra\RecordProcessor\Records\KeyedRecord;
 use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ExampleRecordAggregateSerializer implements RecordSerializer
@@ -36,7 +37,7 @@ class ExampleRecordAggregateSerializer implements RecordSerializer
             'email' => $children,
         ];
 
-        return $this->recordSerializer->serializeRecord($serializer, new SimpleRecord($record->key(), $content));
+        return $this->recordSerializer->serializeRecord($serializer, new KeyedRecord($record->key(), $content));
     }
 
     public function formatChildren(array $children): string

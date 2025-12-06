@@ -2,9 +2,9 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
-use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
+use RodrigoPedra\RecordProcessor\Records\KeyedRecord;
 
-class ExampleRecord extends SimpleRecord
+class ExampleRecord extends KeyedRecord
 {
     public function isValid(): bool
     {
