@@ -11,7 +11,7 @@ use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
 class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 {
-    public function key(): ?string
+    public function key(): mixed
     {
         return Arr::first($this->attributes);
     }
