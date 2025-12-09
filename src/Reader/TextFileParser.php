@@ -3,25 +3,22 @@
 namespace RodrigoPedra\RecordProcessor\Reader;
 
 use RodrigoPedra\RecordProcessor\Configurators\Readers\ReaderConfigurator;
-use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
-use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
-use RodrigoPedra\RecordProcessor\Support\NewLines;
+use RodrigoPedra\RecordProcessor\Support\EOL;
 
 /**
  * @property  \SplFileObject $iterator
  */
 class TextFileParser extends FileReader
 {
-    protected ReaderConfigurator $configurator;
-
-    public function __construct(\SplFileObject|string $file)
+    public function __construct(\SplFileInfo|string $file)
     {
-        parent::__construct($file);
-
-        $this->configurator = new ReaderConfigurator($this);
+        parent::__construct(
+            configurator: new ReaderConfigurator($this),
+            file: $file,
+        );
     }
 
-    public function open()
+    public function open(): void
     {
         parent::open();
 
@@ -32,21 +29,11 @@ class TextFileParser extends FileReader
     {
         $content = $this->iteratorCurrent();
 
-        return \rtrim($content, NewLines::WINDOWS_NEWLINE);
+        return \rtrim($content, EOL::WINDOWS->value);
     }
 
     public function valid(): bool
     {
         return $this->iteratorValid() && ! $this->iterator->eof();
-    }
-
-    public function configurator(): ReaderConfigurator
-    {
-        return $this->configurator;
-    }
-
-    public function defaultRecordParser(): RecordParser
-    {
-        return new ArrayRecordParser();
     }
 }

@@ -14,8 +14,7 @@ class WorksheetConfigurator
 
     public function __construct(
         protected Worksheet $worksheet,
-    ) {
-    }
+    ) {}
 
     public function withColumnFormat(array $formats): static
     {

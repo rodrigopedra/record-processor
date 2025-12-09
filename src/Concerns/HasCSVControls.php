@@ -3,14 +3,18 @@
 namespace RodrigoPedra\RecordProcessor\Concerns;
 
 use League\Csv\Bom;
-use RodrigoPedra\RecordProcessor\Support\NewLines;
+use RodrigoPedra\RecordProcessor\Support\EOL;
 
 trait HasCSVControls
 {
     protected string $delimiter = ',';
+
     protected string $enclosure = '"';
+
     protected string $escape = '\\';
-    protected string $newline = NewLines::UNIX_NEWLINE;
+
+    protected EOL $endOfLine = EOL::UNIX;
+
     protected Bom $outputBOM;
 
     public function delimiter(): string
@@ -28,9 +32,9 @@ trait HasCSVControls
         return $this->escape;
     }
 
-    public function newline(): string
+    public function endOfLine(): string
     {
-        return $this->newline;
+        return $this->endOfLine->value;
     }
 
     public function outputBOM(): Bom
@@ -71,9 +75,9 @@ trait HasCSVControls
         return $this;
     }
 
-    public function withNewline(string $newline): static
+    public function withEndOfLine(EOL $endOfLine): static
     {
-        $this->newline = $newline;
+        $this->endOfLine = $endOfLine;
 
         return $this;
     }

@@ -8,7 +8,7 @@ interface Record extends Arrayable
 {
     public function key(): mixed;
 
-    public function field(string $field): mixed;
+    public function field(string $field, $default = null);
 
     public function isValid(): bool;
 }

@@ -7,6 +7,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\Records\NullRecord;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ExampleRecordParser implements RecordParser
 {
@@ -22,10 +23,9 @@ class ExampleRecordParser implements RecordParser
             return NullRecord::get();
         }
 
-        $name = $values[0];
-        $email = $values[1];
+        [$name, $email,] = $values;
 
-        return new ExampleRecord($name, [
+        return new SimpleRecord([
             'name' => $name,
             'email' => $email,
         ]);

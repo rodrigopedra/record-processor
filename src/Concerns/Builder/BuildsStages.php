@@ -37,7 +37,7 @@ trait BuildsStages
 
     public function logRecords(?string $prefix = null): static
     {
-        $serializer = new LogSerializer($this->logger());
+        $serializer = new LogSerializer($this);
         $serializer->withLevel(LogLevel::DEBUG);
         $serializer->withPrefix($prefix);
         $serializer->configurator()->withRecordSerializer(new ArrayRecordSerializer());
@@ -50,7 +50,7 @@ trait BuildsStages
 
     public function logInvalidRecords(string $prefix = 'INVALID'): static
     {
-        $serializer = new LogSerializer($this->logger());
+        $serializer = new LogSerializer($this);
         $serializer->withLevel(LogLevel::ERROR);
         $serializer->withPrefix($prefix);
         $serializer->configurator()->withRecordSerializer(new ArrayRecordSerializer());

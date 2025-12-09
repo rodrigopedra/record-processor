@@ -11,30 +11,36 @@ class PDOSerializer implements Serializer
 {
     use CountsLines;
 
-    protected ?\PDO $pdo = null;
-    protected ?\PDOStatement $statement = null;
-    protected string $tableName;
-    protected int $columnCount;
-    protected array $columns = [];
-    protected string $valuesStatement;
-    protected bool $usesTransaction = true;
-    protected bool $inTransaction = false;
-    protected ?bool $isAssociative = null;
-    protected PDOSerializerConfigurator $configurator;
+    protected readonly PDOSerializerConfigurator $configurator;
 
-    public function __construct(\PDO $pdo, string $tableName, array $columns)
-    {
-        $this->columnCount = \count($columns);
+    protected array $columns;
+
+    protected readonly int $columnCount;
+
+    protected readonly string $valuesStatement;
+
+    protected bool $usesTransaction = true;
+
+    protected ?\PDOStatement $statement = null;
+
+    protected bool $inTransaction = false;
+
+    protected ?bool $isAssociative = null;
+
+    public function __construct(
+        protected readonly \PDO $pdo,
+        protected readonly string $tableName,
+        array $columns,
+    ) {
+        $this->columns = \array_is_list($columns) ? $columns : \array_keys($columns);
+        $this->columnCount = \count($this->columns);
 
         if ($this->columnCount < 1) {
             throw new \InvalidArgumentException('Columns array should contain at least one column');
         }
 
-        $this->pdo = $pdo;
-        $this->tableName = $tableName;
-        $this->columns = $this->isAssociative($columns) ? \array_keys($columns) : $columns;
-        $this->valuesStatement = $this->formatValuesString($this->columnCount);
         $this->configurator = new PDOSerializerConfigurator($this, false, false);
+        $this->valuesStatement = $this->formatValuesString();
     }
 
     public function withUsesTransaction(bool $usesTransaction): static
@@ -44,24 +50,18 @@ class PDOSerializer implements Serializer
         return $this;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
-
-        if ($this->usesTransaction === true) {
-            $this->pdo->beginTransaction();
-            $this->inTransaction = true;
-        }
+        $this->beginTransaction();
     }
 
-    public function close()
+    public function close(): void
     {
-        if ($this->inTransaction) {
-            $this->pdo->commit();
-            $this->inTransaction = false;
-        }
+        $this->commit();
 
         $this->statement = null;
+        $this->isAssociative = null;
     }
 
     /**
@@ -75,18 +75,15 @@ class PDOSerializer implements Serializer
 
         try {
             $data = $this->prepareValuesForInsert($content);
-            $statement = $this->prepareStatement(1);
+            $this->prepareStatement(1);
 
-            if (! $statement->execute($data)) {
+            if (! $this->statement->execute($data)) {
                 throw new \RuntimeException('Could not write PDO records');
             }
 
             $this->incrementLineCount($this->statement->rowCount());
         } catch (\Throwable $exception) {
-            if ($this->inTransaction) {
-                $this->pdo->rollBack();
-                $this->inTransaction = false;
-            }
+            $this->rollback();
 
             throw $exception;
         }
@@ -97,16 +94,36 @@ class PDOSerializer implements Serializer
         return null;
     }
 
-    protected function prepareStatement(int $count): ?\PDOStatement
+    protected function prepareStatement(int $count): void
     {
-        if (! \is_null($this->statement)) {
-            return $this->statement;
+        if (\is_null($this->statement)) {
+            $query = $this->formatQueryStatement($count);
+            $this->statement = $this->pdo->prepare($query);
         }
+    }
 
-        $query = $this->formatQueryStatement($count);
-        $this->statement = $this->pdo->prepare($query);
+    protected function beginTransaction(): void
+    {
+        if ($this->usesTransaction === true) {
+            $this->pdo->beginTransaction();
+            $this->inTransaction = true;
+        }
+    }
 
-        return $this->statement;
+    protected function commit(): void
+    {
+        if ($this->inTransaction) {
+            $this->pdo->commit();
+            $this->inTransaction = false;
+        }
+    }
+
+    protected function rollback(): void
+    {
+        if ($this->inTransaction) {
+            $this->pdo->rollBack();
+            $this->inTransaction = false;
+        }
     }
 
     protected function formatQueryStatement(int $count): string
@@ -122,14 +139,14 @@ class PDOSerializer implements Serializer
         return \implode(' ', $tokens);
     }
 
-    protected function formatValuesString($valuesQuantity): string
+    protected function formatValuesString(): string
     {
-        return '(' . \implode(',', \array_fill(0, $valuesQuantity, '?')) . ')';
+        return '(' . \implode(',', \array_fill(0, $this->columnCount, '?')) . ')';
     }
 
     protected function sanitizeColumns(array $columns): string
     {
-        $columns = \array_map(fn ($column) => \value($column), $columns);
+        $columns = \array_map(\value(...), $columns);
 
         return '(' . \implode(',', $columns) . ')';
     }
@@ -141,7 +158,7 @@ class PDOSerializer implements Serializer
         }
 
         if (\is_null($this->isAssociative)) {
-            $this->isAssociative = $this->isAssociative($values);
+            $this->isAssociative = ! \array_is_list($values);
 
             if ($this->isAssociative) {
                 \sort($this->columns);
@@ -165,14 +182,5 @@ class PDOSerializer implements Serializer
     public function defaultRecordSerializer(): ArrayRecordSerializer
     {
         return new ArrayRecordSerializer();
-    }
-
-    protected function isAssociative(array $array): bool
-    {
-        foreach ($array as $key => $value) {
-            return \is_string($key);
-        }
-
-        return false;
     }
 }

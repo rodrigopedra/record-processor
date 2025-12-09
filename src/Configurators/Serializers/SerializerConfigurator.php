@@ -20,11 +20,10 @@ class SerializerConfigurator
     protected ?RecordSerializer $recordSerializer = null;
 
     public function __construct(
-        protected Serializer $serializer,
+        protected readonly Serializer $serializer,
         protected bool $hasHeader = false,
         protected bool $hasTrailler = false,
-    ) {
-    }
+    ) {}
 
     public function hasRecordSerializer(): bool
     {
@@ -56,9 +55,7 @@ class SerializerConfigurator
     public function withHeader(SerializerAddon|callable|array|null $header): static
     {
         if (! $this->hasHeader) {
-            $className = $this->serializer::class;
-
-            throw new \RuntimeException($className . ' does not accept a header');
+            throw new \RuntimeException($this->serializer::class . ' does not accept a header');
         }
 
         $this->baseWithHeader($header);
@@ -69,9 +66,7 @@ class SerializerConfigurator
     public function withTrailler(SerializerAddon|callable|array|null $trailler): static
     {
         if (! $this->hasTrailler) {
-            $className = $this->serializer::class;
-
-            throw new \RuntimeException($className . ' does not accept a trailler');
+            throw new \RuntimeException($this->serializer::class . ' does not accept a trailler');
         }
 
         $this->baseWithTrailler($trailler);

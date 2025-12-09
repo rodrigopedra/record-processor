@@ -5,25 +5,28 @@ namespace RodrigoPedra\RecordProcessor\Reader;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use RodrigoPedra\RecordProcessor\Configurators\Readers\ExcelFileReaderConfigurator;
-use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
+/**
+ * @property \RodrigoPedra\RecordProcessor\Configurators\Readers\ExcelFileReaderConfigurator $configurator
+ */
 class ExcelFileReader extends FileReader
 {
     protected int $skipRows = 0;
+
     protected int $selectedSheetIndex = 0;
-    protected ExcelFileReaderConfigurator $configurator;
 
-    public function __construct(\SplFileObject|string $file)
+    public function __construct(\SplFileInfo|string $file)
     {
-        parent::__construct($file);
-
-        $this->configurator = new ExcelFileReaderConfigurator($this);
+        parent::__construct(
+            configurator: new ExcelFileReaderConfigurator($this),
+            file: $file,
+        );
     }
 
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function open()
+    public function open(): void
     {
         parent::open();
 
@@ -91,15 +94,5 @@ class ExcelFileReader extends FileReader
         $this->withSkipRows($skipHeading ? 1 : 0);
 
         return $this;
-    }
-
-    public function configurator(): ExcelFileReaderConfigurator
-    {
-        return $this->configurator;
-    }
-
-    public function defaultRecordParser(): ArrayRecordParser
-    {
-        return new ArrayRecordParser();
     }
 }

@@ -55,15 +55,8 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToCSVFile(
-        \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null,
-    ): static {
-        if (\is_callable($fileName)) {
-            $configurator = $fileName;
-            $fileName = null;
-        }
-
+    public function serializeToCSVFile(\SplFileObject|string|null $fileName = null, ?callable $configurator = null): static
+    {
         $serializer = new CSVFileSerializer($fileName);
 
         $this->configureSerializer($serializer, $configurator);
@@ -102,15 +95,8 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToJSONFile(
-        \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null,
-    ): static {
-        if (\is_callable($fileName)) {
-            $configurator = $fileName;
-            $fileName = null;
-        }
-
+    public function serializeToJSONFile(\SplFileObject|string|null $fileName = null, ?callable $configurator = null): static
+    {
         $serializer = new JSONFileSerializer($fileName);
 
         $this->configureSerializer($serializer, $configurator);
@@ -121,7 +107,7 @@ trait BuildsSerializers
 
     public function serializeToLog(?callable $configurator = null): static
     {
-        $serializer = new LogSerializer($this->logger());
+        $serializer = new LogSerializer($this);
 
         $this->configureSerializer($serializer, $configurator);
         $this->addSerializer($serializer);
@@ -146,15 +132,8 @@ trait BuildsSerializers
         return $this;
     }
 
-    public function serializeToTextFile(
-        \SplFileObject|string|callable|null $fileName = null,
-        ?callable $configurator = null,
-    ): static {
-        if (\is_callable($fileName)) {
-            $configurator = $fileName;
-            $fileName = null;
-        }
-
+    public function serializeToTextFile(\SplFileObject|string|null $fileName = null, ?callable $configurator = null): static
+    {
         $serializer = new TextFileSerializer($fileName);
 
         $this->configureSerializer($serializer, $configurator);

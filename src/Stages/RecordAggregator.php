@@ -13,6 +13,7 @@ use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, RecordAggregateFactory
 {
     protected ?RecordAggregate $aggregateRecord = null;
+
     protected RecordAggregateFactory $recordAggregateFactory;
 
     public function __construct(?RecordAggregateFactory $recordAggregateFactory = null)
@@ -22,6 +23,10 @@ class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, 
 
     public function handle(Record $record, \Closure $next): ?Record
     {
+        if (! $record->isValid()) {
+            return $next($record);
+        }
+
         if (\is_null($this->aggregateRecord)) {
             $this->withAggregateRecord($record); // first record
 
@@ -50,10 +55,6 @@ class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, 
 
     protected function withAggregateRecord(Record $record): ?RecordAggregate
     {
-        if (! $record->isValid()) {
-            return null;
-        }
-
         $current = $this->aggregateRecord;
 
         $this->aggregateRecord = $this->recordAggregateFactory->makeRecordAggregate($record);

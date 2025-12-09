@@ -13,46 +13,49 @@ use RodrigoPedra\RecordProcessor\Support\Excel\WorkbookConfigurator;
 use RodrigoPedra\RecordProcessor\Support\Excel\WorksheetConfigurator;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
+/**
+ * @property \RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerConfigurator $configurator
+ */
 class ExcelFileSerializer extends FileSerializer
 {
     protected const ROW_LIMIT = 1048576;
 
     protected ?IWriter $writer = null;
+
     protected ?Spreadsheet $workbook = null;
 
-    public function __construct(\SplFileObject|string $file)
+    public function __construct(\SplFileInfo|string|null $file = null)
     {
-        parent::__construct($file);
+        parent::__construct(
+            configurator: new ExcelFileSerializerConfigurator($this, true, true),
+            file: $file,
+        );
 
-        if ($this->fileInfo->isTempFile()) {
+        if ($this->file->isTempFile()) {
             throw new \RuntimeException('Cannot write Excel as a temporary file');
         }
-
-        $this->file = null;
-        $this->configurator = new ExcelFileSerializerConfigurator($this, true, true);
     }
 
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
-        $this->file = null;
-
-        $this->writer = $this->createWriter();
+        FileInfo::createWritableFileObject($this->file);
+        $this->workbook = $this->createWorkbook();
+        $this->writer = $this->createWriter($this->workbook);
     }
 
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function close()
+    public function close(): void
     {
-        $this->writer->save($this->fileInfo->getRealPath());
+        $this->writer->save($this->file->getRealPath());
         $this->writer = null;
-
-        $this->file = FileInfo::createReadableFileObject($this->fileInfo->getRealPath());
+        $this->workbook = null;
     }
 
     /**
@@ -64,7 +67,7 @@ class ExcelFileSerializer extends FileSerializer
             throw new \RuntimeException(
                 \vsprintf('Excel worksheet cannot contain more than %d rows', [
                     \number_format(static::ROW_LIMIT, '0'),
-                ])
+                ]),
             );
         }
 
@@ -79,20 +82,16 @@ class ExcelFileSerializer extends FileSerializer
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    protected function createWriter(): IWriter
+    protected function createWriter(Spreadsheet $workbook): IWriter
     {
-        $extension = $this->fileInfo->getExtension();
+        $extension = $this->file->getExtension();
 
         if (\in_array($extension, ['xls', 'xlt'])) {
-            $this->workbook = $this->createWorkbook();
-
-            return IOFactory::createWriter($this->workbook, 'Xls');
+            return IOFactory::createWriter($workbook, 'Xls');
         }
 
         if (\in_array($extension, ['xlsx', 'xlsm', 'xltx', 'xltm'])) {
-            $this->workbook = $this->createWorkbook();
-
-            return IOFactory::createWriter($this->workbook, 'Xlsx');
+            return IOFactory::createWriter($workbook, 'Xlsx');
         }
 
         throw new \RuntimeException('The file must have a valid Excel extension');
@@ -118,7 +117,7 @@ class ExcelFileSerializer extends FileSerializer
         return $workbook;
     }
 
-    protected function configureWorkbook(Spreadsheet $workbook)
+    protected function configureWorkbook(Spreadsheet $workbook): void
     {
         $configurator = $this->configurator->workbookConfigurator();
 
@@ -129,7 +128,7 @@ class ExcelFileSerializer extends FileSerializer
         \call_user_func($configurator, new WorkbookConfigurator($workbook));
     }
 
-    protected function configureWorksheet(Worksheet $worksheet)
+    protected function configureWorksheet(Worksheet $worksheet): void
     {
         $configurator = $this->configurator->worksheetConfigurator();
 
@@ -145,7 +144,7 @@ class ExcelFileSerializer extends FileSerializer
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function appendRowToWorksheet(Worksheet $worksheet, array $values)
+    protected function appendRowToWorksheet(Worksheet $worksheet, array $values): void
     {
         $currentCell = $worksheet->getActiveCell();
 

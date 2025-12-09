@@ -2,19 +2,20 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples;
 
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\Table;
 
 class AllExamplesCommand extends ExamplesCommand
 {
     protected ?string $currentParser = null;
     protected ?string $currentSerializer = null;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('all-examples');
         $this->setDescription('Tests all combinations of parsers and serializers to validate no errors exist');
@@ -29,13 +30,13 @@ class AllExamplesCommand extends ExamplesCommand
         $parsers = $this->getParsers($input->getOption('skip-pdo'));
         $serializers = $this->getSerializers($input->getOption('skip-pdo'));
 
-        $totalCombinations = count($parsers) * count($serializers);
+        $totalCombinations = \count($parsers) * \count($serializers);
         $results = [];
         $errors = [];
 
         $output->writeln("<info>Testing {$totalCombinations} combinations...</info>");
-        $output->writeln("<comment>Parsers: " . implode(', ', $parsers) . "</comment>");
-        $output->writeln("<comment>Serializers: " . implode(', ', $serializers) . "</comment>");
+        $output->writeln('<comment>Parsers: ' . \implode(', ', $parsers) . '</comment>');
+        $output->writeln('<comment>Serializers: ' . \implode(', ', $serializers) . '</comment>');
         $output->writeln('');
 
         $progressBar = new ProgressBar($output, $totalCombinations);
@@ -50,7 +51,7 @@ class AllExamplesCommand extends ExamplesCommand
                     // Set current context for file naming
                     $this->currentParser = $parser;
                     $this->currentSerializer = $serializer;
-                    
+
                     $this->testCombination($parser, $serializer);
                     $results[] = ['combination' => $combination, 'status' => 'SUCCESS', 'error' => null];
                     $progressBar->setMessage("✅ {$combination}", 'status');
@@ -93,7 +94,7 @@ class AllExamplesCommand extends ExamplesCommand
     {
         $parsers = ['array', 'collection', 'csv', 'excel', 'iterator', 'text'];
 
-        if (!$skipPdo) {
+        if (! $skipPdo) {
             $parsers[] = 'pdo';
         }
 
@@ -104,7 +105,7 @@ class AllExamplesCommand extends ExamplesCommand
     {
         $serializers = ['array', 'collection', 'csv', 'echo', 'excel', 'html', 'json', 'log', 'text'];
 
-        if (!$skipPdo) {
+        if (! $skipPdo) {
             $serializers[] = 'pdo';
             $serializers[] = 'pdo-buffered';
         }
@@ -112,28 +113,19 @@ class AllExamplesCommand extends ExamplesCommand
         return $serializers;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Throwable
+     */
     protected function testCombination(string $parser, string $serializer): void
     {
         // Capture output to prevent verbose testing output
-        ob_start();
+        \ob_start();
 
         try {
             // Create a minimal test to verify the combination works
             $builder = $this->makeBuilder();
-
-            // Use a null logger to suppress output during testing
-            $builder->setLogger(new class implements \Psr\Log\LoggerInterface {
-                public function emergency($message, array $context = []): void {}
-                public function alert($message, array $context = []): void {}
-                public function critical($message, array $context = []): void {}
-                public function error($message, array $context = []): void {}
-                public function warning($message, array $context = []): void {}
-                public function notice($message, array $context = []): void {}
-                public function info($message, array $context = []): void {}
-                public function debug($message, array $context = []): void {}
-                public function log($level, $message, array $context = []): void {}
-            });
-
+            $builder->setLogger(new NullLogger());
             $builder->withRecordParser(new RecordObjects\ExampleRecordParser());
             $builder->withRecordSerializer(new RecordObjects\ExampleRecordSerializer());
 
@@ -141,7 +133,7 @@ class AllExamplesCommand extends ExamplesCommand
 
             $builder->onlyValidRecords();
 
-            if (in_array($serializer, ['echo', 'log'])) {
+            if (\in_array($serializer, ['echo', 'log'], true)) {
                 $builder->serializeToArray();
             } else {
                 $this->serializeTo($builder, $serializer);
@@ -154,24 +146,24 @@ class AllExamplesCommand extends ExamplesCommand
                 throw new \RuntimeException('No records were processed');
             }
         } finally {
-            ob_end_clean();
+            \ob_end_clean();
         }
     }
 
     protected function displayResults(OutputInterface $output, array $results, array $errors, bool $verboseErrors): void
     {
-        $successCount = count($results) - count($errors);
-        $failureCount = count($errors);
-        $totalCount = count($results);
+        $totalCount = \count($results);
+        $failureCount = \count($errors);
+        $successCount = $totalCount - $failureCount;
 
         // Summary
-        $output->writeln("<info>Results Summary:</info>");
+        $output->writeln('<info>Results Summary:</info>');
         $output->writeln("✅ Success: {$successCount}/{$totalCount}");
         $output->writeln("❌ Failed: {$failureCount}/{$totalCount}");
         $output->writeln('');
 
-        if (!empty($errors)) {
-            $output->writeln("<error>Failed Combinations:</error>");
+        if (! empty($errors)) {
+            $output->writeln('<error>Failed Combinations:</error>');
 
             $table = new Table($output);
             $table->setHeaders(['Parser → Serializer', 'Error']);
@@ -186,30 +178,36 @@ class AllExamplesCommand extends ExamplesCommand
         }
 
         $successRate = ($successCount / $totalCount) * 100;
-        $status = $successRate === 100.0 ? 'info' : ($successRate >= 80.0 ? 'comment' : 'error');
-        $output->writeln("<{$status}>Success Rate: " . number_format($successRate, 1) . "%</{$status}>");
+
+        $status = match (true) {
+            $successRate === 100.0 => 'info',
+            $successRate >= 80.0 => 'comment',
+            default => 'error',
+        };
+
+        $output->writeln("<{$status}>Success Rate: " . \number_format($successRate, 1) . "%</{$status}>");
     }
 
     protected function truncateError(string $error, int $maxLength = 80): string
     {
-        if (strlen($error) <= $maxLength) {
+        if (\strlen($error) <= $maxLength) {
             return $error;
         }
 
-        return substr($error, 0, $maxLength - 3) . '...';
+        return \substr($error, 0, $maxLength - 3) . '...';
     }
 
     protected function storagePath(string $file): string
     {
-        if (str_starts_with($file, 'input')) {
+        if (\str_starts_with($file, 'input')) {
             return parent::storagePath($file);
         }
 
         // Get the current parser and serializer from the test context
         $parser = $this->currentParser ?? 'unknown';
         $serializer = $this->currentSerializer ?? 'unknown';
-        
-        $pathInfo = pathinfo($file);
+
+        $pathInfo = \pathinfo($file);
         $filename = $parser . '_' . $serializer;
         $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
 

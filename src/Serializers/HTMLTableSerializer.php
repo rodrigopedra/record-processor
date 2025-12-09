@@ -4,24 +4,27 @@ namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use Illuminate\Support\Arr;
 use League\Csv\HTMLConverter;
-use RodrigoPedra\RecordProcessor\Concerns\CountsLines;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
+use RodrigoPedra\RecordProcessor\Support\EOL;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
-use RodrigoPedra\RecordProcessor\Support\NewLines;
 
 class HTMLTableSerializer implements Serializer
 {
-    use CountsLines;
+    protected readonly HTMLTableSerializerConfigurator $configurator;
 
-    protected ?HTMLConverter $converter = null;
-    protected array $records = [];
     protected string $tableClassAttribute = '';
+
     protected string $tableIdAttribute = '';
-    protected ?\SplFileObject $file = null;
-    protected \SplFileObject|string $output = '';
-    protected HTMLTableSerializerConfigurator $configurator;
+
+    protected ?FileInfo $file = null;
+
+    protected ?\SplFileObject $writer = null;
+
+    protected \SplFileInfo|string|null $output = null;
+
+    protected ?array $records = null;
 
     public function __construct()
     {
@@ -30,7 +33,7 @@ class HTMLTableSerializer implements Serializer
 
     public function writeOutputToFile(string $fileName): static
     {
-        $this->file = FileInfo::createWritableFileObject($fileName);
+        $this->file = new FileInfo($fileName);
 
         return $this;
     }
@@ -49,44 +52,75 @@ class HTMLTableSerializer implements Serializer
         return $this;
     }
 
+    public function open(): void
+    {
+        $this->records = [];
+        $this->output = null;
+
+        if ($this->file) {
+            $this->writer = FileInfo::createWritableFileObject($this->file);
+        }
+    }
+
     /**
      * @throws \DOMException
      */
-    public function open()
+    public function close(): void
     {
-        $this->lineCount = 0;
-        $this->output = '';
-        $this->records = [];
+        if ($this->writer) {
+            $this->output = $this->writer->getFileInfo(FileInfo::class);
 
-        // should be chained, ->table() returns a cloned HTMLConverter instance
-        $this->converter = (new HTMLConverter())
-            ->table($this->tableClassAttribute, $this->tableIdAttribute);
-    }
-
-    public function close()
-    {
-        $this->output = $this->converter->convert($this->records);
-
-        if (! \is_null($this->file)) {
-            $this->file->fwrite($this->output);
-            $this->file->fwrite(NewLines::UNIX_NEWLINE);
-
-            $this->output = FileInfo::createReadableFileObject($this->file);
+            $this->writer->fwrite($this->convert());
+            $this->writer->fwrite(EOL::UNIX->value);
+            $this->writer = null;
+        } else {
+            $this->output = $this->convert();
         }
 
-        $this->converter = null;
-        $this->records = [];
+        $this->records = null;
     }
 
     public function append($content): void
     {
-        $this->records[] = Arr::wrap($content);
+        if (\is_null($this->records)) {
+            $this->open();
+        }
 
-        $this->incrementLineCount();
+        $this->records[] = \array_map(\strval(...), Arr::wrap($content));
     }
 
-    public function output(): \SplFileObject|string
+    public function lineCount(): int
     {
+        return \count($this->records ?? []);
+    }
+
+    /**
+     * @throws \DOMException
+     */
+    public function convert(): string
+    {
+        $records = $this->records ?? [];
+
+        $header = \is_null($this->configurator->header())
+            ? []
+            : \array_shift($records);
+
+        $footer = \is_null($this->configurator->trailler())
+            ? []
+            : \array_pop($records);
+
+        // should be chained, ->table() returns a cloned HTMLConverter instance
+        return (new HTMLConverter())
+            ->table($this->tableClassAttribute, $this->tableIdAttribute)
+            ->convert($records, $header ?? [], $footer ?? []);
+    }
+
+    public function output(): ?string
+    {
+        if ($this->output instanceof \SplFileInfo) {
+            return $this->output->getRealPath();
+        }
+
         return $this->output;
     }
 

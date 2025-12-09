@@ -4,7 +4,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
-use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddonCallback;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\AddonContext;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordSerializer;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
@@ -18,9 +18,9 @@ $processor = (new ProcessorBuilder())
 
         $configurator->withHeader(['name', 'email']);
 
-        $configurator->withTrailler(function (SerializerAddonCallback $serializer): void {
-            $recordCount = $serializer->recordCount();
-            $serializer->append($recordCount . ' records');
+        $configurator->withTrailler(function (AddonContext $context): void {
+            $recordCount = $context->recordCount();
+            $context->append($recordCount . ' records');
         });
 
         $configurator->withTableClassAttribute('table table-condensed');

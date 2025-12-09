@@ -2,7 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Contracts;
 
-interface RecordAggregate extends Record
+interface RecordAggregate extends \Countable, Record
 {
     public function master(): Record;
 

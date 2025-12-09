@@ -7,6 +7,7 @@ use RodrigoPedra\RecordProcessor\Concerns\Serializers\HasHeader;
 use RodrigoPedra\RecordProcessor\Concerns\Serializers\HasTrailler;
 use RodrigoPedra\RecordProcessor\Concerns\Serializers\WritesHeader;
 use RodrigoPedra\RecordProcessor\Concerns\Serializers\WritesTrailler;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerAddon;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
@@ -23,6 +24,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
     use WritesTrailler;
 
     private RecordSerializer $recordSerializer;
+
     private bool $isOpen = false;
 
     public function __construct(
@@ -44,8 +46,8 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
 
     public function flush(FlushPayload $payload, \Closure $next): FlushPayload
     {
-        // writes header if result is still empty (no records were written)
         if (! $this->isOpen) {
+            // writes header if no records were written yet
             $this->open();
         }
 
@@ -63,7 +65,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         return $next($payload);
     }
 
-    private function open(?Record $record = null)
+    private function open(?Record $record = null): void
     {
         if ($this->isOpen) {
             return;
@@ -76,7 +78,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         $this->writeHeader($record);
     }
 
-    private function close()
+    private function close(): void
     {
         if (! $this->isOpen) {
             return;
@@ -86,5 +88,19 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
 
         $this->writeTrailler();
         $this->serializer->close();
+    }
+
+    public function withHeader(?SerializerAddon $header): self
+    {
+        $this->header = $header;
+
+        return $this;
+    }
+
+    public function withTrailler(?SerializerAddon $trailler): self
+    {
+        $this->trailler = $trailler;
+
+        return $this;
     }
 }

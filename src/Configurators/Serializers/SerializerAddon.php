@@ -4,20 +4,14 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
-use RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException;
 
-class SerializerAddon
+final class SerializerAddon
 {
-    /** @var  array|callable */
-    protected $addon;
+    private readonly \Closure|array $addon;
 
-    public function __construct(array|callable $addon)
+    public function __construct(callable|array $addon)
     {
-        if (! \is_array($addon) && ! \is_callable($addon)) {
-            throw new InvalidAddonException();
-        }
-
-        $this->addon = $addon;
+        $this->addon = \is_array($addon) ? $addon : $addon(...);
     }
 
     public function handle(Serializer $serializer, $recordCount, ?Record $record = null): void
@@ -28,7 +22,7 @@ class SerializerAddon
             return;
         }
 
-        $content = \call_user_func($this->addon, new SerializerAddonCallback($serializer, $recordCount, $record));
+        $content = \call_user_func($this->addon, new AddonContext($serializer, $recordCount, $record));
 
         $content = \value($content);
 

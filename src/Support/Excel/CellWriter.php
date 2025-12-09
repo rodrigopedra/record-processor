@@ -21,8 +21,7 @@ final class CellWriter
     public function __construct(
         public string $cells,
         public Worksheet $sheet,
-    ) {
-    }
+    ) {}
 
     public function setValue($value): self
     {

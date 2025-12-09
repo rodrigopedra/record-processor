@@ -3,6 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 
 use RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer;
+use RodrigoPedra\RecordProcessor\Support\EOL;
 
 /**
  * @property  \RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer $serializer
@@ -14,9 +15,9 @@ class TextFileSerializerConfigurator extends SerializerConfigurator
         parent::__construct($serializer, $hasHeader, $hasTrailler);
     }
 
-    public function withNewLine(string $newLine): static
+    public function withEndOfLine(EOL $endOf): static
     {
-        $this->serializer->withNewLine($newLine);
+        $this->serializer->withEndOfLine($endOf);
 
         return $this;
     }

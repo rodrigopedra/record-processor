@@ -5,14 +5,13 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 
-class SerializerAddonCallback
+class AddonContext
 {
     public function __construct(
-        protected Serializer $serializer,
-        protected int $recordCount,
-        protected ?Record $firstRecord = null,
-    ) {
-    }
+        protected readonly Serializer $serializer,
+        protected readonly int $recordCount,
+        protected readonly ?Record $firstRecord = null,
+    ) {}
 
     public function append($content): static
     {

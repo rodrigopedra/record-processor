@@ -19,6 +19,7 @@ use RodrigoPedra\RecordProcessor\RecordParsers\CallbackRecordParser;
 trait BuildsParser
 {
     protected Reader $reader;
+
     protected ?RecordParser $recordParser = null;
 
     public function withRecordParser(RecordParser|callable $recordParser): static

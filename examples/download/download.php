@@ -4,7 +4,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
-use RodrigoPedra\RecordProcessor\Stages\DownloadFileOutput;
 
 $storagePath = __DIR__ . '/../../storage/';
 
@@ -13,7 +12,7 @@ $processor = (new ProcessorBuilder())
     ->serializeToExcelFile($storagePath . 'output.xlsx', function (SerializerConfigurator $configurator): void {
         $configurator->withHeader(['name', 'email']);
     })
-    ->downloadFileOutput('report.xlsx', DownloadFileOutput::DELETE_FILE_AFTER_DOWNLOAD)
+    ->downloadFileOutput('report.xlsx', deleteFileAfterDownload: true)
     ->build();
 
 $processor->process();

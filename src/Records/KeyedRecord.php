@@ -2,18 +2,24 @@
 
 namespace RodrigoPedra\RecordProcessor\Records;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use RodrigoPedra\RecordProcessor\Contracts\JsonRecord;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
-class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
+class KeyedRecord extends Fluent implements Record, TextRecord, JsonRecord
 {
-    public function key(): mixed
+    public function __construct(
+        protected readonly ?string $key,
+        array $attributes = [],
+    ) {
+        parent::__construct($attributes);
+    }
+
+    public function key(): ?string
     {
-        return Arr::first($this->attributes);
+        return $this->key;
     }
 
     public function field(string $field, $default = null)
@@ -23,7 +29,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
 
     public function isValid(): bool
     {
-        return \filled($this->key());
+        return \filled($this->key);
     }
 
     public function toText(): string

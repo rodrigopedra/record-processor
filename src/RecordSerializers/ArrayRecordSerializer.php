@@ -9,9 +9,8 @@ use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 class ArrayRecordSerializer implements RecordSerializer
 {
     public function __construct(
-        protected bool $writesValidRecords = true,
-    ) {
-    }
+        protected readonly bool $writesValidRecords = true,
+    ) {}
 
     public function serializeRecord(Serializer $serializer, Record $record): bool
     {

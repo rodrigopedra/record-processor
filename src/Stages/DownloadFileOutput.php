@@ -2,7 +2,6 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
-use League\Csv\Exception;
 use League\Csv\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer;
@@ -14,13 +13,14 @@ use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
 class DownloadFileOutput implements ProcessorStageFlusher
 {
-    public const DELETE_FILE_AFTER_DOWNLOAD = true;
-    public const KEEP_AFTER_DOWNLOAD = false;
-
     protected ?\SplFileObject $inputFile = null;
+
     protected FileInfo $inputFileInfo;
+
     protected ?FileInfo $outputFileInfo = null;
+
     protected bool $deleteAfterDownload;
+
     protected \SplFileInfo|string|null $outputFile;
 
     public function __construct(string $outputFile = '', bool $deleteFileAfterDownload = false)
@@ -32,6 +32,9 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $this->deleteAfterDownload = $deleteFileAfterDownload;
     }
 
+    /**
+     * @throws \League\Csv\Exception
+     */
     public function flush(FlushPayload $payload, \Closure $next): ?FlushPayload
     {
         $this->inputFile = $this->inputFile($payload);
@@ -40,8 +43,6 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $this->buildOutputFileInfo($payload->serializerClassName());
 
         $this->downloadFile();
-
-        return null;
     }
 
     protected function inputFile(FlushPayload $payload): \SplFileObject
@@ -55,7 +56,10 @@ class DownloadFileOutput implements ProcessorStageFlusher
         return $inputFile;
     }
 
-    protected function downloadFile(): void
+    /**
+     * @throws \League\Csv\Exception
+     */
+    protected function downloadFile(): never
     {
         if ($this->inputFileInfo->isCSV()) {
             $this->outputFileWithLeagueCSV($this->inputFile);
@@ -71,7 +75,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         die;
     }
 
-    protected function sendHeaders()
+    protected function sendHeaders(): void
     {
         $mimeType = $this->inputFileInfo->isTempFile()
             ? $this->outputFileInfo->guessMimeType()
@@ -86,12 +90,12 @@ class DownloadFileOutput implements ProcessorStageFlusher
     }
 
     /**
-     * @throws Exception
+     * @throws \League\Csv\Exception
      */
-    protected function outputFileWithLeagueCSV(\SplFileObject $file)
+    protected function outputFileWithLeagueCSV(\SplFileObject $file): void
     {
         // league\csv handles CSV BOM properly
-        $reader = Reader::createFromFileObject($file);
+        $reader = Reader::from($file);
         $reader->download($this->outputFileInfo->getBasename());
     }
 

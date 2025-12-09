@@ -5,21 +5,22 @@ namespace RodrigoPedra\RecordProcessor\Reader;
 use League\Csv\Reader as CsvReader;
 use RodrigoPedra\RecordProcessor\Concerns\HasCSVControls;
 use RodrigoPedra\RecordProcessor\Configurators\Readers\CSVFileReaderConfigurator;
-use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
-use RodrigoPedra\RecordProcessor\RecordParsers\ArrayRecordParser;
 
+/**
+ * @property \RodrigoPedra\RecordProcessor\Configurators\Readers\CSVFileReaderConfigurator $configurator
+ */
 class CSVFileReader extends FileReader
 {
     use HasCSVControls;
 
-    protected CSVFileReaderConfigurator $configurator;
     protected bool $useFirstRowAsHeader = true;
 
-    public function __construct(\SplFileObject|string $file)
+    public function __construct(\SplFileInfo|string $file)
     {
-        parent::__construct($file);
-
-        $this->configurator = new CSVFileReaderConfigurator($this);
+        parent::__construct(
+            configurator: new CSVFileReaderConfigurator($this),
+            file: $file,
+        );
 
         $this->withDelimiter(';');
         $this->withEnclosure('"');
@@ -27,7 +28,7 @@ class CSVFileReader extends FileReader
         $this->useFirstRowAsHeader();
     }
 
-    public function useFirstRowAsHeader(bool $firstRowAsHeader = true)
+    public function useFirstRowAsHeader(bool $firstRowAsHeader = true): void
     {
         $this->useFirstRowAsHeader = $firstRowAsHeader;
     }
@@ -36,11 +37,11 @@ class CSVFileReader extends FileReader
      * @throws \League\Csv\InvalidArgument
      * @throws \League\Csv\Exception
      */
-    public function open()
+    public function open(): void
     {
         parent::open();
 
-        $csvReader = CsvReader::createFromFileObject($this->file);
+        $csvReader = CsvReader::from($this->file);
 
         $csvReader->setDelimiter($this->delimiter());
         $csvReader->setEnclosure($this->enclosure());
@@ -51,15 +52,5 @@ class CSVFileReader extends FileReader
         }
 
         $this->withInnerIterator($csvReader->getRecords());
-    }
-
-    public function configurator(): CSVFileReaderConfigurator
-    {
-        return $this->configurator;
-    }
-
-    public function defaultRecordParser(): RecordParser
-    {
-        return new ArrayRecordParser();
     }
 }

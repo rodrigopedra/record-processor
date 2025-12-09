@@ -10,7 +10,7 @@ interface Serializer extends Resource
 
     public function lineCount(): int;
 
-    public function output();
+    public function output(): mixed;
 
     public function configurator(): SerializerConfigurator;
 

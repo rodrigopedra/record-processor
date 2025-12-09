@@ -5,8 +5,11 @@ namespace RodrigoPedra\RecordProcessor\Support;
 class FileInfo extends \SplFileInfo
 {
     public const INPUT_STREAM = 'php://input';
+
     public const OUTPUT_STREAM = 'php://output';
+
     public const TEMP_FILE = 'php://temp';
+
     public const TEMP_FILE_MEMORY_SIZE = 4194304; // 4MB
 
     public function getExtension(): string
@@ -25,7 +28,7 @@ class FileInfo extends \SplFileInfo
             return true;
         }
 
-        return \substr($this->getPathname(), 0, 10) === self::TEMP_FILE;
+        return \str_starts_with($this->getPathname(), self::TEMP_FILE);
     }
 
     public function guessMimeType(): string
@@ -78,35 +81,26 @@ class FileInfo extends \SplFileInfo
         return new \SplTempFileObject(self::TEMP_FILE_MEMORY_SIZE);
     }
 
-    public static function createFileObject(\SplFileObject|string $file, string $mode = 'r'): \SplFileObject
+    public static function createFileObject(\SplFileInfo|string $file, string $mode = 'r'): \SplFileObject
     {
         if ($file === static::TEMP_FILE) {
             return static::createTempFileObject();
         }
 
         if (\is_string($file)) {
-            $fileInfo = new static($file);
-
-            return $fileInfo->isTempFile()
-                ? FileInfo::createTempFileObject()
-                : $fileInfo->openFile($mode);
+            $file = new static($file);
         }
 
-        if (! ($file instanceof \SplFileObject)) {
-            throw new \InvalidArgumentException('File should be a path to a file or a \SplFileObject');
+        if ($file instanceof \SplFileInfo) {
+            return $file->isTempFile()
+                ? self::createTempFileObject()
+                : $file->openFile($mode);
         }
 
-        /** @var FileInfo $fileInfo */
-        $fileInfo = $file->getFileInfo(static::class);
-
-        if ($fileInfo->isTempFile()) {
-            return $file;
-        }
-
-        return $fileInfo->openFile($mode);
+        throw new \InvalidArgumentException('File should be a path to a file or a \SplFileInfo');
     }
 
-    public static function createWritableFileObject(\SplFileObject|string $file, string $mode = 'wb'): \SplFileObject
+    public static function createWritableFileObject(\SplFileInfo|string $file, string $mode = 'wb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 
@@ -132,9 +126,10 @@ class FileInfo extends \SplFileInfo
         return $file;
     }
 
-    public static function createReadableFileObject(\SplFileObject|string $file, string $mode = 'rb'): \SplFileObject
+    public static function createReadableFileObject(\SplFileInfo|string $file, string $mode = 'rb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
+        $file->setFlags(\SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
         /** @var static $fileInfo */
         $fileInfo = $file->getFileInfo(static::class);

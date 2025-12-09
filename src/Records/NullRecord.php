@@ -11,16 +11,14 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
 {
     private static ?NullRecord $instance = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
-    public function key(): mixed
+    public function key(): null
     {
         return null;
     }
 
-    public function field(string $field): mixed
+    public function field(string $field, $default = null): null
     {
         return null;
     }
@@ -60,12 +58,13 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
         return [];
     }
 
+    public function count(): int
+    {
+        return 0;
+    }
+
     public static function get(): NullRecord
     {
-        if (\is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        return self::$instance ??= new self();
     }
 }

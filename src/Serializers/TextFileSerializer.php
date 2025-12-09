@@ -4,41 +4,63 @@ namespace RodrigoPedra\RecordProcessor\Serializers;
 
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\TextFileSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\RecordSerializers\TextRecordSerializer;
-use RodrigoPedra\RecordProcessor\Support\NewLines;
+use RodrigoPedra\RecordProcessor\Support\EOL;
+use RodrigoPedra\RecordProcessor\Support\FileInfo;
 
+/**
+ * @property \RodrigoPedra\RecordProcessor\Configurators\Serializers\TextFileSerializerConfigurator $configurator
+ */
 class TextFileSerializer extends FileSerializer
 {
-    protected string $newLine = NewLines::WINDOWS_NEWLINE;
+    protected EOL $endOfLine = EOL::WINDOWS;
+
+    protected ?\SplFileObject $writer = null;
 
     public function __construct(\SplFileObject|string|null $file = null)
     {
-        parent::__construct($file);
-
-        $this->configurator = new TextFileSerializerConfigurator($this, true, true);
+        parent::__construct(
+            configurator: new TextFileSerializerConfigurator($this, true, true),
+            file: $file,
+        );
     }
 
-    public function newLine(): string
+    public function endOfLine(): string
     {
-        return $this->newLine;
+        return $this->endOfLine->value;
     }
 
-    public function withNewLine(string $newLine): static
+    public function withEndOfLine(EOL $endOfLine): static
     {
-        $this->newLine = $newLine;
+        $this->endOfLine = $endOfLine;
 
         return $this;
     }
 
+    public function open(): void
+    {
+        $this->lineCount = 0;
+        $this->writer = FileInfo::createWritableFileObject($this->file);
+    }
+
+    public function close(): void
+    {
+        $this->writer = null;
+    }
+
     public function append($content): void
     {
+        if (\is_null($this->writer)) {
+            $this->open();
+        }
+
         if (! \is_string($content)) {
             throw new \InvalidArgumentException('Content for TextFileSerializer should be a string');
         }
 
-        $content = \sprintf('%s%s', $content, $this->newLine());
-        $this->file->fwrite($content);
+        $content = \sprintf('%s%s', $content, $this->endOfLine());
+        $this->writer->fwrite($content);
 
-        $this->incrementLineCount(\substr_count($content, $this->newLine()));
+        $this->incrementLineCount(\substr_count($content, $this->endOfLine()));
     }
 
     public function defaultRecordSerializer(): TextRecordSerializer
