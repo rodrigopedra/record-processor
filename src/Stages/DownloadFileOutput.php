@@ -13,9 +13,7 @@ use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
 class DownloadFileOutput implements ProcessorStageFlusher
 {
-    protected ?\SplFileObject $inputFile = null;
-
-    protected FileInfo $inputFileInfo;
+    protected ?FileInfo $inputFileInfo = null;
 
     protected ?FileInfo $outputFileInfo = null;
 
@@ -37,23 +35,26 @@ class DownloadFileOutput implements ProcessorStageFlusher
      */
     public function flush(FlushPayload $payload, \Closure $next): ?FlushPayload
     {
-        $this->inputFile = $this->inputFile($payload);
-        $this->inputFileInfo = $this->inputFile->getFileInfo(FileInfo::class);
+        $this->inputFileInfo = $this->inputFile($payload);
 
         $this->buildOutputFileInfo($payload->serializerClassName());
 
         $this->downloadFile();
     }
 
-    protected function inputFile(FlushPayload $payload): \SplFileObject
+    protected function inputFile(FlushPayload $payload): FileInfo
     {
         $inputFile = $payload->output();
 
-        if (! ($inputFile instanceof \SplFileObject)) {
-            throw new \RuntimeException('Process output should be a file to be downloadable');
+        if (\is_string($inputFile)) {
+            return new FileInfo($inputFile);
         }
 
-        return $inputFile;
+        if ($inputFile instanceof \SplFileInfo) {
+            return $inputFile->getFileInfo(FileInfo::class);
+        }
+
+        throw new \RuntimeException('Process output should be a file to be downloadable');
     }
 
     /**
@@ -61,13 +62,17 @@ class DownloadFileOutput implements ProcessorStageFlusher
      */
     protected function downloadFile(): never
     {
+        if (\is_null($this->inputFileInfo)) {
+            throw new \RuntimeException('No input file was provided');
+        }
+
         if ($this->inputFileInfo->isCSV()) {
-            $this->outputFileWithLeagueCSV($this->inputFile);
+            $this->outputFileWithLeagueCSV($this->inputFileInfo);
         } else {
             $this->sendHeaders();
 
-            $this->inputFile->rewind();
-            $this->inputFile->fpassthru();
+            $fileObject = $this->inputFileInfo->openFile();
+            $fileObject->fpassthru();
         }
 
         $this->unlinkInputFile();
@@ -77,6 +82,14 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     protected function sendHeaders(): void
     {
+        if (\is_null($this->inputFileInfo)) {
+            throw new \RuntimeException('No input file was provided');
+        }
+
+        if (\is_null($this->outputFile)) {
+            throw new \RuntimeException('Failed to assess output mime type');
+        }
+
         $mimeType = $this->inputFileInfo->isTempFile()
             ? $this->outputFileInfo->guessMimeType()
             : $this->inputFileInfo->guessMimeType();
@@ -92,7 +105,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
     /**
      * @throws \League\Csv\Exception
      */
-    protected function outputFileWithLeagueCSV(\SplFileObject $file): void
+    protected function outputFileWithLeagueCSV(\SplFileInfo $file): void
     {
         // league\csv handles CSV BOM properly
         $reader = Reader::from($file);
@@ -114,13 +127,19 @@ class DownloadFileOutput implements ProcessorStageFlusher
         }
 
         // invalid outputFileInfo, tries to guess from inputFile
-        if ($this->inputFileInfo->isTempFile()) {
+        if ($this->inputFileInfo?->isTempFile()) {
             $this->outputFileInfo = $this->buildTempOutputFileInfo($className);
 
             return;
         }
 
-        $this->outputFileInfo = $this->inputFileInfo;
+        if (! \is_null($this->inputFileInfo)) {
+            $this->outputFileInfo = $this->inputFileInfo;
+
+            return;
+        }
+
+        throw new \RuntimeException('Failed to build output file info');
     }
 
     protected function unlinkInputFile(): void
@@ -129,9 +148,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
             return;
         }
 
-        $this->inputFile = null;
-
-        $realPath = $this->inputFileInfo->getRealPath();
+        $realPath = $this->inputFileInfo?->getRealPath() ?? false;
 
         if ($realPath === false) {
             // file does not exist
