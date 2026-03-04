@@ -11,7 +11,7 @@ use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ExampleRecordParser implements RecordParser
 {
-    public function parseRecord(Reader $reader, $rawContent): Record
+    public function parseRecords(Reader $reader, $rawContent): Record
     {
         if (\is_string($rawContent)) {
             $rawContent = \explode('|', $rawContent);
