@@ -12,10 +12,8 @@ trait FillsArrayWithRecords
 {
     abstract protected function fillArrayWithSingleRecord(array &$results, Record $record, int $offset): int;
 
-    protected function fillArrayWithRecords(array &$results, array $records, int $limit, int $offset): void
+    protected function fillArrayWithRecords(array &$results, iterable $records, int $limit, int $offset): void
     {
-        $length = \min(\count($records), $limit);
-
         $index = 0;
 
         foreach ($records as $record) {
@@ -23,7 +21,7 @@ trait FillsArrayWithRecords
 
             $index++;
 
-            if ($index >= $length) {
+            if ($index >= $limit) {
                 break;
             }
         }
