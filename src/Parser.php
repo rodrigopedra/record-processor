@@ -27,7 +27,7 @@ final class Parser implements \IteratorAggregate
         foreach ($this->reader as $line) {
             $this->incrementLineCount();
 
-            $records = $this->recordParser->parseRecord($this->reader, $line);
+            $records = $this->recordParser->parseRecords($this->reader, $line);
 
             if ($records instanceof Record) {
                 $records = [$records];

@@ -10,7 +10,7 @@ use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
 
 class ArrayRecordParser implements RecordParser
 {
-    public function parseRecord(Reader $reader, $rawContent): Record
+    public function parseRecords(Reader $reader, $rawContent): Record
     {
         if ($rawContent instanceof Arrayable) {
             $rawContent = $rawContent->toArray();

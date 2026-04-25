@@ -15,7 +15,7 @@ class CallbackRecordParser implements RecordParser
         $this->callback = $callback(...);
     }
 
-    public function parseRecord(Reader $reader, $rawContent): Record
+    public function parseRecords(Reader $reader, $rawContent): Record|iterable
     {
         return \call_user_func($this->callback, $rawContent);
     }
