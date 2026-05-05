@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer $serializer
  */
 final class JSONFileSerializerConfigurator extends SerializerConfigurator
 {

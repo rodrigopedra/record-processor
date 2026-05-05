@@ -2,7 +2,6 @@
 
 namespace RodrigoPedra\RecordProcessor\Support\Excel;
 
-use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Style\Style;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -10,8 +9,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * Based on LaravelExcel Excel writer
  *
  * @category   Laravel Excel
+ *
  * @version    1.0.0
- * @package    maatwebsite/excel
+ *
  * @copyright  Copyright (c) 2013 - 2014 Maatwebsite (http://www.maatwebsite.nl)
  * @author     Maatwebsite <info@maatwebsite.nl>
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
@@ -19,14 +19,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 final class CellWriter
 {
     public function __construct(
-        public string $cells,
-        public Worksheet $sheet,
+        public readonly string $cells,
+        public readonly Worksheet $sheet,
     ) {}
 
     public function setValue($value): self
     {
         // Only set cell value for single cells
-        if (! Str::contains($this->cells, ':')) {
+        if (! \str_contains($this->cells, ':')) {
             $this->sheet->setCellValue($this->cells, $value);
         }
 
@@ -39,7 +39,7 @@ final class CellWriter
     public function setUrl(string $url): self
     {
         // Only set cell value for single cells
-        if (! Str::contains($this->cells, ':')) {
+        if (! \str_contains($this->cells, ':')) {
             $this->sheet->getCell($this->cells)->getHyperlink()->setUrl($url);
         }
 
@@ -56,7 +56,7 @@ final class CellWriter
         return $this->setColorStyle('font', $color, false, $colorType);
     }
 
-    public function setFont($styles): self
+    public function setFont(array $styles): self
     {
         return $this->setStyle('font', $styles);
     }
@@ -129,7 +129,7 @@ final class CellWriter
         return $this;
     }
 
-    protected function setColorStyle(
+    private function setColorStyle(
         string $styleType,
         array|string $color,
         bool $type = false,
@@ -145,7 +145,7 @@ final class CellWriter
         return $this->setStyle($styleType, $color);
     }
 
-    protected function setStyle(string $styleType, array $styles): self
+    private function setStyle(string $styleType, array $styles): self
     {
         $style = $this->getCellStyle();
 
@@ -154,7 +154,7 @@ final class CellWriter
         return $this;
     }
 
-    protected function getCellStyle(): Style
+    private function getCellStyle(): Style
     {
         return $this->sheet->getStyle($this->cells);
     }

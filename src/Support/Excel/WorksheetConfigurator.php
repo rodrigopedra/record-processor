@@ -13,7 +13,7 @@ class WorksheetConfigurator
     use ForwardsCalls;
 
     public function __construct(
-        protected Worksheet $worksheet,
+        protected readonly Worksheet $worksheet,
     ) {}
 
     public function withColumnFormat(array $formats): static

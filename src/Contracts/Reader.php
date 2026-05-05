@@ -4,7 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Contracts;
 
 use RodrigoPedra\RecordProcessor\Configurators\Readers\ReaderConfigurator;
 
-interface Reader extends Resource, \OuterIterator
+interface Reader extends \OuterIterator, Resource
 {
     public function lineCount(): int;
 

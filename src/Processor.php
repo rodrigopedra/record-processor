@@ -13,10 +13,10 @@ use RodrigoPedra\RecordProcessor\Support\TransferObjects\ProcessorOutput;
 
 final class Processor implements ProcessorContract
 {
-    /** @var  \RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler[] */
+    /** @var \RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler[] */
     private array $stages = [];
 
-    /** @var  \RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher[] */
+    /** @var \RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher[] */
     private array $flushers = [];
 
     public function __construct(

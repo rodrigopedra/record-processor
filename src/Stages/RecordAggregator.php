@@ -10,11 +10,11 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordAggregateFactory;
 use RodrigoPedra\RecordProcessor\Records\RecordKeyAggregate;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
-class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, RecordAggregateFactory
+class RecordAggregator implements ProcessorStageFlusher, ProcessorStageHandler, RecordAggregateFactory
 {
     protected ?RecordAggregate $aggregateRecord = null;
 
-    protected RecordAggregateFactory $recordAggregateFactory;
+    protected readonly RecordAggregateFactory $recordAggregateFactory;
 
     public function __construct(?RecordAggregateFactory $recordAggregateFactory = null)
     {
@@ -33,7 +33,7 @@ class RecordAggregator implements ProcessorStageHandler, ProcessorStageFlusher, 
             return null;
         }
 
-        if ($this->aggregateRecord->addRecord($record) === true) {
+        if ($this->aggregateRecord->addRecord($record)) {
             return null;
         }
 

@@ -26,7 +26,7 @@ class JsonRecordSerializer implements RecordSerializer
         if (! $record instanceof JsonRecord) {
             $className = $record::class;
 
-            throw new \RuntimeException("'{$className}' should implement JsonRecord interface");
+            throw new \RuntimeException(\sprintf("'%s' should implement JsonRecord interface", $className));
         }
 
         if ($this->writesValidRecords xor $record->isValid()) {

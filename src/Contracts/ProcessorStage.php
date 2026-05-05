@@ -2,6 +2,4 @@
 
 namespace RodrigoPedra\RecordProcessor\Contracts;
 
-interface ProcessorStage
-{
-}
+interface ProcessorStage {}

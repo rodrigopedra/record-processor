@@ -15,15 +15,15 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordSerializer;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer as SerializerContract;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
-final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
+final class Writer implements ProcessorStageFlusher, ProcessorStageHandler
 {
     use CountsRecords;
     use HasHeader;
-    use WritesHeader;
     use HasTrailler;
+    use WritesHeader;
     use WritesTrailler;
 
-    private RecordSerializer $recordSerializer;
+    private readonly RecordSerializer $recordSerializer;
 
     private bool $isOpen = false;
 
@@ -52,7 +52,7 @@ final class Writer implements ProcessorStageHandler, ProcessorStageFlusher
         }
 
         if ($payload->hasRecord()) {
-            $this->handle($payload->record(), fn (): null => null);
+            $this->handle($payload->record(), static fn (): null => null);
         }
 
         $this->close();

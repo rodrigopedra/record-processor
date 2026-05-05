@@ -3,8 +3,8 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\AddonContext;
+use RodrigoPedra\RecordProcessor\Configurators\Serializers\HTMLTableSerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordSerializer;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 

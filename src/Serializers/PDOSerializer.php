@@ -73,8 +73,9 @@ class PDOSerializer implements Serializer
             throw new \InvalidArgumentException('Content for PDOSerializer should be an array');
         }
 
+        $data = $this->prepareValuesForInsert($content);
+
         try {
-            $data = $this->prepareValuesForInsert($content);
             $this->prepareStatement(1);
 
             if (! $this->statement->execute($data)) {
@@ -86,6 +87,8 @@ class PDOSerializer implements Serializer
             $this->rollback();
 
             throw $exception;
+        } finally {
+            $data = null;
         }
     }
 
@@ -104,7 +107,7 @@ class PDOSerializer implements Serializer
 
     protected function beginTransaction(): void
     {
-        if ($this->usesTransaction === true) {
+        if ($this->usesTransaction) {
             $this->pdo->beginTransaction();
             $this->inTransaction = true;
         }

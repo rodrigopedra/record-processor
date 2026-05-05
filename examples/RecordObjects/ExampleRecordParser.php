@@ -23,7 +23,7 @@ class ExampleRecordParser implements RecordParser
             return NullRecord::get();
         }
 
-        [$name, $email,] = $values;
+        [$name, $email] = $values;
 
         return new SimpleRecord([
             'name' => $name,

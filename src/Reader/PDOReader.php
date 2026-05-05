@@ -69,7 +69,13 @@ class PDOReader implements Reader
 
     public function next(): void
     {
-        $this->currentRecord = $this->statement->fetch() ?: null;
+        $record = $this->statement->fetch();
+
+        if ($record === false) {
+            throw new \RuntimeException('Failed to fetch a record from the database');
+        }
+
+        $this->currentRecord = $record;
     }
 
     public function key(): int
@@ -99,7 +105,7 @@ class PDOReader implements Reader
             return;
         }
 
-        $this->currentRecord = $this->statement->fetch() ?: null;
+        $this->next();
     }
 
     public function getInnerIterator(): static

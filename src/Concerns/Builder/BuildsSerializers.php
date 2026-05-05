@@ -5,7 +5,6 @@ namespace RodrigoPedra\RecordProcessor\Concerns\Builder;
 use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurator;
 use RodrigoPedra\RecordProcessor\Contracts\RecordSerializer;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
-use RodrigoPedra\RecordProcessor\Contracts\Serializer as SerializerContract;
 use RodrigoPedra\RecordProcessor\RecordSerializers\CallbackRecordSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\ArraySerializer;
 use RodrigoPedra\RecordProcessor\Serializers\CollectionSerializer;
@@ -153,7 +152,7 @@ trait BuildsSerializers
         return $configurator;
     }
 
-    protected function addSerializer(SerializerContract $instance): static
+    protected function addSerializer(Serializer $instance): static
     {
         $configurator = $instance->configurator();
 

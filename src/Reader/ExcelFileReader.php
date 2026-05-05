@@ -46,7 +46,7 @@ class ExcelFileReader extends FileReader
      */
     public function current(): array
     {
-        /** @var  \PhpOffice\PhpSpreadsheet\Worksheet\Row $row */
+        /** @var \PhpOffice\PhpSpreadsheet\Worksheet\Row $row */
         $row = $this->iteratorCurrent();
 
         $cells = Collection::make();
@@ -54,10 +54,9 @@ class ExcelFileReader extends FileReader
         $cellsIterator = $row->getCellIterator();
         $cellsIterator->setIterateOnlyExistingCells(false);
 
-        /** @var  \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
-        foreach ($cellsIterator as $cell) {
-            $column = $cell->getColumn();
-            $value = $cell->getCalculatedValue();
+        foreach ($cellsIterator as $cellIterator) {
+            $column = $cellIterator->getColumn();
+            $value = $cellIterator->getCalculatedValue();
 
             $cells->put($column, $value);
         }

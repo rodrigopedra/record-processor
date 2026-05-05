@@ -6,7 +6,7 @@ use RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer;
 use RodrigoPedra\RecordProcessor\Support\EOL;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer $serializer
  */
 class TextFileSerializerConfigurator extends SerializerConfigurator
 {

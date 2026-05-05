@@ -1,0 +1,75 @@
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/tools/overview
+php-version = "8.2.0"
+
+[source]
+workspace = "."
+paths = ["src/"]
+includes = ["vendor"]
+excludes = ["storage/**"]
+extensions = ["php"]
+
+[formatter]
+preset = "default"
+
+[linter]
+integrations = ["symfony", "laravel", "phpunit"]
+
+[linter.rules]
+ambiguous-function-call = { enabled = false }
+cyclomatic-complexity = { enabled = false }
+excessive-parameter-list = { enabled = false }
+explicit-octal = { enabled = false }
+final-controller = { enabled = false }
+halstead = { enabled = false }
+kan-defect = { enabled = false }
+literal-named-argument = { enabled = false }
+no-assign-in-condition = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+no-else-clause = { enabled = false }
+no-redundant-nullsafe = { enabled = false }
+prefer-early-continue = { enabled = false }
+strict-types = { enabled = false }
+too-many-enum-cases = { enabled = false }
+too-many-methods = { enabled = false }
+sensitive-parameter = { enabled = false }
+readable-literal = { enabled = false }
+inline-variable-return = { enabled = false }
+
+[analyzer]
+plugins = []
+ignore = [
+    "docblock-type-mismatch",
+    "less-specific-nested-argument-type",
+    "malformed-docblock-comment",
+    "missing-template-parameter",
+    "mixed-argument",
+    "mixed-assignment",
+    "mixed-method-access",
+    "mixed-operand",
+    "mixed-property-access",
+    "mixed-property-type-coercion",
+    "mixed-return-statement",
+    "non-documented-method",
+    "non-documented-property",
+    "non-existent-method",
+    "non-existent-property",
+    "redundant-nullsafe-operator",
+]
+find-unused-expressions = true
+find-unused-definitions = true
+analyze-dead-code = true
+memoize-properties = true
+allow-possibly-undefined-array-keys = true
+check-throws = false
+check-missing-override = false
+find-unused-parameters = false
+strict-list-index-checks = false
+no-boolean-literal-comparison = false
+check-missing-type-hints = false
+check-closure-missing-type-hints = false
+check-arrow-function-missing-type-hints = false
+register-super-globals = true
+trust-existence-checks = true
+check-property-initialization = false
+check-use-statements = true

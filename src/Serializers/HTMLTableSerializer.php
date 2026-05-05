@@ -28,6 +28,10 @@ class HTMLTableSerializer implements Serializer
 
     public function __construct()
     {
+        if (! \extension_loaded('dom')) {
+            throw new \RuntimeException('ext-dom is required to use ' . self::class);
+        }
+
         $this->configurator = new HTMLTableSerializerConfigurator($this, true, true);
     }
 

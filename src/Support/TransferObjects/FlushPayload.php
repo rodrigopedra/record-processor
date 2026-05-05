@@ -56,7 +56,7 @@ final class FlushPayload
         return $this->recordCount;
     }
 
-    public function withRecordCount($recordCount): self
+    public function withRecordCount(int $recordCount): self
     {
         $this->recordCount = $recordCount;
 

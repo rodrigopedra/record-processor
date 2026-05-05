@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\LogSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\LogSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\LogSerializer $serializer
  */
 final class LogSerializerConfigurator extends SerializerConfigurator
 {

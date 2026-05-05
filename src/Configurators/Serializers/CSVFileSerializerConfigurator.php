@@ -7,7 +7,7 @@ use RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer;
 use RodrigoPedra\RecordProcessor\Support\EOL;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\CSVFileSerializer $serializer
  */
 final class CSVFileSerializerConfigurator extends SerializerConfigurator
 {

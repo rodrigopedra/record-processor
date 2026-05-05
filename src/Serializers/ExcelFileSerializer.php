@@ -18,7 +18,7 @@ use RodrigoPedra\RecordProcessor\Support\FileInfo;
  */
 class ExcelFileSerializer extends FileSerializer
 {
-    protected const ROW_LIMIT = 1048576;
+    protected const ROW_LIMIT = 1_048_576;
 
     protected ?IWriter $writer = null;
 
@@ -55,6 +55,7 @@ class ExcelFileSerializer extends FileSerializer
     {
         $this->writer->save($this->file->getRealPath());
         $this->writer = null;
+
         $this->workbook = null;
     }
 
@@ -86,11 +87,11 @@ class ExcelFileSerializer extends FileSerializer
     {
         $extension = $this->file->getExtension();
 
-        if (\in_array($extension, ['xls', 'xlt'])) {
+        if (\in_array($extension, ['xls', 'xlt'], true)) {
             return IOFactory::createWriter($workbook, 'Xls');
         }
 
-        if (\in_array($extension, ['xlsx', 'xlsm', 'xltx', 'xltm'])) {
+        if (\in_array($extension, ['xlsx', 'xlsm', 'xltx', 'xltm'], true)) {
             return IOFactory::createWriter($workbook, 'Xlsx');
         }
 

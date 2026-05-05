@@ -14,10 +14,10 @@ use RodrigoPedra\RecordProcessor\Support\FileInfo;
 class JSONFileSerializer extends FileSerializer
 {
     public const JSON_ENCODE_OPTIONS = \JSON_NUMERIC_CHECK
-    | \JSON_HEX_TAG
-    | \JSON_HEX_AMP
-    | \JSON_HEX_APOS
-    | \JSON_HEX_QUOT;
+        | \JSON_HEX_TAG
+        | \JSON_HEX_AMP
+        | \JSON_HEX_APOS
+        | \JSON_HEX_QUOT;
 
     protected int $jsonEncodeOptions = self::JSON_ENCODE_OPTIONS;
 

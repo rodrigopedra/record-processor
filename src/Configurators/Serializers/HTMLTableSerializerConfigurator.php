@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\HTMLTableSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\HTMLTableSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\HTMLTableSerializer $serializer
  */
 final class HTMLTableSerializerConfigurator extends SerializerConfigurator
 {

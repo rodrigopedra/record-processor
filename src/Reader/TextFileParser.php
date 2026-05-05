@@ -6,7 +6,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Readers\ReaderConfigurator;
 use RodrigoPedra\RecordProcessor\Support\EOL;
 
 /**
- * @property  \SplFileObject $iterator
+ * @property \SplFileObject $iterator
  */
 class TextFileParser extends FileReader
 {
@@ -29,7 +29,7 @@ class TextFileParser extends FileReader
     {
         $content = $this->iteratorCurrent();
 
-        return \rtrim($content, EOL::WINDOWS->value);
+        return \rtrim(\strval($content), EOL::WINDOWS->value);
     }
 
     public function valid(): bool

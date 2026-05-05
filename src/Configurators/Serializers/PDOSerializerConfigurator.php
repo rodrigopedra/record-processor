@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\PDOSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\PDOSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\PDOSerializer $serializer
  */
 final class PDOSerializerConfigurator extends SerializerConfigurator
 {

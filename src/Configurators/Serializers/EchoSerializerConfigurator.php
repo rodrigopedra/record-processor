@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\EchoSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\EchoSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\EchoSerializer $serializer
  */
 final class EchoSerializerConfigurator extends SerializerConfigurator
 {

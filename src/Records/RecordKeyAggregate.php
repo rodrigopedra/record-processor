@@ -70,8 +70,12 @@ class RecordKeyAggregate implements RecordAggregate
         return \count($this->records);
     }
 
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
+        if ($this->master instanceof \ArrayAccess) {
+            return $this->master->offsetGet($name);
+        }
+
         return $this->master->{$name};
     }
 
@@ -82,7 +86,11 @@ class RecordKeyAggregate implements RecordAggregate
 
     public function __isset(string $name): bool
     {
-        return isset($this->master->{$name});
+        if ($this->master instanceof \ArrayAccess) {
+            return $this->master->offsetExists($name);
+        }
+
+        return \property_exists($this->master, $name);
     }
 
     public function __unset(string $name): void

@@ -23,6 +23,8 @@
     "phpoffice/phpspreadsheet": "^1.30.0|^v5.3"
   },
   "require-dev": {
+    "laravel/pint": "^1.29",
+    "rector/rector": "^2.4",
     "symfony/console": "^7.3",
     "symfony/process": "^7.3",
     "symfony/var-dumper": "^7.3"

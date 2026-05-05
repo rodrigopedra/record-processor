@@ -11,7 +11,7 @@ class ExampleRecordSerializer implements RecordSerializer
 {
     public function serializeRecord(Serializer $serializer, Record $record): bool
     {
-        /** @var  \RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecord $record */
+        /** @var \RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecord $record */
         if (! $record->isValid()) {
             return false;
         }

@@ -3,7 +3,6 @@
 namespace RodrigoPedra\RecordProcessor\Support\Excel;
 
 use Illuminate\Support\Traits\ForwardsCalls;
-use PhpOffice\PhpSpreadsheet\Document\Properties;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 /**
@@ -13,13 +12,9 @@ class WorkbookConfigurator
 {
     use ForwardsCalls;
 
-    protected Properties $properties;
-
     public function __construct(
-        protected Spreadsheet $workbook,
-    ) {
-        $this->properties = $workbook->getProperties();
-    }
+        protected readonly Spreadsheet $workbook,
+    ) {}
 
     public function workbook(): Spreadsheet
     {
@@ -28,6 +23,6 @@ class WorkbookConfigurator
 
     public function __call(string $name, array $arguments)
     {
-        return $this->forwardCallTo($this->properties, $name, $arguments);
+        return $this->forwardCallTo($this->workbook->getProperties(), $name, $arguments);
     }
 }

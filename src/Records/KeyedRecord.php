@@ -4,11 +4,10 @@ namespace RodrigoPedra\RecordProcessor\Records;
 
 use Illuminate\Support\Fluent;
 use RodrigoPedra\RecordProcessor\Contracts\JsonRecord;
-use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 
-class KeyedRecord extends Fluent implements Record, TextRecord, JsonRecord
+class KeyedRecord extends Fluent implements JsonRecord, TextRecord
 {
     public function __construct(
         protected readonly ?string $key,

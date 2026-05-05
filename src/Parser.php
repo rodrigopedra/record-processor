@@ -14,7 +14,7 @@ final class Parser implements \IteratorAggregate
     use CountsLines;
     use CountsRecords;
 
-    private RecordParser $recordParser;
+    private readonly RecordParser $recordParser;
 
     public function __construct(
         private readonly Reader $reader,
@@ -33,7 +33,6 @@ final class Parser implements \IteratorAggregate
                 $records = [$records];
             }
 
-            /** @var  \RodrigoPedra\RecordProcessor\Contracts\Record $record */
             foreach ($records as $record) {
                 if ($this->shouldHalt($record)) {
                     return;

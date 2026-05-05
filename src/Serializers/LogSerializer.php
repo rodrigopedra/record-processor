@@ -13,7 +13,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Serializers\LogSerializerConfigur
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
 
-class LogSerializer implements Serializer, LoggerAwareInterface
+class LogSerializer implements LoggerAwareInterface, Serializer
 {
     use CountsLines;
     use HasPrefix;

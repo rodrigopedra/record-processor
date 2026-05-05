@@ -7,9 +7,9 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 
-final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregate
+final class NullRecord implements JsonRecord, RecordAggregate, TextRecord
 {
-    private static ?NullRecord $instance = null;
+    private static ?self $instance = null;
 
     private function __construct() {}
 
@@ -43,7 +43,7 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
         return '';
     }
 
-    public function master(): NullRecord
+    public function master(): self
     {
         return $this;
     }
@@ -63,7 +63,7 @@ final class NullRecord implements Record, JsonRecord, TextRecord, RecordAggregat
         return 0;
     }
 
-    public static function get(): NullRecord
+    public static function get(): self
     {
         return self::$instance ??= new self();
     }

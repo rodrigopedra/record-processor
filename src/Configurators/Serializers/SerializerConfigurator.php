@@ -21,8 +21,8 @@ class SerializerConfigurator
 
     public function __construct(
         protected readonly Serializer $serializer,
-        protected bool $hasHeader = false,
-        protected bool $hasTrailler = false,
+        protected readonly bool $hasHeader = false,
+        protected readonly bool $hasTrailler = false,
     ) {}
 
     public function hasRecordSerializer(): bool

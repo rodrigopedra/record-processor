@@ -1,0 +1,42 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "simplified_null_return": false,
+        "new_with_parentheses": {
+            "anonymous_class": true,
+            "named_class": true
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "global_namespace_import": {
+            "import_classes": false,
+            "import_constants": false,
+            "import_functions": false
+        },
+        "trailing_comma_in_multiline": {
+            "elements": ["arguments", "array_destructuring", "arrays", "match", "parameters"]
+        },
+        "fully_qualified_strict_types": {
+            "import_symbols": true,
+            "leading_backslash_in_global_namespace": true,
+            "phpdoc_tags": []
+        },
+        "native_function_invocation": {
+            "include": ["@all"],
+            "scope": "all",
+            "strict": true
+        },
+        "psr_autoloading": {
+            "dir": "./src"
+        },
+        "no_short_bool_cast": true,
+        "no_unset_cast": true,
+        "function_to_constant": true
+    },
+    "exclude": [
+        "__assets",
+        "public",
+        "resources/fixtures"
+    ]
+}

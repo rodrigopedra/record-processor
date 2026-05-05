@@ -18,7 +18,7 @@ class TextRecordSerializer implements RecordSerializer
         if (! $record instanceof TextRecord) {
             $className = $record::class;
 
-            throw new \RuntimeException("'{$className}' should implement TextRecord interface");
+            throw new \RuntimeException(\sprintf("'%s' should implement TextRecord interface", $className));
         }
 
         if ($this->writesValidRecords xor $record->isValid()) {

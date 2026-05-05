@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AllExamplesCommand extends ExamplesCommand
 {
     protected ?string $currentParser = null;
+
     protected ?string $currentSerializer = null;
 
     protected function configure(): void
@@ -66,9 +67,11 @@ class AllExamplesCommand extends ExamplesCommand
                         $progressBar->finish();
                         $output->writeln('');
                         $output->writeln("<error>Stopped on first error: {$combination}</error>");
+
                         if ($input->getOption('verbose-errors')) {
                             $output->writeln("<error>{$errorMessage}</error>");
                         }
+
                         return Command::FAILURE;
                     }
                 } finally {

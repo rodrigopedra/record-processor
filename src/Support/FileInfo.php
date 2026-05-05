@@ -10,7 +10,7 @@ class FileInfo extends \SplFileInfo
 
     public const TEMP_FILE = 'php://temp';
 
-    public const TEMP_FILE_MEMORY_SIZE = 4194304; // 4MB
+    public const TEMP_FILE_MEMORY_SIZE = 4_194_304; // 4MB
 
     public function getExtension(): string
     {
@@ -24,10 +24,6 @@ class FileInfo extends \SplFileInfo
 
     public function isTempFile(): bool
     {
-        if ($this instanceof \SplTempFileObject) {
-            return true;
-        }
-
         return \str_starts_with($this->getPathname(), self::TEMP_FILE);
     }
 
@@ -49,7 +45,11 @@ class FileInfo extends \SplFileInfo
             return $mimeMap[$extension];
         }
 
-        return \mime_content_type($this->getBasename());
+        if (\extension_loaded('fileinfo')) {
+            return \mime_content_type($this->getBasename());
+        }
+
+        throw new \RuntimeException('Failed to guess mimetipe for: ' . $this->getRealPath());
     }
 
     public function isCSV(): bool
@@ -91,13 +91,13 @@ class FileInfo extends \SplFileInfo
             $file = new static($file);
         }
 
-        if ($file instanceof \SplFileInfo) {
+        if ($file instanceof static) {
             return $file->isTempFile()
                 ? self::createTempFileObject()
                 : $file->openFile($mode);
         }
 
-        throw new \InvalidArgumentException('File should be a path to a file or a \SplFileInfo');
+        return $file->openFile($mode);
     }
 
     public static function createWritableFileObject(\SplFileInfo|string $file, string $mode = 'wb'): \SplFileObject
@@ -120,7 +120,7 @@ class FileInfo extends \SplFileInfo
         if (! $fileInfo->isWritable()) {
             $fileName = $fileInfo->getPathname();
 
-            throw new \RuntimeException("File {$fileName} is not writable");
+            throw new \RuntimeException(\sprintf('File %s is not writable', $fileName));
         }
 
         return $file;
@@ -137,7 +137,7 @@ class FileInfo extends \SplFileInfo
         if (! $fileInfo->isTempFile() && ! $fileInfo->isReadable()) {
             $fileName = $fileInfo->getPathname();
 
-            throw new \RuntimeException("File {$fileName} is not readable");
+            throw new \RuntimeException(\sprintf('File %s is not readable', $fileName));
         }
 
         $file->rewind();

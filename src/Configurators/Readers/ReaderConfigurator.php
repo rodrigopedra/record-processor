@@ -11,7 +11,7 @@ class ReaderConfigurator
     protected ?RecordParser $recordParser = null;
 
     public function __construct(
-        protected Reader $reader,
+        protected readonly Reader $reader,
     ) {}
 
     public function hasRecordParser(): bool

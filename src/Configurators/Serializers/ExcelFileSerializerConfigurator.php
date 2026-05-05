@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Serializers;
 use RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer $serializer
+ * @property \RodrigoPedra\RecordProcessor\Serializers\ExcelFileSerializer $serializer
  */
 final class ExcelFileSerializerConfigurator extends SerializerConfigurator
 {

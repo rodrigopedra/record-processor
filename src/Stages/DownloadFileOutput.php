@@ -17,17 +17,15 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
     protected ?FileInfo $outputFileInfo = null;
 
-    protected bool $deleteAfterDownload;
+    protected readonly \SplFileInfo|string|null $outputFile;
 
-    protected \SplFileInfo|string|null $outputFile;
-
-    public function __construct(string $outputFile = '', bool $deleteFileAfterDownload = false)
-    {
+    public function __construct(
+        string $outputFile = '',
+        protected readonly bool $deleteAfterDownload = false,
+    ) {
         $this->outputFile = \blank($outputFile)
             ? null
             : $outputFile;
-
-        $this->deleteAfterDownload = $deleteFileAfterDownload;
     }
 
     /**
@@ -77,7 +75,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
         $this->unlinkInputFile();
 
-        die;
+        exit;
     }
 
     protected function sendHeaders(): void

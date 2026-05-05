@@ -8,14 +8,16 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\NullLogger;
-use RodrigoPedra\RecordProcessor\Concerns\Builder;
+use RodrigoPedra\RecordProcessor\Concerns\Builder\BuildsParser;
+use RodrigoPedra\RecordProcessor\Concerns\Builder\BuildsSerializers;
+use RodrigoPedra\RecordProcessor\Concerns\Builder\BuildsStages;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
 
 class ProcessorBuilder implements LoggerAwareInterface, LoggerInterface
 {
-    use Builder\BuildsParser;
-    use Builder\BuildsStages;
-    use Builder\BuildsSerializers;
+    use BuildsParser;
+    use BuildsSerializers;
+    use BuildsStages;
     use LoggerAwareTrait;
     use LoggerTrait;
 
@@ -78,7 +80,7 @@ class ProcessorBuilder implements LoggerAwareInterface, LoggerInterface
     protected function buildStage(string $stage): ProcessorStage
     {
         if (! \class_exists($stage)) {
-            throw new \RuntimeException("'{$stage}' should be an instance of " . ProcessorStage::class);
+            throw new \RuntimeException(\sprintf("'%s' should be an instance of %s", $stage, ProcessorStage::class));
         }
 
         if (\is_null($this->container)) {

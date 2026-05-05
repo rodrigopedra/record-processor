@@ -50,8 +50,9 @@ class PDOBufferedSeriealizer extends PDOSerializer
             return;
         }
 
+        $data = $this->flushData();
+
         try {
-            $data = $this->flushData();
             $this->prepareStatement($count);
 
             if (! $this->statement->execute($data)) {

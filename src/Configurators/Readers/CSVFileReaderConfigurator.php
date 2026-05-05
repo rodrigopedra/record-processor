@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Readers;
 use RodrigoPedra\RecordProcessor\Reader\CSVFileReader;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Reader\CSVFileReader $reader
+ * @property \RodrigoPedra\RecordProcessor\Reader\CSVFileReader $reader
  */
 class CSVFileReaderConfigurator extends ReaderConfigurator
 {

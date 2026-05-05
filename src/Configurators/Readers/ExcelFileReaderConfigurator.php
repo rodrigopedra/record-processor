@@ -5,7 +5,7 @@ namespace RodrigoPedra\RecordProcessor\Configurators\Readers;
 use RodrigoPedra\RecordProcessor\Reader\ExcelFileReader;
 
 /**
- * @property  \RodrigoPedra\RecordProcessor\Reader\ExcelFileReader $reader
+ * @property \RodrigoPedra\RecordProcessor\Reader\ExcelFileReader $reader
  */
 class ExcelFileReaderConfigurator extends ReaderConfigurator
 {

@@ -2,6 +2,4 @@
 
 namespace RodrigoPedra\RecordProcessor\Contracts;
 
-interface HaltsOnInvalid extends RecordParser
-{
-}
+interface HaltsOnInvalid extends RecordParser {}
