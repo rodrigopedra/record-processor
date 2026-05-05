@@ -12,7 +12,7 @@ trait FillsArrayWithRecords
 {
     abstract protected function fillArrayWithSingleRecord(array &$results, Record $record, int $offset): int;
 
-    protected function fillArrayWithRecords(array &$results, iterable $records, int $limit, int $offset): void
+    protected function fillArrayWithRecords(array &$results, iterable $records, int $limit, int $offset): int
     {
         $index = 0;
 
@@ -25,5 +25,7 @@ trait FillsArrayWithRecords
                 break;
             }
         }
+
+        return $offset;
     }
 }
