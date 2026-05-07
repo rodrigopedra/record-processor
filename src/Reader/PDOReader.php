@@ -83,13 +83,13 @@ class PDOReader implements Reader
 
     public function valid(): bool
     {
-        $valid = ! \is_null($this->currentRecord);
-
-        if ($valid) {
-            $this->incrementLineCount();
+        if (\is_null($this->currentRecord)) {
+            return false;
         }
 
-        return $valid;
+        $this->incrementLineCount();
+
+        return true;
     }
 
     public function rewind(): void
