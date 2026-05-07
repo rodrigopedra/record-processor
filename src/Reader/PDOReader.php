@@ -69,13 +69,11 @@ class PDOReader implements Reader
 
     public function next(): void
     {
-        $record = $this->statement->fetch();
-
-        if ($record === false) {
-            throw new \RuntimeException('Failed to fetch a record from the database');
+        if ($record = $this->statement->fetch()) {
+            $this->currentRecord = $record;
+        } else {
+            $this->currentRecord = null;
         }
-
-        $this->currentRecord = $record;
     }
 
     public function key(): int
