@@ -83,6 +83,10 @@ class FileInfo extends \SplFileInfo
 
     public static function createFileObject(\SplFileInfo|string $file, string $mode = 'r'): \SplFileObject
     {
+        if ($file instanceof \SplFileObject) {
+            return $file;
+        }
+
         if ($file === static::TEMP_FILE) {
             return static::createTempFileObject();
         }
