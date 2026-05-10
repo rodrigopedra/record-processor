@@ -4,13 +4,7 @@ namespace RodrigoPedra\RecordProcessor\Support;
 
 class FileInfo extends \SplFileInfo
 {
-    public const INPUT_STREAM = 'php://input';
-
-    public const OUTPUT_STREAM = 'php://output';
-
-    public const TEMP_FILE = 'php://temp';
-
-    public const TEMP_FILE_MEMORY_SIZE = 4_194_304; // 4MB
+    private const TEMP_FILE_MEMORY_SIZE = 2_097_152; // 2MB
 
     public function getExtension(): string
     {
@@ -20,11 +14,6 @@ class FileInfo extends \SplFileInfo
     public function getFileInfo($class = null): \SplFileInfo
     {
         return parent::getFileInfo($class ?? self::class);
-    }
-
-    public function isTempFile(): bool
-    {
-        return \str_starts_with($this->getPathname(), self::TEMP_FILE);
     }
 
     public function guessMimeType(): string
@@ -76,55 +65,64 @@ class FileInfo extends \SplFileInfo
         );
     }
 
-    public static function createTempFileObject(): \SplTempFileObject
+    public static function createTempFileObject(int $maxMemory = self::TEMP_FILE_MEMORY_SIZE): \SplTempFileObject
     {
-        return new \SplTempFileObject(self::TEMP_FILE_MEMORY_SIZE);
+        return new \SplTempFileObject($maxMemory);
     }
 
-    public static function createFileObject(\SplFileInfo|string $file, string $mode = 'r'): \SplFileObject
+    public static function createMemoryFileObject(): \SplFileObject
+    {
+        return new \SplFileObject(PhpStream::MEMORY->value, 'wb+');
+    }
+
+    public static function createFileObject(\SplFileInfo|PhpStream|string $file, string $mode = 'rb'): \SplFileObject
     {
         if ($file instanceof \SplFileObject) {
             return $file;
         }
 
-        if ($file === static::TEMP_FILE) {
-            return static::createTempFileObject();
+        if ($file instanceof PhpStream) {
+            return match ($file) {
+                PhpStream::TEMP => static::createTempFileObject(),
+                PhpStream::MEMORY => static::createMemoryFileObject(),
+                PhpStream::OUTPUT => (new static($file->value))->openFile($mode),
+            };
+        }
+
+        if (\str_starts_with($file, PhpStream::TEMP->value)) {
+            return static::createTempFileObject(match (\str_contains($file, '/maxmemory:')) {
+                true => \intval(\substr($file, \strrpos($file, ':') + 1)),
+                false => self::TEMP_FILE_MEMORY_SIZE,
+            });
         }
 
         if (\is_string($file)) {
             $file = new static($file);
         }
 
-        if ($file instanceof static) {
-            return $file->isTempFile()
-                ? self::createTempFileObject()
-                : $file->openFile($mode);
-        }
-
-        return $file->openFile($mode);
+        return match (true) {
+            PhpStream::isTempFile($file) => self::createTempFileObject(),
+            PhpStream::isMemoryFile($file) => self::createMemoryFileObject(),
+            default => $file->openFile($mode),
+        };
     }
 
-    public static function createWritableFileObject(\SplFileInfo|string $file, string $mode = 'wb'): \SplFileObject
+    public static function createWritableFileObject(\SplFileInfo|PhpStream|string $file, string $mode = 'wb'): \SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 
-        /** @var static $fileInfo */
-        $fileInfo = $file->getFileInfo(static::class);
+        if (PhpStream::isOutputFile($file)) {
+            return $file;
+        }
 
-        if ($fileInfo->isTempFile()) {
+        if (PhpStream::isTempFile($file) || PhpStream::isMemoryFile($file)) {
             $file->ftruncate(0);
 
             return $file;
         }
 
-        if ($fileInfo->getPathname() === static::OUTPUT_STREAM) {
-            return $file;
-        }
-
-        if (! $fileInfo->isWritable()) {
-            $fileName = $fileInfo->getPathname();
-
-            throw new \RuntimeException(\sprintf('File %s is not writable', $fileName));
+        if (! $file->isWritable()) {
+            throw new \RuntimeException(\sprintf('File "%s" is not writable', $file->getPathname()));
         }
 
         return $file;
@@ -135,13 +133,10 @@ class FileInfo extends \SplFileInfo
         $file = static::createFileObject($file, $mode);
         $file->setFlags(\SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
-        /** @var static $fileInfo */
-        $fileInfo = $file->getFileInfo(static::class);
+        if (! $file->isReadable() && ! PhpStream::isTempFile($file) && ! PhpStream::isMemoryFile($file)) {
+            $fileName = $file->getPathname();
 
-        if (! $fileInfo->isTempFile() && ! $fileInfo->isReadable()) {
-            $fileName = $fileInfo->getPathname();
-
-            throw new \RuntimeException(\sprintf('File %s is not readable', $fileName));
+            throw new \RuntimeException(\sprintf('File "%s" is not readable', $fileName));
         }
 
         $file->rewind();

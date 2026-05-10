@@ -18,8 +18,6 @@ class HTMLTableSerializer implements Serializer
 
     protected string $tableIdAttribute = '';
 
-    protected ?FileInfo $file = null;
-
     protected ?\SplFileObject $writer = null;
 
     protected \SplFileInfo|string|null $output = null;
@@ -37,7 +35,7 @@ class HTMLTableSerializer implements Serializer
 
     public function writeOutputToFile(string $fileName): static
     {
-        $this->file = new FileInfo($fileName);
+        $this->writer = FileInfo::createWritableFileObject($fileName);
 
         return $this;
     }
@@ -60,10 +58,6 @@ class HTMLTableSerializer implements Serializer
     {
         $this->records = [];
         $this->output = null;
-
-        if ($this->file) {
-            $this->writer = FileInfo::createWritableFileObject($this->file);
-        }
     }
 
     /**
@@ -72,7 +66,7 @@ class HTMLTableSerializer implements Serializer
     public function close(): void
     {
         if ($this->writer) {
-            $this->output = $this->writer->getFileInfo(FileInfo::class);
+            $this->output = $this->writer;
 
             $this->writer->fwrite($this->convert());
             $this->writer->fwrite(EOL::UNIX->value);

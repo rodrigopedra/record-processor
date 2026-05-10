@@ -9,6 +9,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Serializers\SerializerConfigurato
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\TextRecordSerializer;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
+use RodrigoPedra\RecordProcessor\Support\PhpStream;
 
 class EchoSerializer implements Serializer
 {
@@ -27,7 +28,7 @@ class EchoSerializer implements Serializer
     public function open(): void
     {
         $this->lineCount = 0;
-        $this->writer = FileInfo::createWritableFileObject(FileInfo::OUTPUT_STREAM);
+        $this->writer = FileInfo::createWritableFileObject(PhpStream::OUTPUT);
     }
 
     public function close(): void

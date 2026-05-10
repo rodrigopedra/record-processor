@@ -8,18 +8,19 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordSerializer;
 use RodrigoPedra\RecordProcessor\Contracts\Serializer;
 use RodrigoPedra\RecordProcessor\RecordSerializers\ArrayRecordSerializer;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
+use RodrigoPedra\RecordProcessor\Support\PhpStream;
 
 abstract class FileSerializer implements Serializer
 {
     use CountsLines;
 
-    protected readonly FileInfo $file;
+    protected readonly \SplFileObject $file;
 
     public function __construct(
         protected readonly SerializerConfigurator $configurator,
         \SplFileInfo|string|null $file = null,
     ) {
-        $this->file = FileInfo::createWritableFileObject($file ?? FileInfo::TEMP_FILE)->getFileInfo(FileInfo::class);
+        $this->file = FileInfo::createWritableFileObject($file ?? PhpStream::TEMP);
     }
 
     public function open(): void
@@ -31,8 +32,15 @@ abstract class FileSerializer implements Serializer
 
     public function output(): string
     {
-        if ($this->file->isTempFile()) {
+        if (PhpStream::isTempFile($this->file)) {
             return \file_get_contents($this->file->getRealPath());
+        }
+
+        if (PhpStream::isMemoryFile($this->file)) {
+            $this->file->setFlags(0);
+            $this->file->rewind();
+
+            return \implode('', \iterator_to_array($this->file));
         }
 
         return $this->file->getRealPath();

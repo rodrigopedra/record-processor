@@ -9,6 +9,7 @@ use RodrigoPedra\RecordProcessor\Serializers\HTMLTableSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\JSONFileSerializer;
 use RodrigoPedra\RecordProcessor\Serializers\TextFileSerializer;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
+use RodrigoPedra\RecordProcessor\Support\PhpStream;
 use RodrigoPedra\RecordProcessor\Support\TransferObjects\FlushPayload;
 
 class DownloadFileOutput implements ProcessorStageFlusher
@@ -88,9 +89,12 @@ class DownloadFileOutput implements ProcessorStageFlusher
             throw new \RuntimeException('Failed to assess output mime type');
         }
 
-        $mimeType = $this->inputFileInfo->isTempFile()
-            ? $this->outputFileInfo->guessMimeType()
-            : $this->inputFileInfo->guessMimeType();
+        $mimeType = match (true) {
+            PhpStream::isOutputFile($this->inputFileInfo),
+            PhpStream::isTempFile($this->inputFileInfo),
+            PhpStream::isMemoryFile($this->inputFileInfo) => $this->outputFileInfo->guessMimeType(),
+            default => $this->inputFileInfo->guessMimeType(),
+        };
 
         \header('Content-Type: ' . $mimeType . '; charset=utf-8');
         \header('Content-Transfer-Encoding: binary');
@@ -125,7 +129,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         }
 
         // invalid outputFileInfo, tries to guess from inputFile
-        if ($this->inputFileInfo?->isTempFile()) {
+        if ($this->inputFileInfo && PhpStream::isTempFile($this->inputFileInfo)) {
             $this->outputFileInfo = $this->buildTempOutputFileInfo($className);
 
             return;

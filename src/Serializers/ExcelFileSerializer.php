@@ -34,6 +34,10 @@ class ExcelFileSerializer extends FileSerializer
         if ($this->file->isTempFile()) {
             throw new \RuntimeException('Cannot write Excel as a temporary file');
         }
+
+        if ($this->file->isMemoryFile()) {
+            throw new \RuntimeException('Cannot write Excel as a memory file');
+        }
     }
 
     /**
