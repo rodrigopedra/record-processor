@@ -12,6 +12,7 @@ use RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerCo
 use RodrigoPedra\RecordProcessor\Support\Excel\WorkbookConfigurator;
 use RodrigoPedra\RecordProcessor\Support\Excel\WorksheetConfigurator;
 use RodrigoPedra\RecordProcessor\Support\FileInfo;
+use RodrigoPedra\RecordProcessor\Support\PhpStream;
 
 /**
  * @property \RodrigoPedra\RecordProcessor\Configurators\Serializers\ExcelFileSerializerConfigurator $configurator
@@ -31,11 +32,11 @@ class ExcelFileSerializer extends FileSerializer
             file: $file,
         );
 
-        if ($this->file->isTempFile()) {
+        if (PhpStream::isTempFile($this->file)) {
             throw new \RuntimeException('Cannot write Excel as a temporary file');
         }
 
-        if ($this->file->isMemoryFile()) {
+        if (PhpStream::isMemoryFile($this->file)) {
             throw new \RuntimeException('Cannot write Excel as a memory file');
         }
     }
