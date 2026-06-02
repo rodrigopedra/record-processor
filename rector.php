@@ -22,8 +22,6 @@ use Rector\Php80\Rector\NotIdentical\MbStrContainsRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php82\Rector\Param\AddSensitiveParameterAttributeRector;
-use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\BooleanAnd\BinaryOpNullableToInstanceofRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddParamTypeFromPropertyTypeRector;
@@ -36,7 +34,6 @@ use Rector\TypeDeclaration\Rector\While_\WhileNullableToInstanceofRector;
 
 /** @noinspection PhpUnhandledExceptionInspection */
 return RectorConfig::configure()
-    ->withComposerBased(laravel: true)
     ->withImportNames(
         importDocBlockNames: false,
         importShortClasses: false,
@@ -45,7 +42,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
     ])
-    ->withPhpSets(php83: true)
+    ->withPhpSets(php82: true)
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
@@ -66,9 +63,7 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         // PHP
-        AddOverrideAttributeToOverriddenMethodsRector::class,
         ReadOnlyClassRector::class,
-        ReadOnlyAnonymousClassRector::class,
 
         // codeQuality
         ExplicitBoolCompareRector::class,

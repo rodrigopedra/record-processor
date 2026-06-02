@@ -35,8 +35,6 @@
         "function_to_constant": true
     },
     "exclude": [
-        "__assets",
-        "public",
-        "resources/fixtures"
+        "__assets"
     ]
 }
