@@ -32,7 +32,8 @@
         },
         "no_short_bool_cast": true,
         "no_unset_cast": true,
-        "function_to_constant": true
+        "function_to_constant": true,
+        "static_lambda": true
     },
     "exclude": [
         "__assets"

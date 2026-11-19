@@ -15,7 +15,7 @@ $items = [
 
 $processor = (new ProcessorBuilder())
     ->readFromArray($items)
-    ->withRecordParser(function ($rawContent) {
+    ->withRecordParser(static function ($rawContent) {
         $name = Arr::get($rawContent, 0);
 
         foreach (\range(1, 2) as $index) {

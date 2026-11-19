@@ -129,7 +129,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         }
 
         // invalid outputFileInfo, tries to guess from inputFile
-        if ($this->inputFileInfo && PhpStream::isTempFile($this->inputFileInfo)) {
+        if ($this->inputFileInfo instanceof FileInfo && PhpStream::isTempFile($this->inputFileInfo)) {
             $this->outputFileInfo = $this->buildTempOutputFileInfo($className);
 
             return;

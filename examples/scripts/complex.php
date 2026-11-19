@@ -13,12 +13,12 @@ $storagePath = __DIR__ . '/../../storage/';
 $processor = (new ProcessorBuilder())
     ->readFromExcelFile($storagePath . 'input.xlsx')
     ->serializeToExcelFile($storagePath . 'output.xlsx')
-    ->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator) use ($storagePath): void {
+    ->serializeToHTMLTable(static function (HTMLTableSerializerConfigurator $configurator) use ($storagePath): void {
         $configurator->withRecordSerializer(new ExampleRecordSerializer());
 
         $configurator->withHeader(['name', 'email']);
 
-        $configurator->withTrailler(function (AddonContext $context): void {
+        $configurator->withTrailler(static function (AddonContext $context): void {
             $recordCount = $context->recordCount();
             $context->append($recordCount . ' records');
         });

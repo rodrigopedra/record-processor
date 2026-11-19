@@ -2,8 +2,8 @@
 
 namespace RodrigoPedra\RecordProcessor\Reader;
 
-use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Worksheet\CellIterator;
 use RodrigoPedra\RecordProcessor\Configurators\Readers\ExcelFileReaderConfigurator;
 
 /**
@@ -49,19 +49,22 @@ class ExcelFileReader extends FileReader
         /** @var \PhpOffice\PhpSpreadsheet\Worksheet\Row $row */
         $row = $this->iteratorCurrent();
 
-        $cells = Collection::make();
+        $cells = [];
 
         $cellsIterator = $row->getCellIterator();
+        $cellsIterator->setIfNotExists(CellIterator::IF_NOT_EXISTS_RETURN_NULL);
         $cellsIterator->setIterateOnlyExistingCells(false);
 
-        foreach ($cellsIterator as $cellIterator) {
-            $column = $cellIterator->getColumn();
-            $value = $cellIterator->getCalculatedValue();
+        foreach ($cellsIterator as $cell) {
+            $column = $cell?->getColumn();
+            $value = $cell?->getCalculatedValue();
 
-            $cells->put($column, $value);
+            if (! \is_null($column)) {
+                $cells[$column] = $value;
+            }
         }
 
-        return $cells->toArray();
+        return $cells;
     }
 
     public function skipRows(): int

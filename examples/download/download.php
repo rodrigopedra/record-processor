@@ -9,7 +9,7 @@ $storagePath = __DIR__ . '/../../storage/';
 
 $processor = (new ProcessorBuilder())
     ->readFromCSVFile($storagePath . 'input.csv')
-    ->serializeToExcelFile($storagePath . 'output.xlsx', function (SerializerConfigurator $configurator): void {
+    ->serializeToExcelFile($storagePath . 'output.xlsx', static function (SerializerConfigurator $configurator): void {
         $configurator->withHeader(['name', 'email']);
     })
     ->downloadFileOutput('report.xlsx', deleteFileAfterDownload: true)

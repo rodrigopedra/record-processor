@@ -65,7 +65,7 @@ class HTMLTableSerializer implements Serializer
      */
     public function close(): void
     {
-        if ($this->writer) {
+        if ($this->writer instanceof \SplFileObject) {
             $this->output = $this->writer;
 
             $this->writer->fwrite($this->convert());

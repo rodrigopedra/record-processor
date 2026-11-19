@@ -185,30 +185,30 @@ class ExamplesCommand extends Command
 
             'collection' => $builder->serializeToCollection(),
 
-            'csv' => $builder->serializeToCSVFile($outputPath . '.csv', function (SerializerConfigurator $configurator): void {
+            'csv' => $builder->serializeToCSVFile($outputPath . '.csv', static function (SerializerConfigurator $configurator): void {
                 $configurator->withHeader(['name', 'email']);
             }),
 
-            'echo' => $builder->serializeToEcho(function (EchoSerializerConfigurator $configurator): void {
+            'echo' => $builder->serializeToEcho(static function (EchoSerializerConfigurator $configurator): void {
                 $configurator->withPrefix('PERSIST');
             }),
 
             'excel' => $builder->serializeToExcelFile($outputPath . '.xlsx',
-                function (ExcelFileSerializerConfigurator $configurator): void {
+                static function (ExcelFileSerializerConfigurator $configurator): void {
                     $configurator->withHeader(['name', 'email']);
 
-                    $configurator->withTrailler(function (AddonContext $context): void {
+                    $configurator->withTrailler(static function (AddonContext $context): void {
                         $context->append([$context->recordCount() . ' records']);
                         $context->append([($context->lineCount() + 1) . ' lines']);
                     });
 
-                    $configurator->withWorkbookConfigurator(function (WorkbookConfigurator $workbook): void {
+                    $configurator->withWorkbookConfigurator(static function (WorkbookConfigurator $workbook): void {
                         $workbook->setTitle('Workbook title');
                         $workbook->setCreator('Creator');
                         $workbook->setCompany('Company');
                     });
 
-                    $configurator->withWorksheetConfigurator(function (WorksheetConfigurator $worksheet): void {
+                    $configurator->withWorksheetConfigurator(static function (WorksheetConfigurator $worksheet): void {
                         $worksheet->setTitle('results', false);
 
                         $worksheet->withColumnFormat([
@@ -218,7 +218,7 @@ class ExamplesCommand extends Command
 
                         // header
                         $worksheet->freezeFirstRow();
-                        $worksheet->configureCells('A1:B1', function ($cells): void {
+                        $worksheet->configureCells('A1:B1', static function ($cells): void {
                             $cells->setFontWeight('bold');
                             $cells->setBorder('node', 'none', 'solid', 'none');
                         });
@@ -226,7 +226,7 @@ class ExamplesCommand extends Command
                     });
                 }),
 
-            'html' => $builder->serializeToHTMLTable(function (HTMLTableSerializerConfigurator $configurator): void {
+            'html' => $builder->serializeToHTMLTable(static function (HTMLTableSerializerConfigurator $configurator): void {
                 $configurator->withHeader(['name', 'email']);
                 $configurator->withTrailler(static fn (AddonContext $context) => ['Total', $context->recordCount()]);
                 $configurator->withTableClassAttribute('table table-condensed');
@@ -234,11 +234,11 @@ class ExamplesCommand extends Command
             }),
 
             'json' => $builder->serializeToJSONFile($outputPath . '.json',
-                function (JSONFileSerializerConfigurator $configurator): void {
+                static function (JSONFileSerializerConfigurator $configurator): void {
                     $configurator->withEncodeOptions(JSONFileSerializer::JSON_ENCODE_OPTIONS | \JSON_PRETTY_PRINT);
                 }),
 
-            'log' => $builder->serializeToLog(function (LogSerializerConfigurator $configurator): void {
+            'log' => $builder->serializeToLog(static function (LogSerializerConfigurator $configurator): void {
                 $configurator->withPrefix('PERSIST');
             }),
 
